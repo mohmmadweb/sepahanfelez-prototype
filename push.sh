@@ -14,7 +14,10 @@ REMOTE="git@github-mohmmadweb:${OWNER}/${REPO}.git"
 cd "$(dirname "$0")"
 
 echo "▸ بررسی دسترسی SSH…"
-if ! ssh -o BatchMode=yes -T git@github-mohmmadweb 2>&1 | grep -q "Hi ${OWNER}"; then
+# گیت‌هاب برای اتصال SSH همیشه خروجی ۱ می‌دهد؛ با `set -o pipefail` این
+# باعث می‌شد بررسی درست، شکست‌خورده تفسیر شود. خروجی را جدا می‌گیریم.
+AUTH="$(ssh -o BatchMode=yes -T git@github-mohmmadweb 2>&1 || true)"
+if ! printf '%s' "$AUTH" | grep -q "Hi ${OWNER}"; then
   echo "✗ کلید SSH اکانت ${OWNER} جواب نداد." >&2
   exit 1
 fi
