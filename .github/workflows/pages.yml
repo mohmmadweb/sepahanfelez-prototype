@@ -1,0 +1,40 @@
+name: انتشار روی GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# توکنِ خودِ Actions اجازه‌ی فعال‌سازی و انتشار Pages را دارد — کاری که
+# PAT شخصی این مخزن نمی‌توانست انجام دهد.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: پیکربندی و فعال‌سازی Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: بسته‌بندی سایت
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: انتشار
+        id: deployment
+        uses: actions/deploy-pages@v4
