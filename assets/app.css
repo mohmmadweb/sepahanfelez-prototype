@@ -802,8 +802,9 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
 
 .fmob{margin-top:var(--s3); font-size:var(--t-sm); color:var(--ink-2)}
 .fmob a{font-weight:800; color:var(--brand-dark); white-space:nowrap}
+/* لینک ایمیل مقصد کلیک است نه متن روان، پس ناحیه‌ی لمسی واقعی می‌خواهد */
 .fmail{display:inline-flex; align-items:center; gap:8px; margin-top:var(--s4);
-  font-size:var(--t-sm); color:var(--ink-2)}
+  font-size:var(--t-sm); color:var(--ink-2); min-height:44px}
 .fmail svg{width:18px; height:18px; flex:none}
 
 .faddr{list-style:none; padding:0; margin:0; display:grid; gap:var(--s4)}
@@ -988,4 +989,75 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
   .crumb ol{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none}
   .crumb ol::-webkit-scrollbar{display:none}
   .crumb li{white-space:nowrap}
+}
+
+/* ===========================================================================
+   صفحات تماس و درباره
+   =========================================================================== */
+.prose-lead{max-width:66ch}
+.prose-lead .lede{font-size:var(--t-lg); line-height:1.8; color:var(--ink-2)}
+.prose-lead .lede strong{color:var(--ink)}
+
+/* ---- اعداد کارخانه ---- */
+.factnums{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:var(--s3); margin:var(--s6) 0}
+.factnums > *{min-width:0}
+.fact{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg);
+  padding:var(--s4); text-align:center}
+.fact .k{display:block; font-size:var(--t-sm); color:var(--ink-2); font-weight:600}
+.fact .v{display:block; font-size:var(--t-2xl); font-weight:900; color:var(--ink);
+  margin-top:6px; line-height:1.2}
+
+/* ---- تماس ---- */
+.contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s6);
+  margin:var(--s5) 0 var(--s7)}
+.contact-grid > *{min-width:0}
+
+.contact-tel{display:flex; align-items:center; gap:var(--s4); text-decoration:none;
+  background:#fff; border:2px solid var(--brand); border-radius:var(--radius-lg);
+  padding:var(--s4) var(--s5); box-shadow:var(--sh-1)}
+.contact-tel svg{width:40px; height:40px; color:var(--brand); flex:none}
+.contact-tel .l{display:block; font-size:var(--t-sm); font-weight:600; color:var(--ink-2)}
+.contact-tel .n{display:block; font-size:var(--t-3xl); font-weight:900;
+  color:var(--brand-dark); line-height:1.15; direction:ltr; text-align:right}
+.contact-tel .h{display:block; font-size:var(--t-xs); color:var(--ink-2); margin-top:4px}
+.contact-tel:hover{background:var(--brand-soft)}
+.contact-tel:focus-visible{outline:none; box-shadow:var(--ring)}
+
+.soc-list{display:grid; gap:var(--s2); margin-top:var(--s4)}
+.soc-row{display:flex; align-items:center; gap:var(--s3); text-decoration:none;
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+  padding:var(--s3) var(--s4); min-height:56px; color:var(--ink)}
+.soc-row svg{width:24px; height:24px; color:var(--steel-ink); flex:none}
+.soc-row span{font-weight:700; font-size:var(--t-base)}
+.soc-row b{margin-inline-start:auto; font-weight:800; color:var(--brand-dark)}
+.soc-row:hover{background:var(--surface); border-color:var(--line-2)}
+.soc-row:focus-visible{outline:none; box-shadow:var(--ring)}
+
+.contact-addr h2{font-size:var(--t-xl); margin-bottom:var(--s4)}
+.contact-addr .faddr li{background:#fff; border:1px solid var(--line);
+  border-radius:var(--radius); padding:var(--s3) var(--s4)}
+
+/* ---- فرم ---- */
+.cform{background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:var(--s5)}
+.cform-note{display:flex; align-items:center; gap:var(--s2);
+  background:var(--fresh-soft); border:1px solid #E8CD94; color:#6B4708;
+  border-radius:var(--radius); padding:var(--s3) var(--s4);
+  font-size:var(--t-sm); font-weight:600; margin:0 0 var(--s4)}
+.cform-note svg{width:19px; height:19px; flex:none}
+.cform-note b{color:var(--brand-dark)}
+.cform-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s4)}
+.cform-grid > *{min-width:0}
+.cform textarea{border:1.5px solid var(--line-2); border-radius:var(--radius);
+  padding:var(--s3); font:inherit; font-size:var(--t-base); color:var(--ink);
+  background:#fff; width:100%; resize:vertical; min-height:110px}
+.cform :disabled{background:var(--surface-2); color:var(--ink-3); cursor:not-allowed}
+.cform .btn{margin-top:var(--s4)}
+.cform .btn:disabled{opacity:.55; cursor:not-allowed}
+
+@media (max-width:820px){
+  .contact-grid{grid-template-columns:1fr; gap:var(--s5)}
+  .cform-grid{grid-template-columns:1fr}
+  .contact-tel .n{font-size:var(--t-2xl)}
 }

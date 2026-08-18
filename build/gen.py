@@ -138,6 +138,8 @@ def prod_slug(name):
 def u_home():              return "/"
 def u_price():             return "/price"
 def u_catlist():           return "/category/"
+def u_about():             return "/about"
+def u_contact():           return "/contact"
 def u_cat(key):            return f"/category/{cat_slug(key)}"
 def u_prod(key, name):     return f"/category/{cat_slug(key)}/{prod_slug(name)}"
 
@@ -224,7 +226,11 @@ def mainnav(current=None):
         c = C.CATS[key]
         cur = ' aria-current="page"' if current == c["slug"] else ""
         links.append(f'<a href="{u_cat(key)}"{cur}>{c["nav"]}</a>')
-    links.append('<span class="spacer"></span><a href="#">درباره کارخانه</a><a href="#">تماس با ما</a>')
+    cur_a = ' aria-current="page"' if current == "about" else ""
+    cur_c = ' aria-current="page"' if current == "contact" else ""
+    links.append(f'<span class="spacer"></span>'
+                 f'<a href="{u_about()}"{cur_a}>درباره کارخانه</a>'
+                 f'<a href="{u_contact()}"{cur_c}>تماس با ما</a>')
     return f"""
 <nav class="mainnav" aria-label="منوی اصلی">
   <div class="container">
@@ -277,7 +283,7 @@ def callband():
   </div>
 </section>"""
 
-def footer():
+def footer(show_addr=True):
     """پاصفحه‌ی جمع‌وجور.
 
     نسخه‌ی قبلی سه ستون بلند بود و فهرست کامل ۹ دسته را تکرار می‌کرد —
@@ -285,10 +291,15 @@ def footer():
     واقعاً ته صفحه دنبالش می‌گردد: راه تماس و آدرس انبارها.
 
     آدرس‌ها عیناً از sepahanfelez.ir است؛ چیزی به آن‌ها اضافه نشده.
+
+    روی صفحه‌ی تماس همین سه نشانی با جزئیات بیشتر در متن صفحه آمده، پس
+    ستون نشانی پاصفحه آنجا تکرار می‌شود و حذف می‌گردد.
     """
     addr = "".join(
         f'<li><span class="a-t">{esc(t)}</span>{esc(a)}</li>'
         for t, a in C.ADDRESSES)
+    addr_col = (f'<div class="fcol-addr"><h3>کارخانه و انبارها</h3>'
+                f'<ul class="faddr">{addr}</ul></div>') if show_addr else ""
     soc = "".join(
         f'<a href="{u}" aria-label="{esc(n)} سپاهان فلز" '
         f'rel="noopener" target="_blank">{icon(i)}</a>'
@@ -312,10 +323,7 @@ def footer():
           {icon('i-mail')}info@sepahanfelez.ir</a>
       </div>
 
-      <div class="fcol-addr">
-        <h3>کارخانه و انبارها</h3>
-        <ul class="faddr">{addr}</ul>
-      </div>
+      {addr_col}
     </div>
     <p class="copyright">سپاهان فلز — فروشگاه اینترنتی {C.FACTORY['name']} ·
       شماره ثبت {C.FACTORY['reg']} · سال تأسیس {C.FACTORY['year']}</p>
@@ -1101,6 +1109,172 @@ def build_catlist():
 {footer()}{dock()}"""
 
 
+def build_about():
+    """صفحه‌ی /about — معادل AboutController@index.
+
+    محتوا فقط چیزی می‌گوید که روی sepahanfelez.ir یا smtsco.ir قابل
+    اثبات است. عکس هوایی دو واحد همان فایل‌های صفحه‌ی اصلی است.
+    """
+    return f"""{head("درباره کارخانه‌ی صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+      "صنایع مفتولی طلوع سپاهان، تولیدکننده‌ی توری و محصولات مفتولی در شهرک صنعتی منتظریه نجف‌آباد اصفهان. سپاهان فلز فروشگاه اینترنتی این کارخانه است.")}
+{UTILBAR}{masthead()}{mainnav("about")}{FACTORYBAR}
+{crumb([("خانه", u_home()), ("درباره کارخانه", "#")])}
+<main id="main" tabindex="-1">
+  <section class="section">
+    <div class="container">
+      <div class="prose prose-lead">
+        <h1>کارخانه‌ی صنایع مفتولی طلوع سپاهان</h1>
+        <p class="lede"><strong>سپاهان فلز</strong> فروشگاه اینترنتی
+           <strong>{C.FACTORY['name']}</strong> است. یعنی آنچه در این سایت
+           می‌خرید، از خط تولید همین کارخانه می‌آید و بار از محوطه‌ی خودش
+           بارگیری می‌شود — نه از انبار واسطه.</p>
+      </div>
+
+      <div class="plants">
+        <figure class="plant">
+          <video controls preload="none" playsinline
+                 poster="/assets/factory/toloue-sepahan-1.jpg"
+                 aria-label="ویدئوی هوایی کارخانه‌ی طلوع سپاهان ۱">
+            <source src="/assets/factory/toloue-sepahan-1.mp4" type="video/mp4">
+            <img src="/assets/factory/toloue-sepahan-1.jpg"
+                 alt="نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان ۱">
+          </video>
+          <figcaption><b>واحد یک</b><span>شهرک صنعتی منتظریه، نجف‌آباد</span></figcaption>
+        </figure>
+        <figure class="plant">
+          <video controls preload="none" playsinline
+                 poster="/assets/factory/toloue-sepahan-2.jpg"
+                 aria-label="ویدئوی هوایی کارخانه‌ی طلوع سپاهان ۲">
+            <source src="/assets/factory/toloue-sepahan-2.mp4" type="video/mp4">
+            <img src="/assets/factory/toloue-sepahan-2.jpg"
+                 alt="نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان ۲">
+          </video>
+          <figcaption><b>واحد دو</b><span>سالن‌های تولید و محوطه‌ی بارگیری</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="factnums">
+        <div class="fact"><span class="k">سال تأسیس</span><span class="v">{C.FACTORY['year']}</span></div>
+        <div class="fact"><span class="k">شماره ثبت</span><span class="v">{C.FACTORY['reg']}</span></div>
+        <div class="fact"><span class="k">ظرفیت سالانه</span><span class="v">{C.FACTORY['capacity']}</span></div>
+        <div class="fact"><span class="k">سالن تولید</span><span class="v">{C.FACTORY['hall']}</span></div>
+        <div class="fact"><span class="k">پرسنل</span><span class="v">{C.FACTORY['staff']}</span></div>
+        <div class="fact"><span class="k">کد کالای فعال</span><span class="v">{fa(TOTAL_SKUS)}</span></div>
+      </div>
+
+      <div class="prose">
+        <h2>چرخه‌ی تولید، کامل و زیر یک سقف</h2>
+        <p>آنچه این مجموعه را از فروشندگان بازار جدا می‌کند، کامل‌بودن چرخه‌ی
+           تولید است: <strong>کشش مفتول، گالوانیزه و بافت هر سه در همین مجموعه
+           انجام می‌شود</strong>. کیفیت مفتول اولیه، ضخامت پوشش روی و یکنواختی
+           بافت — سه حلقه‌ای که در خرید از بازار قابل کنترل نیستند — اینجا زیر
+           یک سقف کنترل می‌شوند.</p>
+        <p>بخش ماشین‌سازی داخلی کارخانه بخشی از تجهیزات خط تولید را خودش طراحی
+           و می‌سازد. همین است که <strong>تولید سفارشی</strong> را ممکن می‌کند:
+           عرض، چشمه و ضخامت مطابق نقشه‌ی پروژه، نه فقط آنچه در انبار هست.</p>
+
+        <h2>چه چیزی تولید می‌شود</h2>
+        <p>{fa(TOTAL_SKUS)} کد کالای فعال در {fa(len(C.ORDER))} دسته. قیمت روز
+           همه‌شان در <a href="{u_price()}">جدول قیمت</a> هست و هر روز کاری
+           ساعت ۹ صبح بروزرسانی می‌شود.</p>
+        <ul class="bul">{''.join(f'<li><a href="{u_cat(k)}">{esc(C.CATS[k]["title"])}</a></li>' for k in C.ORDER)}</ul>
+
+        <h2>تحویل بار</h2>
+        <p>بارگیری از کارخانه‌ی اصفهان انجام می‌شود و تحویل از انبارهای
+           <strong>اصفهان و تهران</strong>. نشانی دقیق هر سه محل در
+           <a href="{u_contact()}">صفحه‌ی تماس</a> آمده است.</p>
+      </div>
+    </div>
+  </section>
+{callband()}
+</main>
+{footer()}{dock()}"""
+
+
+def build_contact():
+    """صفحه‌ی /contact — معادل ContactController@index.
+
+    فرم عیناً همان قراردادِ ContactController@store است: نام فیلدها،
+    اجباری‌بودن و کف و سقف طول، همه از قواعد اعتبارسنجی همان کنترلر
+    برداشته شده تا وقتی به بک‌اند وصل شد، بدون تغییر کار کند.
+
+    اینجا فایل ایستاست و POST جایی نمی‌رود، پس فرم غیرفعال است و به‌جایش
+    راه‌های تماسِ واقعی برجسته‌اند — فرمی که بی‌صدا هیچ کاری نکند بدتر از
+    نبودنش است.
+    """
+    addr = "".join(
+        f'<li><span class="a-t">{esc(t)}</span>{esc(a)}</li>' for t, a in C.ADDRESSES)
+    soc = "".join(
+        f'<a class="soc-row" href="{u}" rel="noopener" target="_blank">'
+        f'{icon(i)}<span>{esc(n)}</span><b class="num">{C.MOBILE_SHOW}</b></a>'
+        for i, n, u in C.SOCIALS)
+    return f"""{head("تماس با سپاهان فلز — دفتر فروش کارخانه",
+      f"تماس با دفتر فروش صنایع مفتولی طلوع سپاهان: {C.PHONE_SHOW} با {C.PHONE_LINES}. نشانی کارخانه‌ی اصفهان، دفتر تهران و انبار خاورشهر.")}
+{UTILBAR}{masthead()}{mainnav("contact")}{FACTORYBAR}
+{crumb([("خانه", u_home()), ("تماس با ما", "#")])}
+<main id="main" tabindex="-1">
+  <section class="section">
+    <div class="container">
+      <div class="prose prose-lead">
+        <h1>تماس با دفتر فروش</h1>
+        <p class="lede">قیمت جدول مبنای روز است. <strong>قیمت قطعی سفارش شما
+           به تناژ و مقصد بار بستگی دارد</strong> و کارشناس فروش آن را در همان
+           تماس اعلام می‌کند.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-main">
+          <a class="contact-tel" href="tel:{PH}" data-track="call-contact">
+            {icon('i-phone')}
+            <span>
+              <span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>
+              <span class="n num">{PHS}</span>
+              <span class="h">شنبه تا چهارشنبه ۸ تا ۱۷ · پنجشنبه ۸ تا ۱۳</span>
+            </span>
+          </a>
+          <div class="soc-list">{soc}</div>
+          <a class="fmail" href="mailto:info@sepahanfelez.ir">
+            {icon('i-mail')}info@sepahanfelez.ir</a>
+        </div>
+
+        <div class="contact-addr">
+          <h2>کارخانه و انبارها</h2>
+          <ul class="faddr">{addr}</ul>
+        </div>
+      </div>
+
+      <div class="prose">
+        <h2>پیام بفرستید</h2>
+        <p>اگر خارج از ساعت کاری است، مشخصات و تناژ موردنیازتان را بگذارید تا
+           اولین وقت اداری تماس بگیریم.</p>
+      </div>
+
+      <form class="cform" method="post" action="{u_contact()}">
+        <p class="cform-note">{icon('i-clock')} در این نسخه‌ی نمایشی فرم غیرفعال
+          است. برای پاسخ فوری با <b class="num">{PHS}</b> تماس بگیرید.</p>
+        <div class="cform-grid">
+          <label class="ffield"><span>نام</span>
+            <input name="first_name" type="text" minlength="2" maxlength="25" required disabled></label>
+          <label class="ffield"><span>نام خانوادگی</span>
+            <input name="last_name" type="text" minlength="2" maxlength="25" required disabled></label>
+          <label class="ffield"><span>شماره تماس</span>
+            <input name="phone" type="tel" inputmode="numeric" maxlength="15" required disabled></label>
+          <label class="ffield"><span>ایمیل</span>
+            <input name="email" type="email" maxlength="60" required disabled></label>
+          <label class="ffield fsearch"><span>موضوع</span>
+            <input name="subject" type="text" minlength="2" maxlength="150" required disabled></label>
+          <label class="ffield fsearch"><span>متن پیام</span>
+            <textarea name="body" rows="4" minlength="10" maxlength="500" required disabled></textarea></label>
+        </div>
+        <button class="btn btn-call" type="submit" disabled>ارسال پیام</button>
+      </form>
+    </div>
+  </section>
+{callband()}
+</main>
+{footer(show_addr=False)}{dock()}"""
+
+
 def write(path, s):
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)   # مسیرها حالا تودرتواند
@@ -1112,6 +1286,8 @@ def main():
     write(out_path(u_home()), build_index()); n += 1
     write(out_path(u_price()), build_price()); n += 1
     write(out_path(u_catlist()), build_catlist()); n += 1
+    write(out_path(u_about()), build_about()); n += 1
+    write(out_path(u_contact()), build_contact()); n += 1
     for key in C.ORDER:
         write(out_path(u_cat(key)), build_category(key)); n += 1
         for i, row in enumerate(CAT[key]["rows"]):
