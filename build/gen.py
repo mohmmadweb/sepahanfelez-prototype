@@ -170,13 +170,11 @@ def head(title, desc, css="/assets/app.css"):
 {ICONS}
 <a class="skip" href="#main">رفتن به محتوای اصلی</a>"""
 
-PV_STRIP = f"""
-<div class="pv-strip">
-  <div class="container">
-    <span><span class="dotp"></span>پروتوتایپ طراحی — سایت اصلی: <a href="https://sepahanfelez.ir">sepahanfelez.ir</a></span>
-    <span>نسخه ۵ · {TODAY}</span>
-  </div>
-</div>"""
+# نوار «پروتوتایپ طراحی» حذف شد — دمو باید حس سایت واقعی بدهد.
+# محافظت در برابر ایندکس‌شدن همچنان برقرار است: robots.txt با Disallow
+# و متای noindex در <head> هر صفحه. آن دو کار نوار را می‌کنند بی‌آنکه
+# دیده شوند.
+PV_STRIP = ""
 
 UTILBAR = f"""
 <div class="utilbar">
@@ -202,7 +200,7 @@ def masthead():
         <path d="M13 35c0-6.2 4.2-9.3 9.3-9.3h8.3c3.1 0 5.2-2.1 5.2-4.2s-2.1-4.2-5.2-4.2H15" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
         <path d="M41 19c0 6.2-4.2 9.3-9.3 9.3h-8.3c-3.1 0-5.2 2.1-5.2 4.2s2.1 4.2 5.2 4.2H39" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".55"/>
       </svg>
-      <span><span class="name">سپاهان فلز</span><br><span class="sub">تولیدکننده و مرجع قیمت صنایع مفتولی</span></span>
+      <span><span class="name">سپاهان فلز</span><br><span class="sub">فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان</span></span>
     </a>
     <div class="search">
       <label class="vh" for="q">جستجوی محصول</label>
@@ -240,7 +238,7 @@ FACTORYBAR = f"""
     <div class="lead">
       {icon('i-factory')}
       <span>
-        <span class="t">ما خودمان تولیدکننده‌ایم، نه واسطه</span>
+        <span class="t">فروشگاه مستقیم کارخانه، نه واسطه</span>
         <span class="s">کشش مفتول، گالوانیزه و بافت — هر سه در کارخانه‌ی اصفهان</span>
       </span>
     </div>
@@ -301,6 +299,8 @@ def footer():
     <div class="fgrid">
       <div class="fcol-call">
         <h3>تماس با سپاهان فلز</h3>
+        <p class="fwho">فروشگاه اینترنتی کارخانه‌ی
+          <b>صنایع مفتولی طلوع سپاهان</b></p>
         <a class="fcall" href="tel:{PH}" data-track="call-footer">
           <span class="label">دفتر فروش — {C.PHONE_LINES}</span>
           <span class="number num">{PHS}</span>
@@ -586,9 +586,9 @@ def build_index():
     trust = "".join(f'<div class="trustitem">{icon(ic)}<div><div class="t">{t}</div><div class="d">{d}</div></div></div>'
                     for ic, t, d in C.TRUST)
 
-    return f"""{head("قیمت روز توری و محصولات مفتولی — کارخانه سپاهان فلز",
+    return f"""{head("قیمت روز توری و محصولات مفتولی — سپاهان فلز، فروشگاه صنایع مفتولی طلوع سپاهان",
       "قیمت روز توری حصاری، توری پرسی، مش جوشی، توری مرغی، توری گابیون، سیم خاردار و مفتول آرماتوربندی مستقیم از خط تولید کارخانه اصفهان. ۷۰ کد کالا، قیمت به ریال، بروزرسانی هر روز کاری.")}
-{PV_STRIP}{UTILBAR}{masthead()}{mainnav()}{FACTORYBAR}
+{UTILBAR}{masthead()}{mainnav()}{FACTORYBAR}
 
 <main id="main" tabindex="-1">
 {hero()}
@@ -667,21 +667,70 @@ def build_index():
     </div>
   </section>
 
-  <section class="section">
+  <!-- بخش کارخانه.
+
+       اینجا جایی است که رابطه‌ی فروشگاه و کارخانه صریح گفته می‌شود:
+       سپاهان فلز فروشگاه است، طلوع سپاهان کارخانه. عکس هوایی هر دو
+       کارخانه با مرز مشخص، همان چیزی است که یک واسطه نمی‌تواند نشان
+       بدهد — پس بهترین جای اثباتِ «واسطه نیستیم» همین‌جاست.
+
+       ویدئو preload="none" است و فقط با کلیک دانلود می‌شود؛ ۲۲ مگابایت
+       را نباید به هر بازدیدکننده تحمیل کرد. -->
+  <section class="section alt" id="factory">
     <div class="container">
+      <div class="section-head">
+        <div><h2>کارخانه‌ی صنایع مفتولی طلوع سپاهان</h2>
+          <div class="sub">سپاهان فلز فروشگاه اینترنتی همین کارخانه است —
+            دو واحد تولیدی در شهرک صنعتی منتظریه، نجف‌آباد اصفهان</div></div>
+      </div>
+
+      <div class="plants">
+        <figure class="plant">
+          <video controls preload="none" playsinline
+                 poster="/assets/factory/toloue-sepahan-1.jpg"
+                 aria-label="ویدئوی هوایی کارخانه‌ی طلوع سپاهان ۱">
+            <source src="/assets/factory/toloue-sepahan-1.mp4" type="video/mp4">
+            <img src="/assets/factory/toloue-sepahan-1.jpg"
+                 alt="نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان ۱ در شهرک صنعتی منتظریه نجف‌آباد">
+          </video>
+          <figcaption>
+            <b>واحد یک</b>
+            <span>نمای هوایی، با مرز مشخص محوطه‌ی کارخانه</span>
+          </figcaption>
+        </figure>
+
+        <figure class="plant">
+          <video controls preload="none" playsinline
+                 poster="/assets/factory/toloue-sepahan-2.jpg"
+                 aria-label="ویدئوی هوایی کارخانه‌ی طلوع سپاهان ۲">
+            <source src="/assets/factory/toloue-sepahan-2.mp4" type="video/mp4">
+            <img src="/assets/factory/toloue-sepahan-2.jpg"
+                 alt="نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان ۲ در شهرک صنعتی منتظریه نجف‌آباد">
+          </video>
+          <figcaption>
+            <b>واحد دو</b>
+            <span>سالن‌های تولید و محوطه‌ی بارگیری</span>
+          </figcaption>
+        </figure>
+      </div>
+
       <div class="prose">
-        <h2>کارخانه‌ی سپاهان فلز</h2>
-        <p>سپاهان فلز فروشگاه اینترنتی <strong>{C.FACTORY['name']}</strong> است؛ کارخانه‌ای که
-           در سال {C.FACTORY['year']} با شماره ثبت {C.FACTORY['reg']} و با مجوز رسمی وزارت صنایع
-           و معادن در استان اصفهان کار خود را آغاز کرد و امروز با ظرفیت سالانه‌ی
-           {C.FACTORY['capacity']} محصولات مفتولی تولید می‌کند.</p>
-        <p>آنچه این مجموعه را از فروشندگان بازار جدا می‌کند، کامل‌بودن چرخه‌ی تولید است:
-           <strong>کشش مفتول، گالوانیزه و بافت هر سه در همین مجموعه انجام می‌شود</strong>. یعنی
-           کیفیت مفتول اولیه، ضخامت پوشش روی و یکنواختی بافت، سه حلقه‌ای که در خرید از بازار
-           قابل کنترل نیستند، اینجا زیر یک سقف کنترل می‌شوند.</p>
-        <p>بخش ماشین‌سازی داخلی کارخانه بخشی از تجهیزات خط تولید را طراحی و می‌سازد، و
-           همین امکان تولید سفارشی — عرض، چشمه و ضخامت مطابق نقشه‌ی پروژه — را عملی می‌کند.
-           تحویل بار از انبارهای <strong>اصفهان و تهران</strong> انجام می‌شود.</p>
+        <p><strong>سپاهان فلز</strong> فروشگاه اینترنتی
+           <strong>{C.FACTORY['name']}</strong> است. یعنی وقتی از این سایت
+           سفارش می‌دهید، بار از همین دو محوطه‌ای بارگیری می‌شود که در
+           تصویر بالا می‌بینید — نه از انبار واسطه.</p>
+        <p>کارخانه در سال {C.FACTORY['year']} با شماره ثبت {C.FACTORY['reg']}
+           و مجوز رسمی وزارت صنایع و معادن در استان اصفهان کار خود را آغاز
+           کرد و امروز با ظرفیت سالانه‌ی {C.FACTORY['capacity']} تولید می‌کند.</p>
+        <p>آنچه این مجموعه را از فروشندگان بازار جدا می‌کند، کامل‌بودن چرخه‌ی
+           تولید است: <strong>کشش مفتول، گالوانیزه و بافت هر سه در همین مجموعه
+           انجام می‌شود</strong>. کیفیت مفتول اولیه، ضخامت پوشش روی و یکنواختی
+           بافت — سه حلقه‌ای که در خرید از بازار قابل کنترل نیستند — اینجا زیر
+           یک سقف کنترل می‌شوند.</p>
+        <p>بخش ماشین‌سازی داخلی کارخانه بخشی از تجهیزات خط تولید را طراحی و
+           می‌سازد، و همین امکان تولید سفارشی — عرض، چشمه و ضخامت مطابق نقشه‌ی
+           پروژه — را عملی می‌کند. تحویل بار از انبارهای
+           <strong>اصفهان و تهران</strong> انجام می‌شود.</p>
       </div>
     </div>
   </section>
@@ -706,7 +755,7 @@ def build_price():
 
     return f"""{head("جدول کامل قیمت روز — ۷۰ کد کالا | سپاهان فلز",
       "جدول کامل قیمت روز ۷۰ کد کالای مفتولی سپاهان فلز در ۹ دسته، با مشخصات فنی کامل هر کد. قیمت به ریال، درب کارخانه اصفهان.")}
-{PV_STRIP}{UTILBAR}{masthead()}{mainnav("price")}{FACTORYBAR}
+{UTILBAR}{masthead()}{mainnav("price")}{FACTORYBAR}
 {crumb([("خانه", u_home()), ("جدول کامل قیمت", "#")])}
 
 <main id="main" tabindex="-1">
@@ -774,8 +823,8 @@ def build_category(key):
         "".join(f'<td class="num">{esc(r.get(x, "—")) or "—"}</td>' for x in specs) + "</tr>"
         for r in rows)
 
-    return f"""{head(f"قیمت روز {c['title']} — خرید از کارخانه | سپاهان فلز", c["meta"])}
-{PV_STRIP}{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
+    return f"""{head(f"قیمت روز {c['title']} — مستقیم از کارخانه | سپاهان فلز", c["meta"])}
+{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
 {crumb([("خانه", u_home()), ("جدول کامل قیمت", u_price()), (c["title"], "#")])}
 
 <main id="main" tabindex="-1">
@@ -936,7 +985,7 @@ def build_product(key, row, idx):
 
     return f"""{head(f"قیمت {name} | سپاهان فلز",
       f"قیمت روز {name} از دسته‌ی {c['title']}، مستقیم از کارخانه اصفهان. مشخصات فنی کامل، واحد فروش {unit} و قیمت به ریال.")}
-{PV_STRIP}{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
+{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
 {crumb([("خانه", u_home()), ("جدول کامل قیمت", u_price()),
         (c["title"], u_cat(key)), (name, "#")])}
 
@@ -1034,7 +1083,7 @@ def build_catlist():
     </a>""")
     return f"""{head("همه‌ی دسته‌های محصول — قیمت روز | سپاهان فلز",
       "فهرست کامل دسته‌های صنایع مفتولی سپاهان فلز با بازه‌ی قیمت روز و واحد فروش هر دسته.")}
-{PV_STRIP}{UTILBAR}{masthead()}{mainnav()}{FACTORYBAR}
+{UTILBAR}{masthead()}{mainnav()}{FACTORYBAR}
 {crumb([("خانه", u_home()), ("دسته‌های محصول", "#")])}
 <main id="main" tabindex="-1">
   <section class="section">
