@@ -102,10 +102,57 @@ def icon(name, cls=""):
     c = f' class="{cls}"' if cls else ""
     return f'<svg{c} aria-hidden="true"><use href="#{name}"/></svg>'
 
+
+# ---------------------------------------------------------------------------
+# نشانی‌ها — دقیقاً همان قراردادی که بک‌اند لاراول دارد
+# ---------------------------------------------------------------------------
+# routes/web.php:
+#   /price                            PriceListController@index
+#   /category/                        CategoryController@list
+#   /category/{category}              CategoryController@index
+#   /category/{category}/{product}    ProductController@show
+#
+# اسلاگ دسته همان کلید catalog.json است، چون کاتالوگ از روی همین نشانی‌های
+# زنده برداشته شده و مو‌به‌مو با ستون slug جدول categories یکی است.
+#
+# اسلاگ محصول از عنوان ساخته می‌شود مگر اینکه در build/slugs.json نگاشت
+# صریح داشته باشد. این فایل برای همان مواردی است که ادمین اسلاگ را دستی
+# عوض کرده — مثلاً «سیم خاردار سوزنی قطر ۶۰ سانتی متر» که در دیتابیس
+# «سیم-خاردار-حلقوی-60» است و از عنوان درنمی‌آید.
+SLUGMAP = {}
+_slugmap_path = os.path.join(ROOT, "build", "slugs.json")
+if os.path.exists(_slugmap_path):
+    SLUGMAP = {k: v for k, v in
+               json.load(open(_slugmap_path, encoding="utf-8")).items()
+               if not k.startswith("_")}
+
+
+def cat_slug(key):
+    return key
+
+
+def prod_slug(name):
+    return SLUGMAP.get(name) or slugify(name)
+
+
+def u_home():              return "/"
+def u_price():             return "/price"
+def u_catlist():           return "/category/"
+def u_cat(key):            return f"/category/{cat_slug(key)}"
+def u_prod(key, name):     return f"/category/{cat_slug(key)}/{prod_slug(name)}"
+
+
+def out_path(url):
+    """نشانی → مسیر فایل. هر نشانی یک پوشه با index.html می‌شود تا
+    سرور ایستا همان چیزی را بدهد که لاراول می‌داد."""
+    u = url.strip("/")
+    return "index.html" if not u else f"{u}/index.html"
+
+
 # ---------------------------------------------------------------------------
 # قطعات مشترک
 # ---------------------------------------------------------------------------
-def head(title, desc, css="assets/app.css"):
+def head(title, desc, css="/assets/app.css"):
     return f"""<!doctype html>
 <html dir="rtl" lang="fa">
 <head>
@@ -115,8 +162,8 @@ def head(title, desc, css="assets/app.css"):
 <meta name="googlebot" content="noindex, nofollow">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/Estedad-Regular.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/Estedad-Black.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Black.woff2" crossorigin>
 <link rel="stylesheet" href="{css}">
 </head>
 <body>
@@ -149,7 +196,7 @@ def masthead():
     return f"""
 <header class="masthead">
   <div class="container">
-    <a class="brand" href="index.html">
+    <a class="brand" href="{u_home()}">
       <svg class="mark" viewBox="0 0 54 54" aria-hidden="true">
         <rect width="54" height="54" rx="9" fill="#B42332"/>
         <path d="M13 35c0-6.2 4.2-9.3 9.3-9.3h8.3c3.1 0 5.2-2.1 5.2-4.2s-2.1-4.2-5.2-4.2H15" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
@@ -174,11 +221,11 @@ def masthead():
 </header>"""
 
 def mainnav(current=None):
-    links = ['<a href="price.html"%s>قیمت روز</a>' % (' aria-current="page"' if current == "price" else "")]
+    links = ['<a href="{u_price()}"%s>قیمت روز</a>' % (' aria-current="page"' if current == "price" else "")]
     for key in C.ORDER:
         c = C.CATS[key]
         cur = ' aria-current="page"' if current == c["slug"] else ""
-        links.append(f'<a href="c-{c["slug"]}.html"{cur}>{c["nav"]}</a>')
+        links.append(f'<a href="{u_cat(key)}"{cur}>{c["nav"]}</a>')
     links.append('<span class="spacer"></span><a href="#">درباره کارخانه</a><a href="#">تماس با ما</a>')
     return f"""
 <nav class="mainnav" aria-label="منوی اصلی">
@@ -284,9 +331,9 @@ def dock():
     <span class="n num">{PHS}</span>
   </a>
   <a href="https://wa.me/{WA}">{icon('i-whatsapp')}واتساپ</a>
-  <a href="price.html">{icon('i-chart')}قیمت‌ها</a>
+  <a href="{u_price()}">{icon('i-chart')}قیمت‌ها</a>
 </nav>
-<script src="assets/table.js" defer></script>
+<script src="/assets/table.js" defer></script>
 </body>
 </html>"""
 
@@ -347,7 +394,7 @@ def price_row(key, row, idx, specs, with_cat=False):
     name = row["نام محصول"]
     p = price_of(row)
     d = delta_of(row)
-    href = f'p-{slugify(name)}.html'
+    href = u_prod(key, name)
     cat_line = f'{c["title"]} · ' if with_cat else ""
     # ستون چهارم به بعد کم‌اولویت‌اند: زیر ۱۶۰۰px پنهان می‌شوند تا جدول در عرض
     # دسکتاپ جا شود. مقدار کاملشان در جدول «مشخصات فنی کامل» همین صفحه هست.
@@ -475,9 +522,9 @@ def hero():
     slides, dots = [], []
     for i, sl in enumerate(C.SLIDES, 1):
         c = C.CATS.get(sl["cat"])
-        href = f'c-{c["slug"]}.html' if c else "price.html"
+        href = u_cat(sl["cat"]) if c else u_price()
         # عکس درون style چون نام فایل داده است نه کلاس ثابت
-        bg = (f' style="background-image:url(assets/slides/{esc(sl["img"])})"'
+        bg = (f' style="background-image:url(/assets/slides/{esc(sl["img"])})"'
               if sl.get("img") else "")
         # تیتر اسلاید اول h1 است، بقیه h2 — در هر صفحه فقط یک h1
         tag = "h1" if i == 1 else 'h2 class="stitle"'
@@ -518,7 +565,7 @@ def build_index():
         up = p >= d
         rng = (f'از <span class="num">{fmt(s["min"])}</span> تا <span class="num">{fmt(s["max"])}</span>'
                if s["min"] != s["max"] else f'<span class="num">{fmt(s["min"])}</span>')
-        tiles.append(f"""<a class="ix" href="c-{c['slug']}.html">
+        tiles.append(f"""<a class="ix" href="{u_cat(key)}">
   <span class="k">{esc(c['title'])}</span>
   <span class="v"><span class="num">{fmt(s['min'])}</span> <span class="u">ریال / {esc(s['unit'])}</span></span>
   <span class="d">{delta_badge(d, p)}{spark(up, i)}</span>
@@ -530,7 +577,7 @@ def build_index():
         c, s = C.CATS[key], cat_stats(key)
         pr = (f'از <b class="num">{fmt(s["min"])}</b> تا <b class="num">{fmt(s["max"])}</b> <span class="u">ریال</span>'
               if s["min"] != s["max"] else f'<b class="num">{fmt(s["min"])}</b> <span class="u">ریال</span>')
-        cards.append(f"""<a class="catcard" href="c-{c['slug']}.html">
+        cards.append(f"""<a class="catcard" href="{u_cat(key)}">
   <span class="t">{esc(c['title'])}</span><span class="n">{fa(s['n'])} کد کالا · واحد: {esc(s['unit'])}</span>
   <span class="pr">{pr}</span></a>""")
 
@@ -551,7 +598,7 @@ def build_index():
     <div class="container">
       <div class="board-head">
         <div>
-          <h1>قیمت روز صنایع مفتولی<span>مستقیم از خط تولید، بدون واسطه</span></h1>
+          <h2 class="board-title">قیمت روز صنایع مفتولی<span>مستقیم از خط تولید، بدون واسطه</span></h2>
           <p class="lede">۷۰ کد کالای فعال در ۹ دسته. قیمت درب کارخانه‌ی اصفهان به ریال —
              و معادل تومانی هر عدد، زیر همان عدد.</p>
         </div>
@@ -587,12 +634,12 @@ def build_index():
       <div class="section-head">
         <div><h2>نمونه‌ای از جدول قیمت</h2>
           <div class="sub">شش کد از پرمصرف‌ترین‌ها — جدول کامل ۷۰ کد در صفحه‌ی قیمت روز</div></div>
-        <a href="price.html">جدول کامل ۷۰ کد کالا {icon('i-chev')}</a>
+        <a href="{u_price()}">جدول کامل ۷۰ کد کالا {icon('i-chev')}</a>
       </div>
       {price_table("توری-حصاری", "قیمت روز توری حصاری — شش کد نخست", limit=6)}
       <div class="tfoot">
         <p>قیمت‌ها به ریال و درب کارخانه‌ی اصفهان است. ارزش افزوده جداگانه محاسبه می‌شود.</p>
-        <a class="btn btn-ghost" href="price.html">مشاهده جدول کامل {icon('i-chev')}</a>
+        <a class="btn btn-ghost" href="{u_price()}">مشاهده جدول کامل {icon('i-chev')}</a>
       </div>
     </div>
   </section>
@@ -651,7 +698,7 @@ def build_price():
         blocks.append(f"""<div class="section-head catjump" id="{c['slug']}">
   <div><h2>{esc(c['title'])}</h2>
     <div class="sub">{fa(s['n'])} کد فعال · واحد فروش: {esc(s['unit'])} · {esc(c['unit_note'])}</div></div>
-  <a href="c-{c['slug']}.html">راهنمای خرید و مشخصات کامل {icon('i-chev')}</a>
+  <a href="{u_cat(key)}">راهنمای خرید و مشخصات کامل {icon('i-chev')}</a>
 </div>
 {price_table(key, f"قیمت روز {c['title']} — {fa(s['n'])} کد کالا", search=True)}""")
 
@@ -660,7 +707,7 @@ def build_price():
     return f"""{head("جدول کامل قیمت روز — ۷۰ کد کالا | سپاهان فلز",
       "جدول کامل قیمت روز ۷۰ کد کالای مفتولی سپاهان فلز در ۹ دسته، با مشخصات فنی کامل هر کد. قیمت به ریال، درب کارخانه اصفهان.")}
 {PV_STRIP}{UTILBAR}{masthead()}{mainnav("price")}{FACTORYBAR}
-{crumb([("خانه", "index.html"), ("جدول کامل قیمت", "#")])}
+{crumb([("خانه", u_home()), ("جدول کامل قیمت", "#")])}
 
 <main id="main" tabindex="-1">
   <section class="board">
@@ -729,7 +776,7 @@ def build_category(key):
 
     return f"""{head(f"قیمت روز {c['title']} — خرید از کارخانه | سپاهان فلز", c["meta"])}
 {PV_STRIP}{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
-{crumb([("خانه", "index.html"), ("جدول کامل قیمت", "price.html"), (c["title"], "#")])}
+{crumb([("خانه", u_home()), ("جدول کامل قیمت", u_price()), (c["title"], "#")])}
 
 <main id="main" tabindex="-1">
   <section class="board">
@@ -852,7 +899,7 @@ def build_category(key):
 # ---------------------------------------------------------------------------
 # context لازم برای ماژول تحلیل — توابع کمکی همین فایل
 ANA = {"price_of": price_of, "slugify": slugify, "esc": esc,
-       "fa": fa, "phone": PHS}
+       "fa": fa, "phone": PHS, "u_prod": None}   # u_prod در build_product پر می‌شود
 
 
 def build_product(key, row, idx):
@@ -870,7 +917,7 @@ def build_product(key, row, idx):
     # مقایسه با هم‌دسته‌ای‌ها — عددی، از داده‌ی واقعی
     others = [r for r in rows if r["نام محصول"] != name][:6]
     rel = "".join(
-        f'<li><a href="p-{slugify(r["نام محصول"])}.html">{esc(r["نام محصول"])}</a> — '
+        f'<li><a href="{u_prod(key, r["نام محصول"])}">{esc(r["نام محصول"])}</a> — '
         f'<span class="num">{fmt(price_of(r))}</span> ریال</li>' for r in others)
 
     # جایگاه این کد در دسته
@@ -890,8 +937,8 @@ def build_product(key, row, idx):
     return f"""{head(f"قیمت {name} | سپاهان فلز",
       f"قیمت روز {name} از دسته‌ی {c['title']}، مستقیم از کارخانه اصفهان. مشخصات فنی کامل، واحد فروش {unit} و قیمت به ریال.")}
 {PV_STRIP}{UTILBAR}{masthead()}{mainnav(c["slug"])}{FACTORYBAR}
-{crumb([("خانه", "index.html"), ("جدول کامل قیمت", "price.html"),
-        (c["title"], f"c-{c['slug']}.html"), (name, "#")])}
+{crumb([("خانه", u_home()), ("جدول کامل قیمت", u_price()),
+        (c["title"], u_cat(key)), (name, "#")])}
 
 <main id="main" tabindex="-1">
   <section class="board">
@@ -937,7 +984,7 @@ def build_product(key, row, idx):
       <table class="spectable narrow">
         <caption>{esc(name)}</caption>
         <tbody>
-          <tr><th>دسته</th><td><a href="c-{c['slug']}.html">{esc(c['title'])}</a></td></tr>
+          <tr><th>دسته</th><td><a href="{u_cat(key)}">{esc(c['title'])}</a></td></tr>
           <tr><th>واحد فروش</th><td>{esc(unit)}</td></tr>
           {spec_rows}
           <tr><th>قیمت روز</th><td><b class="num">{fmt(p)}</b> ریال</td></tr>
@@ -945,7 +992,7 @@ def build_product(key, row, idx):
       </table>
       </div>
 
-      {A.price_block(key, row, rows, ANA)}
+      {A.price_block(key, row, rows, dict(ANA, u_prod=lambda nm, k=key: u_prod(k, nm)))}
 
       <div class="prose">
         <!-- راهنمای قیمت‌گذاری دسته عمداً اینجا تکرار نمی‌شود: همان متن روی
@@ -954,13 +1001,13 @@ def build_product(key, row, idx):
              راهنما به دسته لینک می‌دهد. -->
         <h2>پیش از سفارش این کد</h2>
         {''.join(f'<p>{x}</p>' for x in A.buying_notes(key, row, ANA))}
-        {''.join(f'<p>{x}</p>' for x in A.sibling_notes(key, row, rows, specs, ANA))}
+        {''.join(f'<p>{x}</p>' for x in A.sibling_notes(key, row, rows, specs, dict(ANA, u_prod=lambda nm, k=key: u_prod(k, nm))))}
 
-        <p><a class="guidelink" href="c-{c['slug']}.html"><strong>راهنمای کامل خرید {esc(c['title'])} — چطور قیمت بدهید و چه چیزی را مقایسه کنید ←</strong></a></p>
+        <p><a class="guidelink" href="{u_cat(key)}"><strong>راهنمای کامل خرید {esc(c['title'])} — چطور قیمت بدهید و چه چیزی را مقایسه کنید ←</strong></a></p>
 
         <h2>کدهای دیگر همین دسته</h2>
         <ul class="bul">{rel}</ul>
-        <p><a href="c-{c['slug']}.html"><strong>مشاهده‌ی راهنمای کامل خرید {esc(c['title'])} و جدول هر {fa(len(rows))} کد ←</strong></a></p>
+        <p><a href="{u_cat(key)}"><strong>مشاهده‌ی راهنمای کامل خرید {esc(c['title'])} و جدول هر {fa(len(rows))} کد ←</strong></a></p>
       </div>
     </div>
   </section>
@@ -969,18 +1016,57 @@ def build_product(key, row, idx):
 {footer()}{dock()}"""
 
 # ---------------------------------------------------------------------------
+def build_catlist():
+    """صفحه‌ی /category/ — معادل CategoryController@list در بک‌اند.
+
+    بدون این، سرور ایستا فهرست پوشه می‌داد: صفحه‌ای بی‌قالب با نام
+    پوشه‌های فارسی. بک‌اند برای همین نشانی یک روت جدا دارد.
+    """
+    cards = []
+    for key in C.ORDER:
+        c, st = C.CATS[key], cat_stats(key)
+        cards.append(f"""<a class="catcard" href="{u_cat(key)}">
+      <h3>{esc(c['title'])}</h3>
+      <p class="n">{fa(st['n'])} کد فعال · واحد فروش {esc(st['unit'])}</p>
+      <p class="rng">از <b class="num">{fmt(st['min'])}</b> تا
+         <b class="num">{fmt(st['max'])}</b> ریال</p>
+      <span class="go">مشاهده قیمت‌ها {icon('i-chev')}</span>
+    </a>""")
+    return f"""{head("همه‌ی دسته‌های محصول — قیمت روز | سپاهان فلز",
+      "فهرست کامل دسته‌های صنایع مفتولی سپاهان فلز با بازه‌ی قیمت روز و واحد فروش هر دسته.")}
+{PV_STRIP}{UTILBAR}{masthead()}{mainnav()}{FACTORYBAR}
+{crumb([("خانه", u_home()), ("دسته‌های محصول", "#")])}
+<main id="main" tabindex="-1">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div><h1>دسته‌های محصول</h1>
+          <div class="sub">{fa(len(C.ORDER))} دسته‌ی فعال — قیمت هر روز کاری ساعت ۹ صبح بروزرسانی می‌شود</div></div>
+        <a href="{u_price()}">جدول کامل {fa(TOTAL_SKUS)} کد کالا {icon('i-chev')}</a>
+      </div>
+      <div class="catgrid">{''.join(cards)}</div>
+    </div>
+  </section>
+{callband()}
+</main>
+{footer()}{dock()}"""
+
+
 def write(path, s):
-    with open(os.path.join(ROOT, path), "w", encoding="utf-8") as f:
+    full = os.path.join(ROOT, path)
+    os.makedirs(os.path.dirname(full), exist_ok=True)   # مسیرها حالا تودرتواند
+    with open(full, "w", encoding="utf-8") as f:
         f.write(s)
 
 def main():
     n = 0
-    write("index.html", build_index()); n += 1
-    write("price.html", build_price()); n += 1
+    write(out_path(u_home()), build_index()); n += 1
+    write(out_path(u_price()), build_price()); n += 1
+    write(out_path(u_catlist()), build_catlist()); n += 1
     for key in C.ORDER:
-        write(f"c-{C.CATS[key]['slug']}.html", build_category(key)); n += 1
+        write(out_path(u_cat(key)), build_category(key)); n += 1
         for i, row in enumerate(CAT[key]["rows"]):
-            write(f"p-{slugify(row['نام محصول'])}.html", build_product(key, row, i)); n += 1
+            write(out_path(u_prod(key, row["نام محصول"])), build_product(key, row, i)); n += 1
     print(f"ساخته شد: {n} صفحه")
 
 if __name__ == "__main__":

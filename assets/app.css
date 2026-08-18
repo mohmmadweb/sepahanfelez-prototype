@@ -417,7 +417,11 @@ table{border-collapse:collapse}
 /* ==========================================================================
    ۹. کارت دسته
    ========================================================================== */
-.catgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--s3)}
+/* شبکه‌ی دسته‌ها سیال است نه ۵ ستون ثابت: کارت صفحه‌ی /category/ متن
+   بلندتری دارد و با ستون ثابت از لبه بیرون می‌زد. */
+.catgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s3)}
+.catgrid > *{min-width:0}
 .catcard{background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-lg);
   padding:var(--s4); display:flex; flex-direction:column; gap:var(--s2); min-height:150px;
   transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease}
@@ -844,3 +848,17 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
 .ptable[data-empty="yes"] tbody::after{content:"هیچ کدی با این فیلترها پیدا نشد.";
   display:block; padding:var(--s6); text-align:center;
   color:var(--ink-2); font-weight:600}
+
+/* تیتر تابلوی قیمت در صفحه‌ی اصلی h2 است (h1 مال اسلاید است)، ولی باید
+   همان وزن بصری h1 را داشته باشد. */
+.board .board-title{color:var(--ink); font-size:var(--t-3xl); font-weight:900;
+  max-width:20ch; line-height:1.3; letter-spacing:-.02em}
+.board .board-title span{color:var(--ink-2); display:block; font-weight:700}
+
+/* کارت دسته در صفحه‌ی /category/ */
+.catcard h3{font-size:var(--t-lg); font-weight:800; color:var(--ink); margin:0}
+.catcard .rng{font-size:var(--t-sm); color:var(--ink-2); margin-top:auto}
+.catcard .rng b{color:var(--ink); font-weight:800}
+.catcard .go{display:inline-flex; align-items:center; gap:6px;
+  font-size:var(--t-sm); font-weight:700; color:var(--brand-dark)}
+.catcard .go svg{width:16px; height:16px}
