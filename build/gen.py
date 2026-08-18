@@ -264,7 +264,7 @@ def callband():
     </div>
     <div class="lines">
       <a class="line primary" href="tel:{PH}" data-track="call-band">
-        <span class="label">دفتر فروش کارخانه — ۱۰ خط</span>
+        <span class="label">استعلام قیمت و ثبت سفارش</span>
         <span class="number num">{PHS}</span>
         <span class="who">استعلام قیمت و ثبت سفارش</span>
       </a>
@@ -529,20 +529,26 @@ def hero():
         # تیتر اسلاید اول h1 است، بقیه h2 — در هر صفحه فقط یک h1
         tag = "h1" if i == 1 else 'h2 class="stitle"'
         endtag = "h1" if i == 1 else "h2"
+        # فقط اسلاید اول کارت تلفن می‌گیرد. سه اسلاید با سه دکمه‌ی
+        # یکسانِ تلفن، همان «المان تکراری» است — و چون هر بار فقط یکی
+        # دیده می‌شود، تکرارش هیچ چیزی هم به نرخ تماس اضافه نمی‌کند.
+        # اسلایدهای بعدی به قیمت همان دسته می‌برند، که کارِ خودشان است.
+        if i == 1:
+            cta = (f'<a class="slide-tel" href="tel:{PH}" data-track="call-slide">'
+                   f'{icon("i-phone")}<span>'
+                   f'<span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>'
+                   f'<span class="n num">{PHS}</span></span></a>'
+                   f'<a class="btn btn-ghost" href="{href}">مشاهده قیمت‌ها {icon("i-chev")}</a>')
+        else:
+            cta = (f'<a class="btn btn-lg" href="{href}">'
+                   f'قیمت روز {esc(sl["title"])} {icon("i-chev")}</a>')
         slides.append(f"""<article class="slide" id="s{i}"{bg}
         aria-roledescription="اسلاید" aria-label="{esc(sl['title'])}">
       <div class="container"><div class="slide-in">
         <p class="eyebrow">{esc(sl['eyebrow'])}</p>
         <{tag}>{esc(sl['title'])}<span>{esc(sl['sub'])}</span></{endtag}>
         <p class="sdesc">{esc(sl['desc'])}</p>
-        <div class="slide-cta">
-          <a class="slide-tel" href="tel:{PH}" data-track="call-slide">
-            {icon('i-phone')}
-            <span><span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>
-            <span class="n num">{PHS}</span></span>
-          </a>
-          <a class="btn btn-ghost" href="{href}">مشاهده قیمت‌ها {icon('i-chev')}</a>
-        </div>
+        <div class="slide-cta">{cta}</div>
       </div></div>
     </article>""")
         dots.append(f'<a href="#s{i}"><span class="vh">اسلاید {fa(i)}</span></a>')
@@ -612,7 +618,7 @@ def build_index():
           بستگی دارد</b> و کارشناس فروش آن را در همان تماس اعلام می‌کند.</p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
+          <span><span class="l">قیمت قطعی همین حالا، تلفنی</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -646,15 +652,11 @@ def build_index():
 
 {callband()}
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div><h2>قیمت به تفکیک دسته</h2>
-          <div class="sub">نُه دسته‌ی فعال، با بازه‌ی قیمت و واحد فروش هر کدام</div></div>
-      </div>
-      <div class="catgrid">{''.join(cards)}</div>
-    </div>
-  </section>
+  <!-- بخش «قیمت به تفکیک دسته» حذف شد: تابلوی قیمت بالای همین صفحه
+       عیناً همان نُه دسته را با همان بازه‌ی قیمت نشان می‌دهد. دو فهرست
+       یکسان در یک صفحه، هم صفحه را بلند می‌کند هم کاربر را مردد که
+       فرقشان چیست. فهرست کامل دسته‌ها صفحه‌ی /category/ خودش را دارد. -->
+
 
   <section class="section alt">
     <div class="container">
@@ -774,7 +776,7 @@ def build_price():
           <b>یک تماس، قیمت قطعی و زمان تحویل.</b></p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
+          <span><span class="l">قیمت قطعی همین حالا، تلفنی</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -856,7 +858,7 @@ def build_category(key):
           <b>قیمت قطعی را در یک تماس بگیرید.</b></p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
+          <span><span class="l">قیمت قطعی همین حالا، تلفنی</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -1015,7 +1017,7 @@ def build_product(key, row, idx):
           قیمت بالا مبنای روز است و با تناژ و مقصد بار نهایی می‌شود.</p>
         <a class="tel" href="tel:{PH}" data-track="call-product">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
+          <span><span class="l">قیمت قطعی همین حالا، تلفنی</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
