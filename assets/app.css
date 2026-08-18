@@ -1,0 +1,808 @@
+/* ==========================================================================
+   سپاهان فلز — سیستم طراحی نسخه ۵
+   --------------------------------------------------------------------------
+   مخاطب: خریدار +۴۰ سال (پیمانکار، باغدار، خریدار پروژه، دلال).
+   کار صفحه: یک کار — گرفتن تماس روی 021-91326030.
+   موضع: مرجع قیمت صنایع مفتولی.
+
+   چهار قانون که هیچ‌جا شکسته نمی‌شود:
+   1. قرمز برند فقط و فقط معنی «تماس» دارد. هیچ عنوان، هیچ لینک، هیچ آیکون
+      تزئینی قرمز نیست. یک رنگ، یک معنی.
+   2. متن پایه ۱۸px دسکتاپ / ۱۷px موبایل. کنتراست متن ثانویه حداقل ۷:۱.
+      مخاطب +۴۰ سال است؛ ۱۵px «ظریف» نیست، نخواندنی است.
+   3. هیچ ناحیه لمس زیر ۴۸px. فاصله بین دو ناحیه لمس حداقل ۸px.
+   4. یک خانواده فونت (استعداد)، سلسله‌مراتب فقط با وزن و اندازه.
+      اعداد همیشه tabular و ltr — ستون قیمت نباید بلرزد.
+   ========================================================================== */
+
+/* ---------- فونت: استعداد، لوکال، بدون اینترنت هم رندر می‌شود ---------- */
+@font-face{font-family:Estedad;font-display:swap;font-weight:400;
+  src:url('fonts/Estedad-Regular.woff2') format('woff2')}
+@font-face{font-family:Estedad;font-display:swap;font-weight:500;
+  src:url('fonts/Estedad-Medium.woff2') format('woff2')}
+@font-face{font-family:Estedad;font-display:swap;font-weight:600;
+  src:url('fonts/Estedad-SemiBold.woff2') format('woff2')}
+@font-face{font-family:Estedad;font-display:swap;font-weight:700;
+  src:url('fonts/Estedad-Bold.woff2') format('woff2')}
+@font-face{font-family:Estedad;font-display:swap;font-weight:800;
+  src:url('fonts/Estedad-ExtraBold.woff2') format('woff2')}
+@font-face{font-family:Estedad;font-display:swap;font-weight:900;
+  src:url('fonts/Estedad-Black.woff2') format('woff2')}
+
+:root{
+  /* ---- رنگ ---- */
+  --board:      #0E2436;   /* تابلوی قیمت — سرمه‌ای فولادی */
+  --board-2:    #16344C;
+  --board-line: #21455F;
+  --steel:      #16324F;   /* سرصفحه، پاصفحه، عنوان */
+  --steel-2:    #1F4468;
+
+  --ink:        #0B1220;   /* متن اصلی — 17.4:1 روی سفید */
+  --ink-2:      #3A4757;   /* متن ثانویه — 9.1:1 (قبلاً 4A5568 بود) */
+  --ink-3:      #59677A;   /* کم‌اهمیت — 5.6:1، فقط برچسب کوتاه */
+
+  --brand:      #B42332;   /* فقط «تماس» */
+  --brand-dark: #8E1A26;
+  --brand-soft: #FEF3F4;
+
+  --up:         #0A6E44;
+  --down:       #B42332;
+  --fresh:      #B4770F;   /* فقط نشان «بروزرسانی امروز» */
+  --fresh-soft: #FDF6E7;
+
+  --bg:         #FFFFFF;
+  --surface:    #F5F7FA;
+  --surface-2:  #EAEFF5;
+  --line:       #DCE3EB;
+  --line-2:     #C2CDDA;
+
+  /* ---- فاصله ۴/۸ ---- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+
+  /* ---- تایپوگرافی ---- */
+  --t-xs:15px; --t-sm:16px; --t-base:18px; --t-lg:20px;
+  --t-xl:24px; --t-2xl:29px; --t-3xl:36px; --t-4xl:46px;
+
+  --radius:8px;
+  --radius-lg:12px;
+  --ring:0 0 0 3px #fff, 0 0 0 6px var(--steel);
+  --sh-1:0 1px 2px rgba(11,18,32,.05), 0 1px 3px rgba(11,18,32,.06);
+  --sh-2:0 6px 18px rgba(11,18,32,.09);
+  --sh-board:0 12px 34px rgba(14,36,54,.22);
+
+  --container:1300px;
+}
+
+/* ---------- پایه ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important; transition-duration:.001ms !important}
+}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:Estedad, Tahoma, "Segoe UI", sans-serif;
+  font-size:var(--t-base); line-height:1.85; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; height:auto; display:block}
+a{color:inherit; text-decoration:none}
+h1,h2,h3,h4{margin:0; line-height:1.42; font-weight:800; color:var(--steel);
+  text-wrap:balance; letter-spacing:-.01em}
+p{margin:0}
+ul{margin:0; padding:0; list-style:none}
+button{font:inherit; cursor:pointer}
+table{border-collapse:collapse}
+.container{max-width:var(--container); margin-inline:auto; padding-inline:var(--s5)}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* اعداد: همیشه tabular و ltr. ستون قیمت نمی‌لرزد و شماره تلفن در RTL
+   معکوس نمی‌شود. این تنها جایی است که جهت متن را دستی می‌گیریم. */
+.num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
+  direction:ltr; unicode-bidi:isolate; display:inline-block}
+
+:focus-visible{outline:3px solid var(--steel); outline-offset:3px; border-radius:4px}
+
+/* fixed + top منفی، نه inset افقی منفی: در RTL یک offset افقی منفی
+   scrollWidth را بزرگ می‌کند و کل صفحه اسکرول افقی می‌گیرد. */
+.skip{position:fixed; inset-inline-start:var(--s4); top:-120px; z-index:999;
+  background:var(--steel); color:#fff; padding:var(--s3) var(--s5); font-weight:600;
+  border-radius:0 0 var(--radius) var(--radius)}
+.skip:focus{top:0}
+
+/* ==========================================================================
+   نوار اعلام پروتوتایپ
+   ========================================================================== */
+.pv-strip{background:var(--board); color:#B9CBDA; font-size:var(--t-xs);
+  border-bottom:2px solid var(--brand)}
+.pv-strip .container{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s4); min-height:48px; flex-wrap:wrap}
+.pv-strip a{color:#fff; text-decoration:underline; text-underline-offset:3px;
+  display:inline-block; padding-block:var(--s3)}
+.pv-strip .dotp{width:8px;height:8px;border-radius:50%;background:var(--brand);
+  display:inline-block; margin-inline-end:var(--s2)}
+
+/* ==========================================================================
+   ۱. نوار خدماتی
+   ========================================================================== */
+.utilbar{background:var(--steel); color:#D6E2EF; font-size:var(--t-sm)}
+.utilbar .container{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s4); min-height:48px}
+.utilbar ul{display:flex; gap:var(--s5); flex-wrap:wrap}
+.utilbar li{display:flex; align-items:center; gap:var(--s2)}
+.utilbar a{display:inline-flex; align-items:center; gap:var(--s2); min-height:48px}
+.utilbar a:hover{color:#fff; text-decoration:underline; text-underline-offset:3px}
+.utilbar svg{width:18px; height:18px; flex:none; opacity:.9}
+
+/* ==========================================================================
+   ۲. سرصفحه — بلوک تلفن بزرگ‌ترین عنصر صفحه است
+   ========================================================================== */
+.masthead{background:#fff; border-bottom:1px solid var(--line);
+  position:relative; z-index:40}
+.masthead .container{display:grid; grid-template-columns:auto 1fr auto;
+  align-items:center; gap:var(--s5); padding-block:var(--s4)}
+
+.brand{display:flex; align-items:center; gap:var(--s3); min-height:56px}
+.brand .mark{width:54px; height:54px; flex:none}
+.brand .name{font-weight:900; font-size:var(--t-xl); color:var(--steel);
+  line-height:1.15; white-space:nowrap; letter-spacing:-.02em}
+.brand .sub{font-size:var(--t-xs); color:var(--ink-2); font-weight:500}
+
+.search{position:relative; max-width:520px; width:100%}
+/* padding و موقعیت دکمه هر دو منطقی‌اند. با `padding:0 52px 0 16px` فاصله
+   در RTL سمت راست می‌افتد و دکمه که سمت چپ است روی placeholder می‌نشیند. */
+.search input{width:100%; height:58px;
+  padding-inline-start:var(--s4); padding-inline-end:56px;
+  border:1.5px solid var(--line-2); border-radius:var(--radius);
+  font:inherit; font-size:var(--t-base); background:var(--surface); color:var(--ink)}
+.search input::placeholder{color:var(--ink-3)}
+.search input:focus{background:#fff; border-color:var(--steel); outline:none;
+  box-shadow:0 0 0 3px rgba(22,50,79,.18)}
+.search button{position:absolute; inset-inline-end:6px; top:6px;
+  width:46px; height:46px; border:0; border-radius:var(--radius);
+  background:transparent; color:var(--steel); display:grid; place-items:center}
+.search button svg{width:23px;height:23px}
+
+/* ★ بلوک تماس سرصفحه */
+.callbox{display:flex; align-items:center; gap:var(--s3);
+  border:2px solid var(--brand); border-radius:var(--radius-lg);
+  background:var(--brand-soft); padding:var(--s3) var(--s5);
+  min-height:82px; transition:background .18s ease, border-color .18s ease}
+.callbox:hover{background:#fff; border-color:var(--brand-dark)}
+.callbox .icon{width:46px; height:46px; flex:none; border-radius:50%;
+  background:var(--brand); color:#fff; display:grid; place-items:center}
+.callbox .icon svg{width:24px; height:24px}
+.callbox .label{font-size:var(--t-xs); color:var(--brand-dark); font-weight:600;
+  display:block; line-height:1.4}
+.callbox .number{font-size:var(--t-3xl); font-weight:900; color:var(--brand-dark);
+  display:block; line-height:1.1; letter-spacing:-.015em}
+.callbox .hint{font-size:var(--t-xs); color:var(--ink-2); line-height:1.4; display:block}
+
+/* ==========================================================================
+   ۳. منوی اصلی
+   ========================================================================== */
+.mainnav{background:#fff; border-bottom:2px solid var(--steel);
+  position:sticky; top:0; z-index:30}
+.mainnav .container{display:flex; align-items:center; gap:var(--s3)}
+.mainnav .burger{display:none}
+.nav-scroll{display:flex; align-items:center; gap:var(--s1); flex:1;
+  overflow-x:auto; scrollbar-width:thin}
+.nav-scroll a{display:inline-flex; align-items:center; min-height:56px;
+  padding:0 var(--s4); font-size:var(--t-sm); font-weight:600; color:var(--steel);
+  white-space:nowrap; border-bottom:3px solid transparent}
+.nav-scroll a:hover{background:var(--surface); border-bottom-color:var(--line-2)}
+.nav-scroll a[aria-current="page"]{border-bottom-color:var(--brand); color:var(--brand-dark)}
+.nav-scroll .spacer{flex:1}
+.nav-call{display:none}
+
+/* ==========================================================================
+   ۴. ★ نوار تولیدکننده — تنها تفاوتی که رقیب نمی‌تواند کپی کند
+   ========================================================================== */
+.factorybar{background:var(--surface); border-bottom:1px solid var(--line)}
+.factorybar .container{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s5); padding-block:var(--s3); flex-wrap:wrap}
+.factorybar .lead{display:flex; align-items:center; gap:var(--s3)}
+.factorybar .lead > svg{width:32px; height:32px; color:var(--steel); flex:none}
+.factorybar .t{display:block; font-weight:800; color:var(--steel); font-size:var(--t-base);
+  line-height:1.4}
+.factorybar .s{display:block; font-size:var(--t-xs); color:var(--ink-2); line-height:1.5}
+.factorybar ul{display:flex; gap:var(--s5); flex-wrap:wrap}
+.factorybar li{display:flex; flex-direction:column; gap:2px;
+  border-inline-start:2px solid var(--line-2); padding-inline-start:var(--s4)}
+.factorybar .k{font-size:var(--t-xs); color:var(--ink-2)}
+.factorybar .v{font-size:var(--t-lg); font-weight:800; color:var(--steel); line-height:1.2}
+
+/* ==========================================================================
+   ۵. ★★ تابلوی قیمت — امضای طراحی
+   یک پنل فولادی تیره که مثل تابلوی بورس رفتار می‌کند. رقبا جدول وردپرسی
+   دارند؛ این چیزی است که خریدار از آن اسکرین‌شات می‌گیرد و می‌فرستد.
+   ========================================================================== */
+.board{background:var(--board); color:#fff; padding-block:var(--s7) var(--s6);
+  position:relative; overflow:hidden}
+/* بافت توری — خود محصول، نه تزئین تصادفی */
+.board::before{content:""; position:absolute; inset:0; opacity:.16;
+  background-image:
+    linear-gradient(var(--board-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--board-line) 1px, transparent 1px);
+  background-size:34px 34px; pointer-events:none}
+.board > .container{position:relative}
+.board-head{display:flex; justify-content:space-between; align-items:flex-end;
+  gap:var(--s5); flex-wrap:wrap; margin-bottom:var(--s6)}
+.board h1{color:#fff; font-size:var(--t-3xl); font-weight:900; max-width:20ch;
+  line-height:1.3; letter-spacing:-.02em}
+.board h1 span{color:#8FB6D6; display:block; font-weight:700}
+.board .lede{color:#B9CBDA; font-size:var(--t-lg); margin-top:var(--s3); max-width:56ch;
+  line-height:1.7}
+
+.stamp{display:inline-flex; align-items:center; gap:var(--s2); flex:none;
+  background:var(--fresh-soft); color:#6B4708; border:1px solid #E8CD94;
+  border-radius:999px; padding:var(--s2) var(--s4); font-size:var(--t-xs);
+  font-weight:700; white-space:nowrap}
+.stamp .dot{width:9px; height:9px; border-radius:50%; background:var(--fresh);
+  flex:none; box-shadow:0 0 0 3px rgba(180,119,15,.22)}
+
+/* شبکه شاخص دسته‌ها */
+.ixgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--s3)}
+.ixgrid.ix-4{grid-template-columns:repeat(4,1fr)}
+.ixgrid.ix-3{grid-template-columns:repeat(3,1fr)}
+.catjump{margin-top:var(--s7)}
+.chiprow{display:flex; flex-wrap:wrap; gap:var(--s2); justify-content:flex-start}
+.spectable.narrow{max-width:640px}
+.tnote{font-size:var(--t-sm); color:var(--ink-2)}
+.ix{background:var(--board-2); border:1px solid var(--board-line);
+  border-radius:var(--radius); padding:var(--s4); display:flex; flex-direction:column;
+  gap:var(--s2); min-height:132px; transition:border-color .18s ease, background .18s ease}
+.ix:hover{background:#1B3D57; border-color:#3C6C8E}
+.ix .k{font-size:var(--t-xs); color:#9FBBD1; font-weight:600; line-height:1.4}
+.ix .v{font-size:var(--t-xl); font-weight:900; color:#fff; line-height:1.15;
+  letter-spacing:-.02em}
+.ix .u{font-size:var(--t-xs); font-weight:500; color:#8FB6D6}
+.ix .d{display:flex; align-items:center; justify-content:space-between; gap:var(--s2);
+  margin-top:auto}
+.ix .range{font-size:var(--t-xs); color:#8FB6D6}
+
+.delta{display:inline-flex; align-items:center; gap:4px; font-weight:800;
+  font-size:var(--t-sm); white-space:nowrap; border-radius:5px; padding:2px 7px}
+.delta svg{width:13px; height:13px}
+.delta.up{color:#5FD9A4; background:rgba(10,110,68,.24)}
+.delta.down{color:#FF9AA4; background:rgba(180,35,50,.26)}
+.delta.flat{color:#A9C2D6; background:rgba(255,255,255,.09)}
+/* روی زمینه روشن */
+.on-light .delta.up{color:#075B38; background:#E4F4EC}
+.on-light .delta.down{color:#8E1A26; background:#FCEBEC}
+.on-light .delta.flat{color:#44546A; background:var(--surface-2)}
+
+/* خط تماس روی خود تابلو */
+.board-call{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s5); flex-wrap:wrap; margin-top:var(--s5);
+  background:var(--brand); border-radius:var(--radius-lg); padding:var(--s4) var(--s5)}
+.board-call .say{font-size:var(--t-base); font-weight:600; color:#FFE1E4; max-width:52ch;
+  line-height:1.6}
+.board-call .say b{color:#fff; font-weight:800}
+.board-call .tel{display:flex; align-items:center; gap:var(--s3); background:#fff;
+  border-radius:var(--radius); padding:var(--s3) var(--s5); min-height:72px}
+.board-call .tel svg{width:28px; height:28px; color:var(--brand); flex:none}
+.board-call .tel .l{display:block; font-size:var(--t-xs); color:var(--ink-2); font-weight:600}
+.board-call .tel .n{display:block; font-size:var(--t-2xl); font-weight:900;
+  color:var(--brand-dark); line-height:1.15; letter-spacing:-.015em}
+
+/* ==========================================================================
+   ۶. سیاست قیمت
+   ========================================================================== */
+.policy{display:flex; gap:var(--s4); align-items:flex-start; background:var(--surface);
+  border:1px solid var(--line); border-inline-start:4px solid var(--steel);
+  border-radius:var(--radius); padding:var(--s4) var(--s5); margin-bottom:var(--s6)}
+.policy > svg{width:26px; height:26px; color:var(--steel); flex:none; margin-top:3px}
+.policy .t{font-weight:800; color:var(--steel); font-size:var(--t-base)}
+.policy .d{font-size:var(--t-sm); color:var(--ink-2); line-height:1.75; margin-top:var(--s1)}
+
+/* ==========================================================================
+   ۷. جدول قیمت
+   ========================================================================== */
+.section{padding-block:var(--s7)}
+.section.tight{padding-block:var(--s6)}
+.section.alt{background:var(--surface); border-block:1px solid var(--line)}
+.section-head{display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--s4); margin-bottom:var(--s5); flex-wrap:wrap}
+.section-head h2{font-size:var(--t-2xl)}
+.section-head .sub{font-size:var(--t-sm); color:var(--ink-2); margin-top:var(--s1)}
+.section-head a{color:var(--steel); font-size:var(--t-sm); font-weight:700;
+  display:inline-flex; align-items:center; gap:var(--s2); min-height:48px}
+.section-head a:hover{text-decoration:underline; text-underline-offset:4px}
+.section-head a svg{width:18px;height:18px}
+
+/* اسکرول افقی فقط روی خود جدول، نه روی صفحه. هرگز overflow:hidden — چون
+   ستون آخر «استعلام تلفنی» است و بی‌صدا بریده‌شدنش یعنی از دست دادن تماس.
+   ستون‌های کم‌اولویت (.spec-lo) هم زیر ۱۶۰۰px پنهان می‌شوند تا اصلاً کار به
+   اسکرول نکشد. */
+.ptable-wrap{overflow-x:auto; overscroll-behavior-x:contain; padding-bottom:var(--s2)}
+.ptable{width:100%; min-width:920px; font-size:var(--t-sm)}
+@media (max-width:1600px){.ptable .spec-lo{display:none}}
+.ptable caption{text-align:start; font-size:var(--t-sm); color:var(--ink-2);
+  padding-bottom:var(--s3)}
+.ptable th{background:var(--steel); color:#fff; font-size:var(--t-xs); font-weight:700;
+  text-align:start; padding:var(--s3) var(--s3); white-space:nowrap; line-height:1.4}
+.ptable th:first-child{border-start-start-radius:var(--radius)}
+.ptable th:last-child{border-start-end-radius:var(--radius)}
+.ptable td{padding:var(--s3); border-bottom:1px solid var(--line); vertical-align:middle;
+  font-size:var(--t-sm)}
+.ptable tbody tr:nth-child(even){background:#FAFCFE}
+.ptable tbody tr:hover{background:var(--fresh-soft)}
+.ptable .c{text-align:center}
+
+.p-name a{font-weight:700; color:var(--steel); font-size:var(--t-base); line-height:1.5;
+  display:flex; align-items:center; min-height:44px}
+.p-name a:hover{text-decoration:underline; text-underline-offset:3px}
+.p-meta{font-size:var(--t-xs); color:var(--ink-2); margin-top:3px; line-height:1.6}
+.mine{display:inline-flex; align-items:center; gap:4px; background:#E9F2FA;
+  color:var(--steel); border-radius:5px; padding:1px 7px; font-weight:700; font-size:13px}
+.mine svg{width:13px;height:13px}
+
+.cell-price{white-space:nowrap}
+.p-price{font-size:var(--t-xl); font-weight:900; color:var(--ink); letter-spacing:-.02em}
+.riyal{font-size:var(--t-xs); font-weight:600; color:var(--ink-2);
+  margin-inline-start:5px}
+.toman{display:block; font-size:13px; color:var(--ink-3); margin-top:1px}
+
+.stock{display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:700;
+  border-radius:5px; padding:1px 7px}
+.stock::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.stock-in{color:#075B38; background:#E4F4EC}
+.stock-low{color:#8A5A05; background:var(--fresh-soft)}
+.stock-out{color:#5A2B30; background:#F3E7E8}
+
+.review{display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:700;
+  border-radius:5px; padding:1px 7px; color:#8A5A05; background:var(--fresh-soft);
+  border:1px solid #E8CD94}
+.review::before{content:"!"; font-weight:900}
+
+.rowactions{display:flex; gap:var(--s2); justify-content:center}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:var(--s2);
+  min-height:48px; padding:0 var(--s4); border-radius:var(--radius);
+  font-size:var(--t-sm); font-weight:700; white-space:nowrap; border:1.5px solid transparent;
+  transition:background .16s ease, border-color .16s ease, color .16s ease}
+.btn svg{width:19px; height:19px; flex:none}
+.btn-call{background:var(--brand); color:#fff}
+.btn-call:hover{background:var(--brand-dark)}
+.btn-ghost{background:#fff; color:var(--steel); border-color:var(--line-2)}
+.btn-ghost:hover{background:var(--surface); border-color:var(--steel)}
+.btn-icon{width:48px; padding:0}
+.btn-lg{min-height:62px; font-size:var(--t-lg); padding:0 var(--s6);
+  border-radius:var(--radius-lg)}
+.btn-block{width:100%}
+
+.tfoot{display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+  padding-top:var(--s4); flex-wrap:wrap}
+.tfoot p{font-size:var(--t-sm); color:var(--ink-2); margin:0}
+
+/* ==========================================================================
+   ۸. باند تماس
+   ========================================================================== */
+.callband{background:var(--steel); color:#fff; padding-block:var(--s7)}
+.callband .container{display:grid; grid-template-columns:1.15fr 1fr; gap:var(--s7);
+  align-items:center}
+.callband h2{color:#fff; font-size:var(--t-2xl); line-height:1.45}
+.callband p{color:#C7D7E6; font-size:var(--t-base); margin-top:var(--s3); max-width:58ch;
+  line-height:1.75}
+.callband .hours{display:flex; align-items:center; gap:var(--s2); margin-top:var(--s4);
+  font-size:var(--t-sm); color:#C7D7E6}
+.callband .hours svg{width:19px;height:19px}
+.lines{display:grid; gap:var(--s3)}
+.line{background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.18);
+  border-radius:var(--radius-lg); padding:var(--s4) var(--s5); display:block;
+  min-height:96px; transition:background .18s ease, border-color .18s ease}
+.line:hover{background:rgba(255,255,255,.13); border-color:#fff}
+.line.primary{background:var(--brand); border-color:var(--brand)}
+.line.primary:hover{background:var(--brand-dark)}
+.line .label{font-size:var(--t-xs); color:#B7CADC; font-weight:600}
+.line.primary .label{color:#FFD9DD}
+.line .number{font-size:var(--t-3xl); font-weight:900; color:#fff; line-height:1.15;
+  display:block; letter-spacing:-.02em}
+.line .who{font-size:var(--t-xs); color:#C7D7E6}
+.line.primary .who{color:#FFE1E4}
+
+/* ==========================================================================
+   ۹. کارت دسته
+   ========================================================================== */
+.catgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:var(--s3)}
+.catcard{background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-lg);
+  padding:var(--s4); display:flex; flex-direction:column; gap:var(--s2); min-height:150px;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease}
+.catcard:hover{border-color:var(--steel); box-shadow:var(--sh-2); transform:translateY(-2px)}
+.catcard .t{font-weight:800; color:var(--steel); font-size:var(--t-base); line-height:1.4}
+.catcard .n{font-size:var(--t-xs); color:var(--ink-2)}
+.catcard .pr{margin-top:auto; font-size:var(--t-sm); color:var(--ink-2)}
+.catcard .pr b{color:var(--ink); font-weight:800; font-size:var(--t-base)}
+.catcard .u{font-size:13px; color:var(--ink-3)}
+
+/* ==========================================================================
+   ۱۰. اعتماد
+   ========================================================================== */
+.trustgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s5)}
+.trustitem{display:flex; gap:var(--s3); align-items:flex-start}
+.trustitem > svg{width:30px; height:30px; color:var(--steel); flex:none; margin-top:2px}
+.trustitem .t{font-weight:800; color:var(--steel); font-size:var(--t-base)}
+.trustitem .d{font-size:var(--t-sm); color:var(--ink-2); line-height:1.7}
+
+/* اعداد قابل اثبات کارخانه */
+.factnums{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s3);
+  margin-top:var(--s5)}
+.factnum{background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-lg);
+  padding:var(--s4) var(--s5)}
+.factnum .v{font-size:var(--t-3xl); font-weight:900; color:var(--steel); line-height:1.1;
+  letter-spacing:-.03em}
+.factnum .k{font-size:var(--t-sm); color:var(--ink-2); margin-top:var(--s1); line-height:1.5}
+
+/* ==========================================================================
+   ۱۱. فرم درخواست تماس
+   ========================================================================== */
+.callback{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7); align-items:center;
+  background:var(--surface); border:1.5px solid var(--line); border-radius:var(--radius-lg);
+  padding:var(--s6)}
+.callback h3{font-size:var(--t-xl)}
+.callback p{color:var(--ink-2); font-size:var(--t-sm); margin-top:var(--s2); line-height:1.75}
+.callback .f{margin-bottom:var(--s4)}
+.callback label{display:block; font-size:var(--t-sm); font-weight:700; color:var(--steel);
+  margin-bottom:var(--s2)}
+.callback input{width:100%; height:58px; padding-inline:var(--s4);
+  border:1.5px solid var(--line-2); border-radius:var(--radius); font:inherit;
+  font-size:var(--t-base); background:#fff; color:var(--ink)}
+.callback input:focus{border-color:var(--steel); outline:none;
+  box-shadow:0 0 0 3px rgba(22,50,79,.18)}
+
+/* ==========================================================================
+   ۱۲. محتوای مقاله‌ای (صفحه دسته و محصول)
+   ========================================================================== */
+.prose{max-width:76ch}
+.prose h2{font-size:var(--t-2xl); margin-top:var(--s7); margin-bottom:var(--s4)}
+.prose h2:first-child{margin-top:0}
+.prose h3{font-size:var(--t-lg); margin-top:var(--s5); margin-bottom:var(--s3);
+  color:var(--steel-2)}
+.prose p{margin-bottom:var(--s4); color:var(--ink); line-height:1.9}
+.prose ul.bul{margin-bottom:var(--s4)}
+.prose ul.bul li{position:relative; padding-inline-start:var(--s5); margin-bottom:var(--s2);
+  line-height:1.85}
+.prose ul.bul li::before{content:""; position:absolute; inset-inline-start:6px; top:13px;
+  width:7px; height:7px; border-radius:2px; background:var(--steel)}
+.prose strong{font-weight:800; color:var(--steel)}
+
+.tablescroll{overflow-x:auto; overscroll-behavior-x:contain; margin-bottom:var(--s5)}
+.spectable{width:100%; font-size:var(--t-sm)}
+.spectable th,.spectable td{white-space:nowrap}
+.spectable td:first-child,.spectable th:first-child{white-space:normal; min-width:200px}
+.spectable caption{text-align:start; font-weight:800; color:var(--steel);
+  font-size:var(--t-lg); padding-bottom:var(--s3)}
+.spectable th{background:var(--surface-2); color:var(--steel); text-align:start;
+  padding:var(--s3); font-weight:700; border:1px solid var(--line)}
+.spectable td{padding:var(--s3); border:1px solid var(--line)}
+.spectable tbody tr:nth-child(even){background:var(--surface)}
+/* لینک درون سلول و درون فهرست، ناحیه لمس واقعی می‌خواهد — این‌ها متن روان
+   نیستند، مقصد کلیک‌اند. */
+.spectable td a,.prose ul.bul li > a{display:inline-flex; align-items:center;
+  min-height:44px; font-weight:700; color:var(--steel-2);
+  text-decoration:underline; text-underline-offset:4px}
+.spectable td a:hover,.prose ul.bul li > a:hover{color:var(--brand-dark)}
+
+/* هشدار / نکته */
+.callout{border:1.5px solid var(--line); border-inline-start:4px solid var(--fresh);
+  background:var(--fresh-soft); border-radius:var(--radius); padding:var(--s4) var(--s5);
+  margin-bottom:var(--s5)}
+.callout .t{font-weight:800; color:#6B4708; margin-bottom:var(--s1)}
+.callout p{font-size:var(--t-sm); color:#4A3A1C; line-height:1.8; margin:0}
+
+/* FAQ — بدون جاوااسکریپت */
+.faq{border:1.5px solid var(--line); border-radius:var(--radius-lg); overflow:hidden}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:last-child{border-bottom:0}
+.faq summary{padding:var(--s4) var(--s5); font-weight:700; color:var(--steel);
+  cursor:pointer; font-size:var(--t-base); min-height:60px; display:flex;
+  align-items:center; gap:var(--s3); list-style:none; background:#fff}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+"; font-size:var(--t-xl); font-weight:800;
+  color:var(--brand); width:24px; flex:none; line-height:1}
+.faq details[open] summary::before{content:"−"}
+.faq summary:hover{background:var(--surface)}
+.faq .a{padding:0 var(--s5) var(--s5) calc(var(--s5) + 24px); color:var(--ink-2);
+  font-size:var(--t-sm); line-height:1.85}
+
+/* ==========================================================================
+   ۱۳. مسیر راهنما
+   ========================================================================== */
+.crumb{background:var(--surface); border-bottom:1px solid var(--line);
+  font-size:var(--t-sm)}
+.crumb ol{display:flex; align-items:center; gap:var(--s2); flex-wrap:wrap;
+  min-height:52px; list-style:none; margin:0; padding:0}
+.crumb li{display:flex; align-items:center; gap:var(--s2); color:var(--ink-2)}
+.crumb a{color:var(--steel); font-weight:600; display:inline-flex;
+  align-items:center; min-height:44px}
+.crumb a:hover{text-decoration:underline; text-underline-offset:3px}
+.crumb .sep{color:var(--ink-3)}
+.crumb [aria-current]{color:var(--ink); font-weight:700}
+
+/* ==========================================================================
+   ۱۴. پاصفحه
+   ========================================================================== */
+footer.site{background:var(--board); color:#B9CBDA; padding-block:var(--s7) var(--s5);
+  margin-top:var(--s8); font-size:var(--t-sm)}
+footer.site h3{color:#fff; font-size:var(--t-base); margin-bottom:var(--s4)}
+.fgrid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:var(--s7)}
+/* بدون min-width:0 ستون گرید به عرض محتوای درونش کش می‌آید و در ۳۶۰px سرریز می‌کند */
+.fgrid > *{min-width:0}
+.fcall .number{white-space:nowrap}
+footer.site ul li{margin-bottom:var(--s2)}
+footer.site a{display:inline-flex; align-items:center; gap:var(--s2); min-height:48px}
+footer.site a:hover{color:#fff; text-decoration:underline; text-underline-offset:3px}
+footer.site svg{width:18px;height:18px;flex:none}
+.fcall{display:block; background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.18);
+  border-radius:var(--radius); padding:var(--s3) var(--s4); margin-bottom:var(--s3);
+  min-height:76px}
+.fcall:hover{background:rgba(255,255,255,.13)}
+.fcall .label{font-size:var(--t-xs); color:#9FBBD1; display:block}
+.fcall .number{font-size:var(--t-xl); font-weight:900; color:#fff; display:block;
+  line-height:1.2; letter-spacing:-.02em}
+.socials{display:flex; gap:var(--s2); margin-top:var(--s4)}
+.socials a{width:48px; height:48px; border-radius:var(--radius); justify-content:center;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16)}
+.socials svg{width:21px;height:21px}
+.newsletter{display:flex; gap:var(--s2)}
+.newsletter input{flex:1; min-width:0; height:52px; padding-inline:var(--s3);
+  border:1.5px solid rgba(255,255,255,.24); border-radius:var(--radius);
+  background:rgba(255,255,255,.08); color:#fff; font:inherit; font-size:var(--t-sm)}
+.newsletter input::placeholder{color:#8FA9BF}
+.newsletter button{height:52px; border:0; border-radius:var(--radius);
+  background:var(--brand); color:#fff; padding:0 var(--s5); font-weight:700}
+.newsletter button:hover{background:var(--brand-dark)}
+.copyright{border-top:1px solid rgba(255,255,255,.14); margin-top:var(--s6);
+  padding-top:var(--s4); text-align:center; color:#8FA9BF; font-size:var(--t-xs)}
+
+/* ==========================================================================
+   ۱۵. داک تماس موبایل — هیچ رقیبی ندارد
+   ========================================================================== */
+.dock{display:none}
+
+/* ==========================================================================
+   ریسپانسیو
+   ========================================================================== */
+@media (max-width:1200px){
+  .ixgrid,.ixgrid.ix-4{grid-template-columns:repeat(3,1fr)}
+  .catgrid{grid-template-columns:repeat(3,1fr)}
+  .factnums{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:1024px){
+  :root{--t-3xl:31px; --t-2xl:25px}
+  .masthead .container{grid-template-columns:auto 1fr; row-gap:var(--s3)}
+  .search{grid-column:1/-1; max-width:none; order:3}
+  .callbox{padding:var(--s3) var(--s4); min-height:72px}
+  .callbox .number{font-size:var(--t-xl)}
+  .callbox .hint{display:none}
+  .callband .container{grid-template-columns:1fr; gap:var(--s5)}
+  .callback{grid-template-columns:1fr; gap:var(--s5); padding:var(--s5)}
+  .trustgrid{grid-template-columns:repeat(2,1fr)}
+  .fgrid{grid-template-columns:1fr 1fr; gap:var(--s5)}
+
+  /* جدول → کارت. دلال روی موبایل قیمت چک می‌کند؛ رقبا اینجا ناخوانا می‌شوند. */
+  .ptable-wrap{overflow-x:visible}
+  .ptable thead{display:none}
+  /* min-width دسکتاپ باید اینجا برداشته شود، وگرنه کارت‌ها صفحه را افقی می‌کشند */
+  .ptable{min-width:0}
+  .ptable .spec-lo{display:flex}
+  .ptable, .ptable tbody, .ptable tr, .ptable td{display:block; width:100%}
+  .ptable caption{padding-bottom:var(--s3)}
+  .ptable tr{border:1.5px solid var(--line); border-radius:var(--radius-lg);
+    margin-bottom:var(--s3); padding:var(--s4); background:#fff}
+  .ptable tbody tr:nth-child(even){background:#fff}
+  .ptable td{border:0; padding:var(--s2) 0; display:flex; justify-content:space-between;
+    align-items:center; gap:var(--s4)}
+  .ptable td::before{content:attr(data-label); font-size:var(--t-xs); color:var(--ink-2);
+    font-weight:600; flex:none}
+  .ptable td.cell-name{display:block; padding-top:0; border-bottom:1px solid var(--line);
+    padding-bottom:var(--s3); margin-bottom:var(--s2)}
+  .ptable td.cell-name::before{display:none}
+  /* قیمت در حالت کارت بلوکی می‌شود؛ به‌صورت flex، «معادل تومان» سرریز می‌کرد */
+  .ptable td.cell-price{display:block; padding-block:var(--s3)}
+  .ptable td.cell-price::before{display:block; margin-bottom:2px}
+  .cell-price .toman{margin-top:2px}
+  .ptable td.cell-act{display:block; padding-top:var(--s3)}
+  .ptable td.cell-act::before{display:none}
+  .rowactions{justify-content:stretch}
+  .rowactions .btn-call{flex:1}
+}
+@media (max-width:860px){
+  :root{--t-base:17px; --t-lg:19px; --t-xl:22px; --t-2xl:23px; --t-3xl:28px}
+  .utilbar .util-left li:first-child{display:none}
+  .masthead .container{grid-template-columns:1fr auto}
+  .brand .sub{display:none}
+  .mainnav{position:static}
+  .board{padding-block:var(--s6) var(--s5)}
+  .ixgrid,.ixgrid.ix-4,.ixgrid.ix-3{grid-template-columns:repeat(2,1fr)}
+  .catgrid{grid-template-columns:repeat(2,1fr)}
+  .board-call{flex-direction:column; align-items:stretch}
+  .board-call .tel{justify-content:center}
+  .factorybar .container{flex-direction:column; align-items:flex-start}
+  .factorybar ul{gap:var(--s4)}
+  /* داک چسبان پایین — بزرگ‌ترین اهرم زنگ‌خور روی موبایل */
+  .dock{display:grid; grid-template-columns:1fr auto auto; gap:1px; position:fixed;
+    inset-inline:0; bottom:0; z-index:60; background:var(--line-2);
+    border-top:1px solid var(--line-2); box-shadow:0 -4px 16px rgba(11,18,32,.12)}
+  .dock a{display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px; background:#fff; color:var(--steel); font-size:13px; font-weight:700;
+    min-height:68px; padding:0 var(--s4)}
+  .dock a svg{width:22px;height:22px}
+  .dock .primary{background:var(--brand); color:#fff; align-items:flex-start;
+    justify-content:center; padding-inline:var(--s4)}
+  .dock .primary .l{font-size:12px; color:#FFD9DD; font-weight:600}
+  .dock .primary .n{font-size:var(--t-lg); font-weight:900; letter-spacing:-.01em}
+  body{padding-bottom:70px}
+}
+@media (max-width:640px){
+  .container{padding-inline:var(--s4)}
+  .ixgrid,.ixgrid.ix-4,.ixgrid.ix-3{grid-template-columns:1fr}
+  .catgrid{grid-template-columns:1fr}
+  .trustgrid{grid-template-columns:1fr}
+  .factnums{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr}
+  /* زیر ۶۴۰px، شماره تلفن ردیف خودش را می‌گیرد و تمام‌عرض می‌شود.
+     فشردنش کنار لوگو هم سرریز می‌ساخت و هم کوچکش می‌کرد — دقیقاً برعکس
+     کاری که این صفحه باید بکند. */
+  .masthead .container{grid-template-columns:1fr; row-gap:var(--s3)}
+  .callbox{justify-content:center; padding:var(--s3) var(--s4); min-height:68px}
+  .callbox .hint{display:none}
+  .callbox .label{font-size:13px}
+  .callbox .number{font-size:var(--t-xl); white-space:nowrap}
+  .brand .mark{width:46px; height:46px}
+  .search{display:none}
+  .board h1{font-size:var(--t-2xl)}
+  .board .lede{font-size:var(--t-base)}
+}
+
+/* ==========================================================================
+   چاپ — خریدار این جدول را چاپ می‌کند و به دفتر می‌برد
+   ========================================================================== */
+@media print{
+  .pv-strip,.utilbar,.mainnav,.search,.dock,.callback,.newsletter,.socials,
+  .board-call,.callband,.section-head a,.rowactions{display:none !important}
+  body{font-size:11pt; padding:0}
+  .board{background:#fff !important; color:#000; padding-block:0}
+  .board::before{display:none}
+  .board h1,.board h1 span,.board .lede{color:#000 !important}
+  .ix{background:#fff; border:1px solid #999; color:#000}
+  .ix .k,.ix .v,.ix .u,.ix .range{color:#000}
+  .ptable th{background:#EEE !important; color:#000 !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .ptable tr{page-break-inside:avoid}
+  a[href^="tel:"]::after{content:" (" attr(href) ")"; font-size:9pt}
+  footer.site{background:#fff; color:#000; margin-top:var(--s5)}
+  footer.site h3,.fcall .number{color:#000}
+}
+
+/* ===========================================================================
+   بنر بزرگ صفحه‌ی اصلی
+   ---------------------------------------------------------------------------
+   الگو از ahanonline: بنر تمام‌عرض، تیتر درشت، تلفن روی خودِ بنر.
+   یک تفاوت عمدی: آنجا بنر اسلایدرِ عکس محصول است و جدول قیمت را زیر خط تا
+   می‌برد. مزیت اصلی این سایت همان چیزی است که آن اسلایدر دفن می‌کند، پس
+   اینجا بنر خودش سه قیمت زنده را حمل می‌کند.
+
+   بدون جاوااسکریپت و بدون فایل تصویر — بافت پس‌زمینه با گرادیان ساخته
+   می‌شود: همان بافت توری، یعنی خودِ محصول.
+   =========================================================================== */
+.hero{position:relative; overflow:hidden; color:#fff;
+  background:
+    radial-gradient(1100px 520px at 85% -15%, #1E4A72 0%, transparent 62%),
+    linear-gradient(158deg, #16385A 0%, var(--board) 56%, #091927 100%);
+  padding-block:var(--s8) var(--s7)}
+
+/* بافت توری روی پس‌زمینه */
+.hero-mesh{position:absolute; inset:0; pointer-events:none; opacity:.20;
+  background-image:
+    linear-gradient(rgba(143,182,214,.34) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143,182,214,.34) 1px, transparent 1px);
+  background-size:38px 38px;
+  -webkit-mask-image:linear-gradient(to left, #000 15%, transparent 78%);
+          mask-image:linear-gradient(to left, #000 15%, transparent 78%)}
+
+.hero > .container{position:relative}
+.hero-grid{display:grid; grid-template-columns:1.25fr .75fr;
+  gap:var(--s8); align-items:center}
+
+/* ---- ستون متن ---- */
+.hero-eyebrow{display:inline-block; font-size:var(--t-sm); font-weight:700;
+  color:#9CC3E4; letter-spacing:.04em; margin-bottom:var(--s4);
+  padding:6px 14px; border:1px solid rgba(143,182,214,.35); border-radius:999px;
+  background:rgba(255,255,255,.08)}
+.hero h1{font-size:var(--t-4xl); font-weight:900; line-height:1.25;
+  letter-spacing:-.025em; color:#fff; margin:0}
+.hero h1 span{color:#8FB6D6}
+.hero-lede{color:#BDD0E0; font-size:var(--t-lg); line-height:1.75;
+  max-width:52ch; margin-top:var(--s4)}
+
+/* ---- تماس ---- */
+.hero-cta{display:flex; align-items:center; gap:var(--s4);
+  flex-wrap:wrap; margin-top:var(--s6)}
+.hero-tel{display:inline-flex; align-items:center; gap:var(--s3);
+  background:#fff; color:var(--ink); border-radius:var(--radius-lg);
+  padding:14px 22px; box-shadow:var(--sh-2); text-decoration:none;
+  border:2px solid transparent}
+.hero-tel svg{width:32px; height:32px; color:var(--brand); flex:none}
+.hero-tel .l{display:block; font-size:var(--t-xs); font-weight:600;
+  color:var(--ink-2)}
+.hero-tel .n{display:block; font-size:var(--t-3xl); font-weight:900;
+  color:var(--brand-dark); letter-spacing:.01em; line-height:1.2;
+  direction:ltr; text-align:right}
+.hero-tel:hover{border-color:var(--brand)}
+.hero-tel:focus-visible{outline:none; box-shadow:var(--ring)}
+.hero-alt{border-color:rgba(255,255,255,.20); color:#fff; background:rgba(255,255,255,.08);
+  padding:15px 22px; font-size:var(--t-base)}
+.hero-alt:hover{background:rgba(255,255,255,.14); border-color:#8FB6D6}
+
+/* ---- نشان‌ها ---- */
+.hero-chips{display:flex; flex-wrap:wrap; gap:var(--s3) var(--s5);
+  margin-top:var(--s6); padding:0; list-style:none}
+.hero-chips li{display:flex; align-items:center; gap:8px;
+  font-size:var(--t-sm); font-weight:600; color:#C7D9E8}
+.hero-chips svg{width:18px; height:18px; color:#5FBE8C; flex:none}
+
+/* ---- پنل قیمت ---- */
+.hero-panel{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.20);
+  border-radius:var(--radius-lg); padding:var(--s5);
+  backdrop-filter:blur(2px)}
+.hero-panel-head{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s3); margin-bottom:var(--s4); flex-wrap:wrap}
+.hero-panel .hp-t{font-size:var(--t-lg); font-weight:800; color:#fff}
+.hero-prices{display:grid; gap:var(--s3)}
+.hprice{display:grid; grid-template-columns:1fr auto; align-items:baseline;
+  gap:4px var(--s3); padding:var(--s3) var(--s4); border-radius:var(--radius);
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.13); text-decoration:none}
+.hprice:hover{background:rgba(255,255,255,.14); border-color:#8FB6D6}
+.hprice:focus-visible{outline:none; box-shadow:var(--ring)}
+.hprice .t{font-size:var(--t-base); font-weight:700; color:#fff}
+.hprice .v{font-size:var(--t-xl); font-weight:900; color:#fff;
+  grid-row:2; justify-self:start}
+.hprice .u{font-size:var(--t-xs); color:#9CC3E4; grid-row:2;
+  justify-self:end; font-weight:600}
+.hero-panel-all{display:flex; align-items:center; justify-content:center;
+  gap:6px; margin-top:var(--s4); padding:12px; border-radius:var(--radius);
+  background:#fff; color:var(--steel); font-weight:800;
+  font-size:var(--t-sm); text-decoration:none}
+.hero-panel-all svg{width:17px; height:17px}
+.hero-panel-all:hover{background:#E8F0F8}
+.hero-panel-all:focus-visible{outline:none; box-shadow:var(--ring)}
+
+/* تابلوی قیمت بلافاصله زیر بنر می‌آید؛ فاصله‌ی بالایش حذف می‌شود */
+.hero + .board{padding-block-start:var(--s7)}
+
+@media (max-width:1000px){
+  .hero{padding-block:var(--s7) var(--s6)}
+  .hero-grid{grid-template-columns:1fr; gap:var(--s6)}
+  .hero h1{font-size:var(--t-3xl)}
+  .hero-lede{max-width:none}
+  .hero-mesh{-webkit-mask-image:none; mask-image:none; opacity:.14}
+}
+@media (max-width:620px){
+  .hero-cta{gap:var(--s3)}
+  .hero-tel,.hero-alt{width:100%; justify-content:center}
+  .hero-tel .n{font-size:var(--t-2xl)}
+  .hero-chips{gap:var(--s2) var(--s4)}
+}
+
+/* ---- جمع‌وجورسازی موبایل ----
+   بنر در ۳۹۰px به ۱۲۹۳px می‌رسید و تابلوی قیمت را خیلی پایین می‌برد.
+   کارت‌های قیمت تک‌سطری می‌شوند و فاصله‌ها کم — بدون کوچک‌کردن تلفن. */
+@media (max-width:620px){
+  .hero{padding-block:var(--s6) var(--s5)}
+  .hero-lede{font-size:var(--t-base); line-height:1.65; margin-top:var(--s3)}
+  .hero-cta{margin-top:var(--s5)}
+  .hero-chips{margin-top:var(--s5); gap:var(--s2)}
+  .hero-chips li{width:100%}
+  .hero-tel{padding:12px 18px}
+  .hero-tel .l{font-size:13px; line-height:1.4}
+
+  .hero-panel{padding:var(--s4)}
+  .hprice{grid-template-columns:1fr auto; align-items:center; padding:12px var(--s3)}
+  .hprice .t{grid-row:1; font-size:var(--t-sm)}
+  .hprice .v{grid-row:1; grid-column:2; justify-self:end; font-size:var(--t-lg)}
+  .hprice .u{grid-row:2; grid-column:1/-1; justify-self:start; margin-top:2px}
+}
