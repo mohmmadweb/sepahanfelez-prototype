@@ -167,7 +167,7 @@ def masthead():
       <span>
         <span class="label">مشاوره و استعلام قیمت</span>
         <span class="number num">{PHS}</span>
-        <span class="hint">۸ خط ویژه — پاسخگویی همین حالا</span>
+        <span class="hint">۱۰ خط ویژه — پاسخگویی همین حالا</span>
       </span>
     </a>
   </div>
@@ -219,7 +219,7 @@ def callband():
     </div>
     <div class="lines">
       <a class="line primary" href="tel:{PH}" data-track="call-band">
-        <span class="label">دفتر فروش کارخانه — ۸ خط</span>
+        <span class="label">دفتر فروش کارخانه — ۱۰ خط</span>
         <span class="number num">{PHS}</span>
         <span class="who">استعلام قیمت و ثبت سفارش</span>
       </a>
@@ -233,48 +233,48 @@ def callband():
 </section>"""
 
 def footer():
-    li = "".join(f'<li><a href="c-{C.CATS[k]["slug"]}.html">قیمت {C.CATS[k]["title"]}</a></li>' for k in C.ORDER)
+    """پاصفحه‌ی جمع‌وجور.
+
+    نسخه‌ی قبلی سه ستون بلند بود و فهرست کامل ۹ دسته را تکرار می‌کرد —
+    همان فهرستی که در منوی اصلی هست. اینجا فقط چیزی می‌ماند که کسی
+    واقعاً ته صفحه دنبالش می‌گردد: راه تماس و آدرس انبارها.
+
+    آدرس‌ها عیناً از sepahanfelez.ir است؛ چیزی به آن‌ها اضافه نشده.
+    """
+    addr = "".join(
+        f'<li><span class="a-t">{esc(t)}</span>{esc(a)}</li>'
+        for t, a in C.ADDRESSES)
+    soc = "".join(
+        f'<a href="{u}" aria-label="{esc(n)} سپاهان فلز" '
+        f'rel="noopener" target="_blank">{icon(i)}</a>'
+        for i, n, u in C.SOCIALS)
     return f"""
 <footer class="site">
   <div class="container">
     <div class="fgrid">
-      <div>
-        <h3>تماس با کارخانه سپاهان فلز</h3>
+      <div class="fcol-call">
+        <h3>تماس با سپاهان فلز</h3>
         <a class="fcall" href="tel:{PH}" data-track="call-footer">
-          <span class="label">دفتر فروش — ۸ خط</span>
+          <span class="label">دفتر فروش — {C.PHONE_LINES}</span>
           <span class="number num">{PHS}</span>
         </a>
-        <a class="fcall" href="https://wa.me/{WA}">
-          <span class="label">واتساپ کارشناس فروش</span>
-          <span class="number num">{WAS}</span>
-        </a>
-        <ul>
-          <li><a href="mailto:info@sepahanfelez.ir">{icon('i-mail')} info@sepahanfelez.ir</a></li>
-          <li><a href="#">{icon('i-pin')} کارخانه: اصفهان — انبار: اصفهان و تهران</a></li>
-        </ul>
-        <div class="socials">
-          <a href="#" aria-label="اینستاگرام سپاهان فلز">{icon('i-instagram')}</a>
-          <a href="#" aria-label="تلگرام سپاهان فلز">{icon('i-telegram')}</a>
-          <a href="https://wa.me/{WA}" aria-label="واتساپ سپاهان فلز">{icon('i-whatsapp')}</a>
-        </div>
+        <p class="fmob">واتساپ و شبکه‌های اجتماعی:
+          <a href="https://wa.me/{WA}" class="num">{WAS}</a></p>
+        <div class="socials">{soc}</div>
+        <a class="fmail" href="mailto:info@sepahanfelez.ir">
+          {icon('i-mail')}info@sepahanfelez.ir</a>
       </div>
-      <div>
-        <h3>جدول‌های قیمت</h3>
-        <ul><li><a href="price.html">قیمت روز همه‌ی ۷۰ کد کالا</a></li>{li}</ul>
-      </div>
-      <div>
-        <h3>خبرنامه قیمت</h3>
-        <p>شماره موبایل خود را وارد کنید تا تغییرات قیمت را پیامک کنیم.</p>
-        <form class="newsletter" onsubmit="return false">
-          <label class="vh" for="nl">شماره موبایل</label>
-          <input id="nl" type="tel" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx">
-          <button type="submit">عضویت</button>
-        </form>
+
+      <div class="fcol-addr">
+        <h3>کارخانه و انبارها</h3>
+        <ul class="faddr">{addr}</ul>
       </div>
     </div>
-    <p class="copyright">سپاهان فلز — فروشگاه اینترنتی {C.FACTORY['name']} · شماره ثبت {C.FACTORY['reg']}</p>
+    <p class="copyright">سپاهان فلز — فروشگاه اینترنتی {C.FACTORY['name']} ·
+      شماره ثبت {C.FACTORY['reg']} · سال تأسیس {C.FACTORY['year']}</p>
   </div>
 </footer>"""
+
 
 def dock():
     return f"""
@@ -412,58 +412,44 @@ def price_table(key, caption, limit=None, with_cat=False):
 # پس‌زمینه SVG درون‌خطی است — بافت توری، یعنی خود محصول. عکس محصولی در
 # مخزن نیست و بافت توری هم در هر اندازه تیز می‌ماند و فایلی هم بار نمی‌کند.
 def hero():
-    picks = []
-    for key in C.HERO_PICKS:
-        if key not in CAT or not CAT[key].get("rows"):
-            continue
-        c, s = C.CATS[key], cat_stats(key)
-        picks.append(f"""<a class="hprice" href="c-{c['slug']}.html">
-        <span class="t">{esc(c['title'])}</span>
-        <span class="v"><span class="num">{fmt(s['min'])}</span></span>
-        <span class="u">ریال / {esc(s['unit'])}</span></a>""")
+    """اسلایدر تمام‌عرض صفحه‌ی اصلی.
+
+    الگو از ahanonline. بدون جاوااسکریپت: لغزش با scroll-snap و نقطه‌های
+    پایین لینک لنگرند. عکس‌ها از assets/slides/ می‌آیند و در content.SLIDES
+    تعریف می‌شوند؛ نبودِ فایل عکس چیزی را نمی‌شکند.
+    """
+    slides, dots = [], []
+    for i, sl in enumerate(C.SLIDES, 1):
+        c = C.CATS.get(sl["cat"])
+        href = f'c-{c["slug"]}.html' if c else "price.html"
+        # عکس درون style چون نام فایل داده است نه کلاس ثابت
+        bg = (f' style="background-image:url(assets/slides/{esc(sl["img"])})"'
+              if sl.get("img") else "")
+        # تیتر اسلاید اول h1 است، بقیه h2 — در هر صفحه فقط یک h1
+        tag = "h1" if i == 1 else 'h2 class="stitle"'
+        endtag = "h1" if i == 1 else "h2"
+        slides.append(f"""<article class="slide" id="s{i}"{bg}
+        aria-roledescription="اسلاید" aria-label="{esc(sl['title'])}">
+      <div class="container"><div class="slide-in">
+        <p class="eyebrow">{esc(sl['eyebrow'])}</p>
+        <{tag}>{esc(sl['title'])}<span>{esc(sl['sub'])}</span></{endtag}>
+        <p class="sdesc">{esc(sl['desc'])}</p>
+        <div class="slide-cta">
+          <a class="slide-tel" href="tel:{PH}" data-track="call-slide">
+            {icon('i-phone')}
+            <span><span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>
+            <span class="n num">{PHS}</span></span>
+          </a>
+          <a class="btn btn-ghost" href="{href}">مشاهده قیمت‌ها {icon('i-chev')}</a>
+        </div>
+      </div></div>
+    </article>""")
+        dots.append(f'<a href="#s{i}"><span class="vh">اسلاید {fa(i)}</span></a>')
 
     return f"""
-<section class="hero">
-  <div class="hero-mesh" aria-hidden="true"></div>
-  <div class="container hero-grid">
-
-    <div class="hero-say">
-      <p class="hero-eyebrow">تولیدکننده‌ی مستقیم — اصفهان</p>
-      <h1>قیمت روز صنایع مفتولی،<br><span>بدون واسطه از خط تولید</span></h1>
-      <p class="hero-lede">{fa(TOTAL_SKUS)} کد کالای فعال در {fa(len(C.ORDER))} دسته.
-         قیمت هر روز کاری ساعت ۹ صبح بروزرسانی می‌شود — و قیمت هر
-         متر مربع و هر کیلوگرمش را هم خودمان حساب کرده‌ایم.</p>
-
-      <div class="hero-cta">
-        <a class="hero-tel" href="tel:{PH}" data-track="call-hero">
-          {icon('i-phone')}
-          <span>
-            <span class="l">دفتر فروش کارخانه — ۸ خط</span>
-            <span class="n num">{PHS}</span>
-          </span>
-        </a>
-        <a class="btn btn-ghost hero-alt" href="price.html">
-          جدول کامل {fa(TOTAL_SKUS)} کد کالا {icon('i-chev')}</a>
-      </div>
-
-      <ul class="hero-chips">
-        <li>{icon('i-check')}کشش، گالوانیزه و بافت زیر یک سقف</li>
-        <li>{icon('i-check')}تولید سفارشی طبق نقشه</li>
-        <li>{icon('i-check')}تحویل از اصفهان و تهران</li>
-      </ul>
-    </div>
-
-    <aside class="hero-panel" aria-label="قیمت امروز">
-      <div class="hero-panel-head">
-        <span class="hp-t">قیمت امروز</span>
-        <span class="stamp"><span class="dot"></span>{TODAY}</span>
-      </div>
-      <div class="hero-prices">{''.join(picks)}</div>
-      <a class="hero-panel-all" href="price.html">
-        همه‌ی قیمت‌ها {icon('i-chev')}</a>
-    </aside>
-
-  </div>
+<section class="hero" aria-label="معرفی محصولات">
+  <div class="hero-track">{''.join(slides)}</div>
+  <nav class="hero-dots" aria-label="انتخاب اسلاید">{''.join(dots)}</nav>
 </section>"""
 
 
@@ -525,7 +511,7 @@ def build_index():
           بستگی دارد</b> و کارشناس فروش آن را در همان تماس اعلام می‌کند.</p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۸ خط</span>
+          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -638,7 +624,7 @@ def build_price():
           <b>یک تماس، قیمت قطعی و زمان تحویل.</b></p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۸ خط</span>
+          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -718,7 +704,7 @@ def build_category(key):
           <b>قیمت قطعی را در یک تماس بگیرید.</b></p>
         <a class="tel" href="tel:{PH}" data-track="call-board">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۸ خط</span>
+          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
@@ -858,7 +844,7 @@ def build_product(key, row, idx):
           قیمت بالا مبنای روز است و با تناژ و مقصد بار نهایی می‌شود.</p>
         <a class="tel" href="tel:{PH}" data-track="call-product">
           {icon('i-phone')}
-          <span><span class="l">دفتر فروش کارخانه — ۸ خط</span>
+          <span><span class="l">دفتر فروش کارخانه — ۱۰ خط</span>
           <span class="n num">{PHS}</span></span>
         </a>
       </div>
