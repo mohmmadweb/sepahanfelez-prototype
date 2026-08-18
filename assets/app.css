@@ -775,3 +775,72 @@ footer.site svg{width:18px;height:18px;flex:none}
 @media (prefers-reduced-motion:reduce){
   .hero-track{scroll-behavior:auto}
 }
+
+/* ---- پاصفحه ----
+   نسخه‌ی قبلی سه ستون بلند بود و فهرست ۹ دسته را که در منو هست تکرار
+   می‌کرد. حالا دو ستون: راه تماس و آدرس انبارها. */
+.fgrid{display:grid; grid-template-columns:1fr 1.2fr; gap:var(--s7); align-items:start}
+.fgrid > *{min-width:0}
+footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
+
+.fmob{margin-top:var(--s3); font-size:var(--t-sm); color:var(--ink-2)}
+.fmob a{font-weight:800; color:var(--brand-dark); white-space:nowrap}
+.fmail{display:inline-flex; align-items:center; gap:8px; margin-top:var(--s4);
+  font-size:var(--t-sm); color:var(--ink-2)}
+.fmail svg{width:18px; height:18px; flex:none}
+
+.faddr{list-style:none; padding:0; margin:0; display:grid; gap:var(--s4)}
+.faddr li{line-height:1.8; color:var(--ink-2)}
+/* برچسب باید سطر خودش باشد، وگرنه به ابتدای آدرس می‌چسبد */
+.faddr .a-t{display:block; font-weight:800; color:var(--ink);
+  font-size:var(--t-sm); margin-bottom:2px}
+
+@media (max-width:820px){
+  .fgrid{grid-template-columns:1fr; gap:var(--s5)}
+}
+
+/* ---- آکاردئون راهنما ----
+   محتوا حذف نشده، فقط تا شده. <details> را گوگل می‌خواند، پس چیزی از
+   سئو کم نمی‌شود ولی صفحه سه برابر کوتاه‌تر شروع می‌شود. */
+.guides{display:grid; gap:var(--s3); margin-top:var(--s5)}
+.guide{background:#fff; border:1px solid var(--line);
+  border-radius:var(--radius-lg); overflow:hidden}
+.guide > summary{cursor:pointer; list-style:none; padding:var(--s4) var(--s5);
+  font-size:var(--t-lg); font-weight:800; color:var(--ink);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s3); min-height:56px}
+.guide > summary::-webkit-details-marker{display:none}
+.guide > summary::after{content:"+"; font-size:var(--t-2xl); font-weight:700;
+  color:var(--brand); line-height:1; flex:none}
+.guide[open] > summary::after{content:"–"}
+.guide > summary:hover{background:var(--surface)}
+.guide > summary:focus-visible{outline:none; box-shadow:var(--ring)}
+.guide[open] > summary{border-bottom:1px solid var(--line)}
+.guide > .prose{padding:var(--s5)}
+.guide > .prose > :first-child{margin-top:0}
+
+/* ---- جست‌وجوی پیشرفته‌ی جدول ----
+   با hidden می‌آید و فقط وقتی جاوااسکریپت واقعاً راه افتاد باز می‌شود. */
+.tfilter[hidden]{display:none}
+.tfilter{background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:var(--s4) var(--s5);
+  margin-bottom:var(--s4)}
+.tfilter-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:var(--s3) var(--s4)}
+.ffield{display:flex; flex-direction:column; gap:6px; min-width:0}
+.ffield > span{font-size:var(--t-sm); font-weight:700; color:var(--ink-2)}
+.ffield input,.ffield select{height:52px; border:1.5px solid var(--line-2);
+  border-radius:var(--radius); padding-inline:var(--s3);
+  font:inherit; font-size:var(--t-base); color:var(--ink); background:#fff;
+  width:100%; min-width:0}
+.ffield input:focus-visible,.ffield select:focus-visible{outline:none;
+  border-color:var(--brand); box-shadow:var(--ring)}
+.fsearch{grid-column:1/-1}
+@media (min-width:900px){.fsearch{grid-column:span 2}}
+.tfilter-foot{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s4); margin-top:var(--s4); flex-wrap:wrap}
+.tfilter-foot output{font-size:var(--t-base); font-weight:700; color:var(--ink)}
+.ptable tr[hidden]{display:none}
+.ptable[data-empty="yes"] tbody::after{content:"هیچ کدی با این فیلترها پیدا نشد.";
+  display:block; padding:var(--s6); text-align:center;
+  color:var(--ink-2); font-weight:600}

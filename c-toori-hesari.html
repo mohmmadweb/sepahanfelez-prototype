@@ -149,8 +149,35 @@
         <div><h2>جدول قیمت روز توری حصاری</h2>
           <div class="sub">۱۳ کد فعال با مشخصات فنی کامل — قیمت به ریال</div></div>
       </div>
-      <div class="ptable-wrap on-light">
-<table class="ptable">
+      <form class="tfilter" data-for="t-توری-حصاری" hidden
+      onsubmit="return false" aria-label="جست‌وجوی پیشرفته در جدول">
+  <div class="tfilter-row">
+    <label class="ffield fsearch">
+      <span>جست‌وجوی نام یا کد کالا</span>
+      <input type="search" data-q placeholder="مثلاً: چشمه ۵/۵ یا مفتول ۳" autocomplete="off">
+    </label>
+    <label class="ffield">
+        <span>ضخامت مفتول (mm)</span>
+        <select data-spec="0"><option value="">همه</option><option value="2/20">2/20</option><option value="2/40">2/40</option><option value="2/70">2/70</option><option value="3/0">3/0</option><option value="4/0">4/0</option></select>
+      </label><label class="ffield">
+        <span>چشمه (سانتی متر)</span>
+        <select data-spec="3"><option value="">همه</option><option value="5/5">5/5</option><option value="6/5">6/5</option><option value="7/5">7/5</option></select>
+      </label>
+    <label class="ffield">
+      <span>مرتب‌سازی</span>
+      <select data-sort>
+        <option value="">پیش‌فرض جدول</option>
+        <option value="asc">قیمت: ارزان به گران</option>
+        <option value="desc">قیمت: گران به ارزان</option>
+      </select>
+    </label>
+  </div>
+  <div class="tfilter-foot">
+    <output data-count aria-live="polite"></output>
+    <button type="button" class="btn btn-ghost" data-reset>پاک‌کردن فیلترها</button>
+  </div>
+</form><div class="ptable-wrap on-light">
+<table class="ptable" id="t-توری-حصاری">
   <caption>قیمت روز توری حصاری — ۱۷ مرداد ۱۴۰۵</caption>
   <thead><tr>
     <th scope="col">محصول</th>
@@ -159,7 +186,7 @@
     <th scope="col" class="spec">ضخامت مفتول (mm)</th><th scope="col" class="spec">محل بارگیری</th><th scope="col" class="spec">عرض (سانتی متر)</th><th scope="col" class="spec spec-lo">چشمه (سانتی متر)</th><th scope="col" class="spec spec-lo">وزن هر متر مربع (کیلوگرم)</th><th scope="col" class="spec spec-lo">طول رول (متر)</th>
     <th scope="col" class="c">استعلام</th>
   </tr></thead>
-  <tbody><tr>
+  <tbody><tr data-name="توری چشمه 5/5 مفتول 2/2" data-price="1220000" data-s0="2/20" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="5/5" data-s4="1/200" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-5-5-مفتول-2-2.html">توری چشمه 5/5 مفتول 2/2</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -177,7 +204,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-5-5-مفتول-2-2.html" aria-label="جزئیات توری چشمه 5/5 مفتول 2/2"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 5/5 مفتول 2/4" data-price="1220000" data-s0="2/40" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="5/5" data-s4="1/400" data-s5="45">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-5-5-مفتول-2-4.html">توری چشمه 5/5 مفتول 2/4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -195,7 +222,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-5-5-مفتول-2-4.html" aria-label="جزئیات توری چشمه 5/5 مفتول 2/4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 5/5 مفتول 2/7" data-price="1220000" data-s0="2/70" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="5/5" data-s4="1/700" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-5-5-مفتول-2-7.html">توری چشمه 5/5 مفتول 2/7</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -213,7 +240,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-5-5-مفتول-2-7.html" aria-label="جزئیات توری چشمه 5/5 مفتول 2/7"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 5/5 مفتول 3" data-price="1220000" data-s0="3/0" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="5/5" data-s4="2/200" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-5-5-مفتول-3.html">توری چشمه 5/5 مفتول 3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -231,7 +258,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-5-5-مفتول-3.html" aria-label="جزئیات توری چشمه 5/5 مفتول 3"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 5/5 مفتول 4" data-price="850000" data-s0="4/0" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="5/5" data-s4="4/300" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-5-5-مفتول-4.html">توری چشمه 5/5 مفتول 4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -249,7 +276,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-5-5-مفتول-4.html" aria-label="جزئیات توری چشمه 5/5 مفتول 4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 6/5 مفتول 2/20" data-price="1220000" data-s0="2/20" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="6/5" data-s4="1/0" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-6-5-مفتول-2-20.html">توری چشمه 6/5 مفتول 2/20</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -267,7 +294,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-6-5-مفتول-2-20.html" aria-label="جزئیات توری چشمه 6/5 مفتول 2/20"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 6/5 مفتول 2/40" data-price="1220000" data-s0="2/40" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="6/5" data-s4="1/250" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-6-5-مفتول-2-40.html">توری چشمه 6/5 مفتول 2/40</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -285,7 +312,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-6-5-مفتول-2-40.html" aria-label="جزئیات توری چشمه 6/5 مفتول 2/40"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 6/5 مفتول 2/70" data-price="1220000" data-s0="2/70" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="6/5" data-s4="1/500" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-6-5-مفتول-2-70.html">توری چشمه 6/5 مفتول 2/70</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -303,7 +330,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-6-5-مفتول-2-70.html" aria-label="جزئیات توری چشمه 6/5 مفتول 2/70"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 6/5 مفتول 3/0" data-price="1220000" data-s0="3/0" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="6/5" data-s4="2" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-6-5-مفتول-3-0.html">توری چشمه 6/5 مفتول 3/0</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -321,7 +348,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-6-5-مفتول-3-0.html" aria-label="جزئیات توری چشمه 6/5 مفتول 3/0"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه چشمه 7/5 مفتول 2/20" data-price="1220000" data-s0="2/20" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="7/5" data-s4="0/900" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-چشمه-7-5-مفتول-2-20.html">توری چشمه چشمه 7/5 مفتول 2/20</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -339,7 +366,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-چشمه-7-5-مفتول-2-20.html" aria-label="جزئیات توری چشمه چشمه 7/5 مفتول 2/20"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 7/5 مفتول 2/40" data-price="1220000" data-s0="2/40" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="7/5" data-s4="1/200" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-7-5-مفتول-2-40.html">توری چشمه 7/5 مفتول 2/40</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -357,7 +384,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-7-5-مفتول-2-40.html" aria-label="جزئیات توری چشمه 7/5 مفتول 2/40"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 7/5 مفتول 2/70" data-price="1220000" data-s0="2/70" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="7/5" data-s4="1/300" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-7-5-مفتول-2-70.html">توری چشمه 7/5 مفتول 2/70</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -375,7 +402,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-چشمه-7-5-مفتول-2-70.html" aria-label="جزئیات توری چشمه 7/5 مفتول 2/70"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری چشمه 7/5 مفتول 3" data-price="1220000" data-s0="3/0" data-s1="کارخانه اصفهان" data-s2="سفارشی" data-s3="7/5" data-s4="1/700" data-s5="15">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-چشمه-7-5-مفتول-3.html">توری چشمه 7/5 مفتول 3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -399,27 +426,46 @@
     </div>
   </section>
 
+  <!-- راهنمای خرید در آکاردئون است، نه باز روی صفحه.
+
+       این بخش ۱۷۸۶ پیکسل بود — یک‌سوم کل صفحه — و جدول قیمت را که دلیل
+       اصلی آمدن بازدیدکننده است، به عمق صفحه می‌راند. متن حذف نشده چون
+       برای سئو لازم است؛ <details> را گوگل می‌خواند و ایندکس می‌کند.
+       فقط اولین بند باز می‌ماند تا صفحه بی‌مقدمه شروع نشود. -->
   <section class="section alt">
     <div class="container">
       <div class="prose">
         <h2>توری حصاری چیست و کجا به کار می‌آید</h2>
-        <p>توری حصاری از بافتِ درهم‌رفته‌ی مفتول گالوانیزه ساخته می‌شود؛ هر مفتول به شکل زیگزاگ خم می‌خورد و در مفتول کناری قفل می‌شود. همین قفل‌شدنِ مکانیکی است که باعث می‌شود توری بدون جوش و بدون پرس، شکل خودش را نگه دارد و اگر جایی بریده شود، کل بافت باز نشود.</p><p>در بازار به این محصول فنس هم می‌گویند و همین دو اسمی‌بودن، مقایسه‌ی قیمت را سخت می‌کند: بعضی فروشنده‌ها فنس را متری قیمت می‌دهند و بعضی کیلویی. ما کیلویی می‌فروشیم و وزن هر مترمربع هر کد را در جدول نوشته‌ایم تا تبدیل این دو به هم، حدس‌زدنی نباشد.</p>
+        <p>توری حصاری از بافتِ درهم‌رفته‌ی مفتول گالوانیزه ساخته می‌شود؛ هر مفتول به شکل زیگزاگ خم می‌خورد و در مفتول کناری قفل می‌شود. همین قفل‌شدنِ مکانیکی است که باعث می‌شود توری بدون جوش و بدون پرس، شکل خودش را نگه دارد و اگر جایی بریده شود، کل بافت باز نشود.</p>
+      </div>
 
-        <h2>قیمت توری حصاری چطور حساب می‌شود</h2>
-        <p>واحد فروش این دسته کیلوگرم است. یعنی عددی که در ستون «قیمت روز» می‌بینید، قیمت یک کیلوگرم توری است — نه یک متر و نه یک رول. برای رسیدن به هزینه‌ی واقعی حصارکشی، سه عدد لازم دارید که هر سه در همین صفحه هست:</p><p><b>هزینه‌ی هر مترمربع = قیمت هر کیلوگرم × وزن هر مترمربع</b>. مثلاً کد «چشمه ۵/۵ مفتول ۲/۲» وزن هر مترمربعش ۱/۲۰۰ کیلوگرم است؛ اگر قیمت کیلو ۱٬۲۲۰٬۰۰۰ ریال باشد، هر مترمربع آن ۱٬۴۶۴٬۰۰۰ ریال درمی‌آید. برای دیوار حصاری به طول ۱۰۰ متر و ارتفاع ۲ متر، ۲۰۰ مترمربع لازم دارید.</p><p>این ساده‌ترین جایی است که خریدار سرش کلاه می‌رود: دو فروشنده ممکن است قیمت کیلوی یکسانی بدهند، اما توری یکی وزن مترمربعش کمتر باشد. وزن کمتر یعنی مفتول نازک‌تر یا کشیده‌شده‌تر — ارزان‌تر نیست، کم‌تر است.</p>
+      <div class="guides">
+        <details class="guide" open>
+          <summary>توری حصاری — ادامه‌ی معرفی</summary>
+          <div class="prose"><p>در بازار به این محصول فنس هم می‌گویند و همین دو اسمی‌بودن، مقایسه‌ی قیمت را سخت می‌کند: بعضی فروشنده‌ها فنس را متری قیمت می‌دهند و بعضی کیلویی. ما کیلویی می‌فروشیم و وزن هر مترمربع هر کد را در جدول نوشته‌ایم تا تبدیل این دو به هم، حدس‌زدنی نباشد.</p></div>
+        </details>
 
-        <div class="callout">
-          <div class="t">قیمت‌ها به ریال است</div>
-          <p>در جدول بالا زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر قیمت این
-             صفحه را با سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را
-             ملاک بگیرید تا مقایسه‌تان درست باشد.</p>
-        </div>
+        <details class="guide">
+          <summary>قیمت توری حصاری چطور حساب می‌شود</summary>
+          <div class="prose"><p>واحد فروش این دسته کیلوگرم است. یعنی عددی که در ستون «قیمت روز» می‌بینید، قیمت یک کیلوگرم توری است — نه یک متر و نه یک رول. برای رسیدن به هزینه‌ی واقعی حصارکشی، سه عدد لازم دارید که هر سه در همین صفحه هست:</p><p><b>هزینه‌ی هر مترمربع = قیمت هر کیلوگرم × وزن هر مترمربع</b>. مثلاً کد «چشمه ۵/۵ مفتول ۲/۲» وزن هر مترمربعش ۱/۲۰۰ کیلوگرم است؛ اگر قیمت کیلو ۱٬۲۲۰٬۰۰۰ ریال باشد، هر مترمربع آن ۱٬۴۶۴٬۰۰۰ ریال درمی‌آید. برای دیوار حصاری به طول ۱۰۰ متر و ارتفاع ۲ متر، ۲۰۰ مترمربع لازم دارید.</p><p>این ساده‌ترین جایی است که خریدار سرش کلاه می‌رود: دو فروشنده ممکن است قیمت کیلوی یکسانی بدهند، اما توری یکی وزن مترمربعش کمتر باشد. وزن کمتر یعنی مفتول نازک‌تر یا کشیده‌شده‌تر — ارزان‌تر نیست، کم‌تر است.</p>
+            <div class="callout">
+              <div class="t">قیمت‌ها به ریال است</div>
+              <p>زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر این قیمت را با
+                 سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را ملاک
+                 بگیرید تا مقایسه درست باشد.</p>
+            </div>
+          </div>
+        </details>
 
-        <h2>کدام چشمه و کدام ضخامت را بگیرید</h2>
-        <h3>چشمه ۵/۵ سانتی‌متر</h3><p>کوچک‌ترین چشمه‌ی این دسته و سنگین‌ترینشان از نظر وزن مترمربع. جایی که می‌خواهید عبور از توری واقعاً سخت باشد: محوطه‌ی کارخانه، انبار، مرز ملک با گذر عمومی.</p><h3>چشمه ۶/۵ سانتی‌متر</h3><p>حد وسط بازار. برای حصار باغ، مرغداری و محوطه‌سازی معمول‌ترین انتخاب است چون به ازای هر متر، مفتول کمتری مصرف می‌کند و قیمت تمام‌شده‌ی هر متر پایین‌تر می‌آید.</p><h3>چشمه ۷/۵ سانتی‌متر</h3><p>سبک‌ترین گزینه در واحد سطح. برای مرزبندی زمین کشاورزی و جایی که هدف «مشخص‌کردن حد» است نه «مانع فیزیکی سنگین».</p><h3>مفتول ۲/۲ تا ۳ میلی‌متر</h3><p>بازه‌ی متعارف حصارکشی. هرچه ضخامت بالاتر، مقاومت در برابر خم‌شدن و ضربه بیشتر و وزن مترمربع — و در نتیجه قیمت هر متر — بالاتر.</p><h3>مفتول ۴ میلی‌متر</h3><p>برای حصار سنگین صنعتی و جایی که احتمال برخورد ماشین‌آلات هست. وزن هر مترمربع این کد ۴/۳۰۰ کیلوگرم است، یعنی نزدیک چهار برابر کد ۲/۲ در همان چشمه.</p>
+        <details class="guide">
+          <summary>کدام چشمه و کدام ضخامت را بگیرید</summary>
+          <div class="prose"><h3>چشمه ۵/۵ سانتی‌متر</h3><p>کوچک‌ترین چشمه‌ی این دسته و سنگین‌ترینشان از نظر وزن مترمربع. جایی که می‌خواهید عبور از توری واقعاً سخت باشد: محوطه‌ی کارخانه، انبار، مرز ملک با گذر عمومی.</p><h3>چشمه ۶/۵ سانتی‌متر</h3><p>حد وسط بازار. برای حصار باغ، مرغداری و محوطه‌سازی معمول‌ترین انتخاب است چون به ازای هر متر، مفتول کمتری مصرف می‌کند و قیمت تمام‌شده‌ی هر متر پایین‌تر می‌آید.</p><h3>چشمه ۷/۵ سانتی‌متر</h3><p>سبک‌ترین گزینه در واحد سطح. برای مرزبندی زمین کشاورزی و جایی که هدف «مشخص‌کردن حد» است نه «مانع فیزیکی سنگین».</p><h3>مفتول ۲/۲ تا ۳ میلی‌متر</h3><p>بازه‌ی متعارف حصارکشی. هرچه ضخامت بالاتر، مقاومت در برابر خم‌شدن و ضربه بیشتر و وزن مترمربع — و در نتیجه قیمت هر متر — بالاتر.</p><h3>مفتول ۴ میلی‌متر</h3><p>برای حصار سنگین صنعتی و جایی که احتمال برخورد ماشین‌آلات هست. وزن هر مترمربع این کد ۴/۳۰۰ کیلوگرم است، یعنی نزدیک چهار برابر کد ۲/۲ در همان چشمه.</p></div>
+        </details>
 
-        <h2>چهار اشتباه رایج در خرید توری حصاری</h2>
-        <ul class="bul"><li><b>مقایسه‌ی قیمت متری با قیمت کیلویی.</b> تا وزن مترمربع را ندانید، این دو عدد اصلاً قابل مقایسه نیستند. همیشه بپرسید وزن هر مترمربع چند کیلوگرم است.</li><li><b>سفارش‌دادن بدون مشخص‌کردن عرض رول.</b> عرض این دسته سفارشی تولید می‌شود؛ اگر ارتفاع حصار شما ۲ متر است، عرض توری باید ۲ متر سفارش داده شود، وگرنه مجبورید دو رول را روی هم ببندید.</li><li><b>در نظر نگرفتن پرت برش.</b> در گوشه‌ها و شیب زمین معمولاً بین ۳ تا ۵ درصد پرت دارید. این را در تناژ سفارش حساب کنید.</li><li><b>فراموش‌کردن لوازم جانبی.</b> پایه، مفتول مهار و بست جزو قیمت توری نیست و جداگانه حساب می‌شود.</li></ul>
+        <details class="guide">
+          <summary>چهار اشتباه رایج در خرید توری حصاری</summary>
+          <div class="prose"><ul class="bul"><li><b>مقایسه‌ی قیمت متری با قیمت کیلویی.</b> تا وزن مترمربع را ندانید، این دو عدد اصلاً قابل مقایسه نیستند. همیشه بپرسید وزن هر مترمربع چند کیلوگرم است.</li><li><b>سفارش‌دادن بدون مشخص‌کردن عرض رول.</b> عرض این دسته سفارشی تولید می‌شود؛ اگر ارتفاع حصار شما ۲ متر است، عرض توری باید ۲ متر سفارش داده شود، وگرنه مجبورید دو رول را روی هم ببندید.</li><li><b>در نظر نگرفتن پرت برش.</b> در گوشه‌ها و شیب زمین معمولاً بین ۳ تا ۵ درصد پرت دارید. این را در تناژ سفارش حساب کنید.</li><li><b>فراموش‌کردن لوازم جانبی.</b> پایه، مفتول مهار و بست جزو قیمت توری نیست و جداگانه حساب می‌شود.</li></ul></div>
+        </details>
       </div>
     </div>
   </section>
@@ -505,5 +551,6 @@
   <a href="https://wa.me/989001066030"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>واتساپ</a>
   <a href="price.html"><svg aria-hidden="true"><use href="#i-chart"/></svg>قیمت‌ها</a>
 </nav>
+<script src="assets/table.js" defer></script>
 </body>
 </html>

@@ -286,6 +286,7 @@ def dock():
   <a href="https://wa.me/{WA}">{icon('i-whatsapp')}واتساپ</a>
   <a href="price.html">{icon('i-chart')}قیمت‌ها</a>
 </nav>
+<script src="assets/table.js" defer></script>
 </body>
 </html>"""
 
@@ -357,7 +358,9 @@ def price_row(key, row, idx, specs, with_cat=False):
     if name in C.SUSPECT:
         flag = (f'<span class="review" title="{esc(C.SUSPECT[name])}">'
                 f'قیمت نیازمند بازبینی</span>')
-    return f"""<tr>
+    data_specs = " ".join(
+        f'data-s{n}="{esc(str(row.get(sp,"")))}"' for n, sp in enumerate(specs))
+    return f"""<tr data-name="{esc(name)}" data-price="{p}" {data_specs}>
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="{href}">{esc(name)}</a></div>
     <div class="p-meta">{cat_line}واحد: {esc(unit_of(row))} <span class="mine">{icon('i-shield')}تولید ما</span></div>
@@ -377,14 +380,65 @@ def price_row(key, row, idx, specs, with_cat=False):
   </td>
 </tr>"""
 
-def price_table(key, caption, limit=None, with_cat=False):
+def filter_bar(key, specs, rows, tid):
+    """نوار جست‌وجوی پیشرفته‌ی جدول.
+
+    بدون جاوااسکریپت هم صفحه سالم است: جدول کامل رندر شده و این نوار
+    با `hidden` پنهان می‌ماند؛ اسکریپت که اجرا شد بازش می‌کند. یعنی
+    اگر جاوااسکریپت نیامد، کاربر جدول کامل را دارد نه یک فرم بی‌کار.
+
+    فیلترها از مقدارهای واقعی همان دسته ساخته می‌شوند، نه فهرست ثابت.
+    """
+    sels = []
+    for n, sp in enumerate(specs[:4]):
+        vals = sorted({str(r.get(sp, "")).strip() for r in rows if str(r.get(sp, "")).strip()},
+                      key=lambda v: (num_key(v), v))
+        if len(vals) < 2:
+            continue
+        opts = "".join(f'<option value="{esc(v)}">{esc(v)}</option>' for v in vals)
+        sels.append(f"""<label class="ffield">
+        <span>{esc(sp)}</span>
+        <select data-spec="{n}"><option value="">همه</option>{opts}</select>
+      </label>""")
+    return f"""<form class="tfilter" data-for="{tid}" hidden
+      onsubmit="return false" aria-label="جست‌وجوی پیشرفته در جدول">
+  <div class="tfilter-row">
+    <label class="ffield fsearch">
+      <span>جست‌وجوی نام یا کد کالا</span>
+      <input type="search" data-q placeholder="مثلاً: چشمه ۵/۵ یا مفتول ۳" autocomplete="off">
+    </label>
+    {''.join(sels)}
+    <label class="ffield">
+      <span>مرتب‌سازی</span>
+      <select data-sort>
+        <option value="">پیش‌فرض جدول</option>
+        <option value="asc">قیمت: ارزان به گران</option>
+        <option value="desc">قیمت: گران به ارزان</option>
+      </select>
+    </label>
+  </div>
+  <div class="tfilter-foot">
+    <output data-count aria-live="polite"></output>
+    <button type="button" class="btn btn-ghost" data-reset>پاک‌کردن فیلترها</button>
+  </div>
+</form>"""
+
+
+def num_key(v):
+    m = re.search(r"\d+(?:[/.]\d+)?", str(v))
+    return float(m.group(0).replace("/", ".")) if m else 9e9
+
+
+def price_table(key, caption, limit=None, with_cat=False, search=False):
     specs = CAT[key]["specs"]
     rows = CAT[key]["rows"][:limit] if limit else CAT[key]["rows"]
     th = "".join(f'<th scope="col" class="spec{" spec-lo" if i >= 3 else ""}">{esc(s)}</th>'
                  for i, s in enumerate(specs))
     body = "".join(price_row(key, r, i, specs, with_cat) for i, r in enumerate(rows))
-    return f"""<div class="ptable-wrap on-light">
-<table class="ptable">
+    tid = f"t-{slugify(key)}"
+    bar = filter_bar(key, specs, rows, tid) if search else ""
+    return f"""{bar}<div class="ptable-wrap on-light">
+<table class="ptable" id="{tid}">
   <caption>{esc(caption)}</caption>
   <thead><tr>
     <th scope="col">محصول</th>
@@ -599,7 +653,7 @@ def build_price():
     <div class="sub">{fa(s['n'])} کد فعال · واحد فروش: {esc(s['unit'])} · {esc(c['unit_note'])}</div></div>
   <a href="c-{c['slug']}.html">راهنمای خرید و مشخصات کامل {icon('i-chev')}</a>
 </div>
-{price_table(key, f"قیمت روز {c['title']} — {fa(s['n'])} کد کالا")}""")
+{price_table(key, f"قیمت روز {c['title']} — {fa(s['n'])} کد کالا", search=True)}""")
 
     chips = "".join(f'<a class="btn btn-ghost" href="#{C.CATS[k]["slug"]}">{C.CATS[k]["nav"]}</a>' for k in C.ORDER)
 
@@ -657,7 +711,9 @@ def build_category(key):
     rows = CAT[key]["rows"]
     specs = CAT[key]["specs"]
 
-    intro = "".join(f"<p>{p}</p>" for p in c["intro"])
+    # بند اول باز می‌ماند، بقیه داخل آکاردئون
+    intro_lead = f"<p>{c['intro'][0]}</p>" if c["intro"] else ""
+    intro_rest = "".join(f"<p>{x}</p>" for x in c["intro"][1:])
     pricing = "".join(f"<p>{p}</p>" for p in c["pricing"])
     choose = "".join(f"<h3>{esc(t)}</h3><p>{d}</p>" for t, d in c["choose"])
     mistakes = "".join(f"<li>{m}</li>" for m in c["mistakes"])
@@ -717,31 +773,50 @@ def build_category(key):
         <div><h2>جدول قیمت روز {esc(c['title'])}</h2>
           <div class="sub">{fa(s['n'])} کد فعال با مشخصات فنی کامل — قیمت به ریال</div></div>
       </div>
-      {price_table(key, f"قیمت روز {c['title']} — {TODAY}")}
+      {price_table(key, f"قیمت روز {c['title']} — {TODAY}", search=True)}
     </div>
   </section>
 
+  <!-- راهنمای خرید در آکاردئون است، نه باز روی صفحه.
+
+       این بخش ۱۷۸۶ پیکسل بود — یک‌سوم کل صفحه — و جدول قیمت را که دلیل
+       اصلی آمدن بازدیدکننده است، به عمق صفحه می‌راند. متن حذف نشده چون
+       برای سئو لازم است؛ <details> را گوگل می‌خواند و ایندکس می‌کند.
+       فقط اولین بند باز می‌ماند تا صفحه بی‌مقدمه شروع نشود. -->
   <section class="section alt">
     <div class="container">
       <div class="prose">
         <h2>{esc(c['title'])} چیست و کجا به کار می‌آید</h2>
-        {intro}
+        {intro_lead}
+      </div>
 
-        <h2>{esc(c['pricing_title'])}</h2>
-        {pricing}
+      <div class="guides">
+        <details class="guide" open>
+          <summary>{esc(c['title'])} — ادامه‌ی معرفی</summary>
+          <div class="prose">{intro_rest}</div>
+        </details>
 
-        <div class="callout">
-          <div class="t">قیمت‌ها به ریال است</div>
-          <p>در جدول بالا زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر قیمت این
-             صفحه را با سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را
-             ملاک بگیرید تا مقایسه‌تان درست باشد.</p>
-        </div>
+        <details class="guide">
+          <summary>{esc(c['pricing_title'])}</summary>
+          <div class="prose">{pricing}
+            <div class="callout">
+              <div class="t">قیمت‌ها به ریال است</div>
+              <p>زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر این قیمت را با
+                 سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را ملاک
+                 بگیرید تا مقایسه درست باشد.</p>
+            </div>
+          </div>
+        </details>
 
-        <h2>{esc(c['choose_title'])}</h2>
-        {choose}
+        <details class="guide">
+          <summary>{esc(c['choose_title'])}</summary>
+          <div class="prose">{choose}</div>
+        </details>
 
-        <h2>چهار اشتباه رایج در خرید {esc(c['title'])}</h2>
-        <ul class="bul">{mistakes}</ul>
+        <details class="guide">
+          <summary>چهار اشتباه رایج در خرید {esc(c['title'])}</summary>
+          <div class="prose"><ul class="bul">{mistakes}</ul></div>
+        </details>
       </div>
     </div>
   </section>

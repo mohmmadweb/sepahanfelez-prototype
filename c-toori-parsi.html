@@ -149,8 +149,38 @@
         <div><h2>جدول قیمت روز توری پرسی</h2>
           <div class="sub">۱۳ کد فعال با مشخصات فنی کامل — قیمت به ریال</div></div>
       </div>
-      <div class="ptable-wrap on-light">
-<table class="ptable">
+      <form class="tfilter" data-for="t-توری-پرسی" hidden
+      onsubmit="return false" aria-label="جست‌وجوی پیشرفته در جدول">
+  <div class="tfilter-row">
+    <label class="ffield fsearch">
+      <span>جست‌وجوی نام یا کد کالا</span>
+      <input type="search" data-q placeholder="مثلاً: چشمه ۵/۵ یا مفتول ۳" autocomplete="off">
+    </label>
+    <label class="ffield">
+        <span>ضخامت مفتول (mm)</span>
+        <select data-spec="0"><option value="">همه</option><option value="3/0">3/0</option><option value="3/3">3/3</option><option value="3/50">3/50</option><option value="3/6">3/6</option><option value="4/0">4/0</option><option value="4/5">4/5</option><option value="5">5</option></select>
+      </label><label class="ffield">
+        <span>چشمه (سانتی متر)</span>
+        <select data-spec="1"><option value="">همه</option><option value="2*2">2*2</option><option value="3*3">3*3</option><option value="4*4">4*4</option><option value="5*5">5*5</option></select>
+      </label><label class="ffield">
+        <span>وزن هر برگ</span>
+        <select data-spec="2"><option value="">همه</option><option value="6 کیلوگرم">6 کیلوگرم</option><option value="7 کیلوگرم">7 کیلوگرم</option><option value="8 کیلوگرم">8 کیلوگرم</option><option value="9 کیلوگرم">9 کیلوگرم</option><option value="10 کیلوگرم">10 کیلوگرم</option><option value="11 کیلوگرم">11 کیلوگرم</option><option value="13 کیلوگرم">13 کیلوگرم</option><option value="14 کیلوگرم">14 کیلوگرم</option><option value="17 کیلوگرم">17 کیلوگرم</option></select>
+      </label>
+    <label class="ffield">
+      <span>مرتب‌سازی</span>
+      <select data-sort>
+        <option value="">پیش‌فرض جدول</option>
+        <option value="asc">قیمت: ارزان به گران</option>
+        <option value="desc">قیمت: گران به ارزان</option>
+      </select>
+    </label>
+  </div>
+  <div class="tfilter-foot">
+    <output data-count aria-live="polite"></output>
+    <button type="button" class="btn btn-ghost" data-reset>پاک‌کردن فیلترها</button>
+  </div>
+</form><div class="ptable-wrap on-light">
+<table class="ptable" id="t-توری-پرسی">
   <caption>قیمت روز توری پرسی — ۱۷ مرداد ۱۴۰۵</caption>
   <thead><tr>
     <th scope="col">محصول</th>
@@ -159,7 +189,7 @@
     <th scope="col" class="spec">ضخامت مفتول (mm)</th><th scope="col" class="spec">چشمه (سانتی متر)</th><th scope="col" class="spec">وزن هر برگ</th>
     <th scope="col" class="c">استعلام</th>
   </tr></thead>
-  <tbody><tr>
+  <tbody><tr data-name="توری پرسی چشمه 2*2 مفتول 3" data-price="980000" data-s0="3/0" data-s1="2*2" data-s2="9 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-2x2-مفتول-3.html">توری پرسی چشمه 2*2 مفتول 3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -177,7 +207,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-2x2-مفتول-3.html" aria-label="جزئیات توری پرسی چشمه 2*2 مفتول 3"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 2*2 مفتول 3/3" data-price="900000" data-s0="3/3" data-s1="3*3" data-s2="11 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-2x2-مفتول-3-3.html">توری پرسی چشمه 2*2 مفتول 3/3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -195,7 +225,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-2x2-مفتول-3-3.html" aria-label="جزئیات توری پرسی چشمه 2*2 مفتول 3/3"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 2*2 مفتول 3/60" data-price="900000" data-s0="3/6" data-s1="2*2" data-s2="14 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-2x2-مفتول-3-60.html">توری پرسی چشمه 2*2 مفتول 3/60</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -213,7 +243,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-2x2-مفتول-3-60.html" aria-label="جزئیات توری پرسی چشمه 2*2 مفتول 3/60"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 2*2 مفتول 4" data-price="900000" data-s0="4/0" data-s1="2*2" data-s2="17 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-2x2-مفتول-4.html">توری پرسی چشمه 2*2 مفتول 4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -231,7 +261,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-2x2-مفتول-4.html" aria-label="جزئیات توری پرسی چشمه 2*2 مفتول 4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 3*3 مفتول 4" data-price="900000" data-s0="4/0" data-s1="3*3" data-s2="14 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-3x3-مفتول-4.html">توری پرسی چشمه 3*3 مفتول 4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -249,7 +279,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-3x3-مفتول-4.html" aria-label="جزئیات توری پرسی چشمه 3*3 مفتول 4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 3*3 مفتول 4/5" data-price="900000" data-s0="4/5" data-s1="3*3" data-s2="17 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-3x3-مفتول-4-5.html">توری پرسی چشمه 3*3 مفتول 4/5</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -267,7 +297,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-3x3-مفتول-4-5.html" aria-label="جزئیات توری پرسی چشمه 3*3 مفتول 4/5"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 4*4 مفتول 3" data-price="900000" data-s0="3/0" data-s1="4*4" data-s2="6 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-4x4-مفتول-3.html">توری پرسی چشمه 4*4 مفتول 3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -285,7 +315,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-4x4-مفتول-3.html" aria-label="جزئیات توری پرسی چشمه 4*4 مفتول 3"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 4*4 مفتول 3/3" data-price="900000" data-s0="3/3" data-s1="4*4" data-s2="7 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-4x4-مفتول-3-3.html">توری پرسی چشمه 4*4 مفتول 3/3</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -303,7 +333,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-4x4-مفتول-3-3.html" aria-label="جزئیات توری پرسی چشمه 4*4 مفتول 3/3"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 4*4 مفتول 3/5" data-price="900000" data-s0="3/50" data-s1="4*4" data-s2="8 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-4x4-مفتول-3-5.html">توری پرسی چشمه 4*4 مفتول 3/5</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -321,7 +351,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-4x4-مفتول-3-5.html" aria-label="جزئیات توری پرسی چشمه 4*4 مفتول 3/5"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 4*4 مفتول 4" data-price="900000" data-s0="4/0" data-s1="4*4" data-s2="10 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-4x4-مفتول-4.html">توری پرسی چشمه 4*4 مفتول 4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -339,7 +369,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-4x4-مفتول-4.html" aria-label="جزئیات توری پرسی چشمه 4*4 مفتول 4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 5*5 مفتول 4" data-price="900000" data-s0="4/0" data-s1="5*5" data-s2="9 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-5x5-مفتول-4.html">توری پرسی چشمه 5*5 مفتول 4</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -357,7 +387,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-5x5-مفتول-4.html" aria-label="جزئیات توری پرسی چشمه 5*5 مفتول 4"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 5*5 مفتول 4/5" data-price="900000" data-s0="4/5" data-s1="5*5" data-s2="13 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-5x5-مفتول-4-5.html">توری پرسی چشمه 5*5 مفتول 4/5</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -375,7 +405,7 @@
       <a class="btn btn-ghost btn-icon" href="p-توری-پرسی-چشمه-5x5-مفتول-4-5.html" aria-label="جزئیات توری پرسی چشمه 5*5 مفتول 4/5"><svg aria-hidden="true"><use href="#i-chev"/></svg></a>
     </div>
   </td>
-</tr><tr>
+</tr><tr data-name="توری پرسی چشمه 5*5 مفتول 5" data-price="900000" data-s0="5" data-s1="5*5" data-s2="14 کیلوگرم">
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="p-توری-پرسی-چشمه-5x5-مفتول-5.html">توری پرسی چشمه 5*5 مفتول 5</a></div>
     <div class="p-meta">واحد: کیلوگرم <span class="mine"><svg aria-hidden="true"><use href="#i-shield"/></svg>تولید ما</span></div>
@@ -399,27 +429,46 @@
     </div>
   </section>
 
+  <!-- راهنمای خرید در آکاردئون است، نه باز روی صفحه.
+
+       این بخش ۱۷۸۶ پیکسل بود — یک‌سوم کل صفحه — و جدول قیمت را که دلیل
+       اصلی آمدن بازدیدکننده است، به عمق صفحه می‌راند. متن حذف نشده چون
+       برای سئو لازم است؛ <details> را گوگل می‌خواند و ایندکس می‌کند.
+       فقط اولین بند باز می‌ماند تا صفحه بی‌مقدمه شروع نشود. -->
   <section class="section alt">
     <div class="container">
       <div class="prose">
         <h2>توری پرسی چیست و کجا به کار می‌آید</h2>
-        <p>در توری پرسی، مفتول‌های طولی و عرضی در محل تقاطع تحت فشار پرس می‌شوند و درهم فرو می‌روند. نتیجه سطحی است که برخلاف توری حصاری تقریباً صاف می‌ماند و چشمه‌هایش زیر بار جابه‌جا نمی‌شوند — به همین دلیل جایی به کار می‌آید که توری باید مثل یک صفحه رفتار کند، نه مثل یک پارچه.</p><p>این محصول برگی فروخته می‌شود ولی قیمتش کیلویی است. یعنی برای دانستن هزینه‌ی هر برگ، باید وزن آن برگ را بدانید؛ ستون «وزن هر برگ» در جدول برای همین است.</p>
+        <p>در توری پرسی، مفتول‌های طولی و عرضی در محل تقاطع تحت فشار پرس می‌شوند و درهم فرو می‌روند. نتیجه سطحی است که برخلاف توری حصاری تقریباً صاف می‌ماند و چشمه‌هایش زیر بار جابه‌جا نمی‌شوند — به همین دلیل جایی به کار می‌آید که توری باید مثل یک صفحه رفتار کند، نه مثل یک پارچه.</p>
+      </div>
 
-        <h2>قیمت توری پرسی چطور حساب می‌شود</h2>
-        <p><b>هزینه‌ی هر برگ = قیمت هر کیلوگرم × وزن آن برگ</b>. مثال: کد «چشمه ۴×۴ مفتول ۳» وزن هر برگش ۶ کیلوگرم است و کد «چشمه ۵×۵ مفتول ۵» وزن هر برگش ۱۴ کیلوگرم. با قیمت کیلویی یکسان، برگ دوم دقیقاً ۲/۳ برابر برگ اول تمام می‌شود.</p><p>دو متغیر وزن برگ را می‌سازند و در جهت مخالف هم کار می‌کنند: <b>ضخامت مفتول</b> وزن را بالا می‌برد و <b>بزرگ‌ترشدن چشمه</b> وزن را پایین می‌آورد، چون در همان سطح مفتول کمتری مصرف می‌شود. برای همین «چشمه ۲×۲ مفتول ۳» با ۹ کیلوگرم سنگین‌تر از «چشمه ۴×۴ مفتول ۳/۳» با ۷ کیلوگرم است، با اینکه مفتول دومی ضخیم‌تر است.</p><p>وقتی دو پیشنهاد قیمت را کنار هم می‌گذارید، مقایسه‌ی درست روی «قیمت هر برگ» است نه «قیمت هر کیلو». دو فروشنده با قیمت کیلوی یکسان می‌توانند برگ‌هایی با وزن متفاوت بدهند.</p>
+      <div class="guides">
+        <details class="guide" open>
+          <summary>توری پرسی — ادامه‌ی معرفی</summary>
+          <div class="prose"><p>این محصول برگی فروخته می‌شود ولی قیمتش کیلویی است. یعنی برای دانستن هزینه‌ی هر برگ، باید وزن آن برگ را بدانید؛ ستون «وزن هر برگ» در جدول برای همین است.</p></div>
+        </details>
 
-        <div class="callout">
-          <div class="t">قیمت‌ها به ریال است</div>
-          <p>در جدول بالا زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر قیمت این
-             صفحه را با سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را
-             ملاک بگیرید تا مقایسه‌تان درست باشد.</p>
-        </div>
+        <details class="guide">
+          <summary>قیمت توری پرسی چطور حساب می‌شود</summary>
+          <div class="prose"><p><b>هزینه‌ی هر برگ = قیمت هر کیلوگرم × وزن آن برگ</b>. مثال: کد «چشمه ۴×۴ مفتول ۳» وزن هر برگش ۶ کیلوگرم است و کد «چشمه ۵×۵ مفتول ۵» وزن هر برگش ۱۴ کیلوگرم. با قیمت کیلویی یکسان، برگ دوم دقیقاً ۲/۳ برابر برگ اول تمام می‌شود.</p><p>دو متغیر وزن برگ را می‌سازند و در جهت مخالف هم کار می‌کنند: <b>ضخامت مفتول</b> وزن را بالا می‌برد و <b>بزرگ‌ترشدن چشمه</b> وزن را پایین می‌آورد، چون در همان سطح مفتول کمتری مصرف می‌شود. برای همین «چشمه ۲×۲ مفتول ۳» با ۹ کیلوگرم سنگین‌تر از «چشمه ۴×۴ مفتول ۳/۳» با ۷ کیلوگرم است، با اینکه مفتول دومی ضخیم‌تر است.</p><p>وقتی دو پیشنهاد قیمت را کنار هم می‌گذارید، مقایسه‌ی درست روی «قیمت هر برگ» است نه «قیمت هر کیلو». دو فروشنده با قیمت کیلوی یکسان می‌توانند برگ‌هایی با وزن متفاوت بدهند.</p>
+            <div class="callout">
+              <div class="t">قیمت‌ها به ریال است</div>
+              <p>زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر این قیمت را با
+                 سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را ملاک
+                 بگیرید تا مقایسه درست باشد.</p>
+            </div>
+          </div>
+        </details>
 
-        <h2>کدام چشمه و کدام مفتول</h2>
-        <h3>چشمه ۲×۲</h3><p>ریزترین چشمه‌ی این دسته. برای حفاظ پنجره، درِ محوطه و جایی که نباید دست یا شیء کوچک رد شود.</p><h3>چشمه ۳×۳ و ۴×۴</h3><p>پرکاربردترین بازه در نرده و حفاظ. تعادل قابل قبولی بین استحکام و هزینه‌ی هر مترمربع دارند.</p><h3>چشمه ۵×۵</h3><p>سبک‌ترین گزینه در واحد سطح؛ برای پوشش‌های محافظتی و قاب‌بندی سازه‌ای که وزن مهم است.</p><h3>مفتول ۳ تا ۳/۶</h3><p>برای کاربردهای معمول ساختمانی و حفاظ سبک.</p><h3>مفتول ۴ تا ۵</h3><p>برای نرده‌ی صنعتی، قفس ماشین‌آلات و جایی که توری باید در برابر ضربه‌ی مستقیم بایستد.</p>
+        <details class="guide">
+          <summary>کدام چشمه و کدام مفتول</summary>
+          <div class="prose"><h3>چشمه ۲×۲</h3><p>ریزترین چشمه‌ی این دسته. برای حفاظ پنجره، درِ محوطه و جایی که نباید دست یا شیء کوچک رد شود.</p><h3>چشمه ۳×۳ و ۴×۴</h3><p>پرکاربردترین بازه در نرده و حفاظ. تعادل قابل قبولی بین استحکام و هزینه‌ی هر مترمربع دارند.</p><h3>چشمه ۵×۵</h3><p>سبک‌ترین گزینه در واحد سطح؛ برای پوشش‌های محافظتی و قاب‌بندی سازه‌ای که وزن مهم است.</p><h3>مفتول ۳ تا ۳/۶</h3><p>برای کاربردهای معمول ساختمانی و حفاظ سبک.</p><h3>مفتول ۴ تا ۵</h3><p>برای نرده‌ی صنعتی، قفس ماشین‌آلات و جایی که توری باید در برابر ضربه‌ی مستقیم بایستد.</p></div>
+        </details>
 
-        <h2>چهار اشتباه رایج در خرید توری پرسی</h2>
-        <ul class="bul"><li><b>سفارش بر پایه‌ی تعداد برگ بدون دانستن وزن برگ.</b> فاکتور کیلویی بسته می‌شود؛ اگر وزن برگ را نپرسیده باشید، مبلغ نهایی غافلگیرتان می‌کند.</li><li><b>یکسان‌گرفتن توری پرسی و مش جوشی.</b> این دو محصول جدا هستند: در پرسی مفتول‌ها پرس می‌شوند و در مش، میلگردها جوش می‌خورند. برای بتن‌آرمه مش جوشی درست است، نه پرسی.</li><li><b>ندیدن اختلاف نام و مشخصات.</b> اسم بعضی کدها با ستون چشمه‌شان همخوان نیست؛ پیش از ثبت سفارش، عدد ستون «چشمه» را ملاک بگیرید و تلفنی تأیید کنید.</li></ul>
+        <details class="guide">
+          <summary>چهار اشتباه رایج در خرید توری پرسی</summary>
+          <div class="prose"><ul class="bul"><li><b>سفارش بر پایه‌ی تعداد برگ بدون دانستن وزن برگ.</b> فاکتور کیلویی بسته می‌شود؛ اگر وزن برگ را نپرسیده باشید، مبلغ نهایی غافلگیرتان می‌کند.</li><li><b>یکسان‌گرفتن توری پرسی و مش جوشی.</b> این دو محصول جدا هستند: در پرسی مفتول‌ها پرس می‌شوند و در مش، میلگردها جوش می‌خورند. برای بتن‌آرمه مش جوشی درست است، نه پرسی.</li><li><b>ندیدن اختلاف نام و مشخصات.</b> اسم بعضی کدها با ستون چشمه‌شان همخوان نیست؛ پیش از ثبت سفارش، عدد ستون «چشمه» را ملاک بگیرید و تلفنی تأیید کنید.</li></ul></div>
+        </details>
       </div>
     </div>
   </section>
@@ -505,5 +554,6 @@
   <a href="https://wa.me/989001066030"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>واتساپ</a>
   <a href="price.html"><svg aria-hidden="true"><use href="#i-chart"/></svg>قیمت‌ها</a>
 </nav>
+<script src="assets/table.js" defer></script>
 </body>
 </html>
