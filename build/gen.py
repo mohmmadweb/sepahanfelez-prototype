@@ -410,12 +410,11 @@ def price_row(key, row, idx, specs, with_cat=False):
     return f"""<tr data-name="{esc(name)}" data-price="{p}" {data_specs}>
   <td class="cell-name" data-label="محصول">
     <div class="p-name"><a href="{href}">{esc(name)}</a></div>
-    <div class="p-meta">{cat_line}واحد: {esc(unit_of(row))} <span class="mine">{icon('i-shield')}تولید ما</span></div>
-    <div class="p-meta"><span class="stock stock-in">موجود</span> {flag}</div>
+    <div class="p-meta">{cat_line}واحد: {esc(unit_of(row))}</div>
+    <div class="p-meta">{flag}</div>
   </td>
   <td class="cell-price" data-label="قیمت روز">
     <span class="p-price num">{fmt(p)}</span><span class="riyal">ریال</span>
-    <span class="toman">معادل <span class="num">{toman(p)}</span> تومان</span>
   </td>
   <td data-label="تغییر از آخرین ثبت">{delta_badge(d, p)}</td>
   {spec_tds}
@@ -605,8 +604,7 @@ def build_index():
       <div class="board-head">
         <div>
           <h2 class="board-title">قیمت روز صنایع مفتولی<span>مستقیم از خط تولید، بدون واسطه</span></h2>
-          <p class="lede">۷۰ کد کالای فعال در ۹ دسته. قیمت درب کارخانه‌ی اصفهان به ریال —
-             و معادل تومانی هر عدد، زیر همان عدد.</p>
+          <p class="lede">۷۰ کد کالای فعال در ۹ دسته. قیمت درب کارخانه‌ی اصفهان، به ریال.</p>
         </div>
         <span class="stamp"><span class="dot"></span>بروزرسانی: امروز {TODAY} — ساعت ۹:۰۰</span>
       </div>
@@ -789,8 +787,8 @@ def build_price():
         {icon('i-refresh')}
         <div>
           <div class="t">همه‌ی قیمت‌ها به ریال و درب کارخانه‌ی اصفهان</div>
-          <div class="d">زیر هر قیمت، معادل تومانی آن نوشته شده تا مقایسه با سایت‌هایی که
-            تومانی کار می‌کنند بدون محاسبه‌ی ذهنی ممکن باشد. ارزش افزوده جداگانه است.</div>
+          <div class="d">همه‌ی قیمت‌ها به ریال و درب کارخانه‌ی اصفهان است.
+            ارزش افزوده جداگانه محاسبه می‌شود.</div>
         </div>
       </div>
       <div class="chiprow">{chips}</div>
@@ -899,9 +897,9 @@ def build_category(key):
           <div class="prose">{pricing}
             <div class="callout">
               <div class="t">قیمت‌ها به ریال است</div>
-              <p>زیر هر عدد ریالی، معادل تومانی‌اش نوشته شده. اگر این قیمت را با
-                 سایتی که تومانی کار می‌کند مقایسه می‌کنید، عدد کوچک‌تر را ملاک
-                 بگیرید تا مقایسه درست باشد.</p>
+              <p>همه‌ی قیمت‌های این جدول به ریال است. اگر با سایتی که تومانی
+                 کار می‌کند مقایسه می‌کنید، حواستان به واحد باشد — عدد ریالی
+                 ده برابر عدد تومانی است.</p>
             </div>
           </div>
         </details>
@@ -1004,13 +1002,13 @@ def build_product(key, row, idx):
       <div class="ixgrid ix-3">
         <div class="ix"><span class="k">قیمت روز</span>
           <span class="v"><span class="num">{fmt(p)}</span> <span class="u">ریال / {esc(unit)}</span></span>
-          <span class="range">معادل <span class="num">{toman(p)}</span> تومان</span></div>
+          <span class="range">قیمت مبنای روز درب کارخانه</span></div>
         <div class="ix"><span class="k">نوسان نسبت به ثبت قبلی</span>
           <span class="v">{delta_badge(d, p)}</span>
           <span class="range">قیمت قبلی: <span class="num">{fmt(d)}</span> ریال</span></div>
-        <div class="ix"><span class="k">وضعیت</span>
-          <span class="v">موجود</span>
-          <span class="range">بارگیری از کارخانه‌ی اصفهان</span></div>
+        <div class="ix"><span class="k">محل بارگیری</span>
+          <span class="v">کارخانه‌ی اصفهان</span>
+          <span class="range">تحویل از انبار اصفهان و تهران</span></div>
       </div>
       <div class="board-call">
         <p class="say">برای این کد <b>قیمت قطعی، تناژ و زمان تحویل</b> را تلفنی بگیرید.
