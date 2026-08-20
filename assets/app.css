@@ -404,13 +404,16 @@ td.num,th.num{display:table-cell}
    ========================================================================== */
 .callband{background:var(--board-2); color:var(--ink); padding-block:var(--s6);
   border-block:1px solid var(--line)}
+/* بدون min-width:0 ستون گرید زیر عرض محتوایش جمع نمی‌شود و در ۳۲۰px
+   هشت پیکسل از کادر بیرون می‌زند. */
 .callband .container{display:grid; grid-template-columns:1.15fr 1fr; gap:var(--s7);
   align-items:center}
+.callband .container > *{min-width:0}
 .callband h2{color:var(--ink); font-size:var(--t-2xl); line-height:1.45}
 .callband p{color:var(--ink-2); font-size:var(--t-base); margin-top:var(--s3); max-width:58ch;
   line-height:1.75}
 .callband .hours{display:flex; align-items:center; gap:var(--s2); margin-top:var(--s4);
-  font-size:var(--t-sm); color:#C7D7E6}
+  font-size:var(--t-sm); color:var(--ink-2)}
 .callband .hours svg{width:19px;height:19px}
 .lines{display:grid; gap:var(--s3)}
 .line{background:#fff; border:1.5px solid var(--line-2);
@@ -1060,4 +1063,19 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
   .contact-grid{grid-template-columns:1fr; gap:var(--s5)}
   .cform-grid{grid-template-columns:1fr}
   .contact-tel .n{font-size:var(--t-2xl)}
+}
+
+/* یادداشت فرم: شماره‌ی تلفن nowrap است و در ۳۲۰px کل خط را پهن می‌کرد.
+   خط اجازه‌ی شکستن می‌گیرد و خودِ شماره یکپارچه می‌ماند. */
+.cform-note{flex-wrap:wrap; row-gap:4px}
+.cform-note b{white-space:nowrap}
+.cform,.cform *{min-width:0}
+
+/* شماره‌ی تلفن در نوار تماس هم nowrap است و در ۳۲۰px کف عرض صفحه را
+   بالا می‌برد. کارت اجازه‌ی جمع‌شدن می‌گیرد و در تنگ‌ترین عرض، اندازه‌ی
+   شماره یک پله کوچک می‌شود تا یکپارچه بماند و صفحه پهن نشود. */
+.lines,.line,.line *{min-width:0}
+@media (max-width:340px){
+  .line .number,.fcall .number,.callbox .num{font-size:var(--t-xl)}
+  .contact-tel .n{font-size:var(--t-xl)}
 }

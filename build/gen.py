@@ -449,7 +449,10 @@ def filter_bar(key, specs, rows, tid):
                       key=lambda v: (num_key(v), v))
         if len(vals) < 2:
             continue
-        opts = "".join(f'<option value="{esc(v)}">{esc(v)}</option>' for v in vals)
+        # مقدار option لاتین می‌ماند چون با data-s* مقایسه می‌شود؛ فقط
+        # برچسبِ دیده‌شده فارسی است. fa_digits به داخل تگ دست نمی‌زند،
+        # پس برچسب را همین‌جا صریح فارسی می‌کنیم.
+        opts = "".join(f'<option value="{esc(v)}">{fa(esc(v))}</option>' for v in vals)
         sels.append(f"""<label class="ffield">
         <span>{esc(sp)}</span>
         <select data-spec="{n}"><option value="">همه</option>{opts}</select>
@@ -906,7 +909,7 @@ def build_category(key):
             <div class="callout">
               <div class="t">قیمت‌ها به ریال است</div>
               <p>همه‌ی قیمت‌های این جدول به ریال است. اگر با سایتی که تومانی
-                 کار می‌کند مقایسه می‌کنید، حواستان به واحد باشد — عدد ریالی
+                 کار می‌کند مقایسه می‌فرمایید، به واحد توجه بفرمایید؛ عدد ریالی
                  ده برابر عدد تومانی است.</p>
             </div>
           </div>
@@ -1245,13 +1248,14 @@ def build_contact():
 
       <div class="prose">
         <h2>پیام بفرستید</h2>
-        <p>اگر خارج از ساعت کاری است، مشخصات و تناژ موردنیازتان را بگذارید تا
-           اولین وقت اداری تماس بگیریم.</p>
+        <p>در صورت مراجعه خارج از ساعات اداری، مشخصات و تناژ موردنیاز خود را ثبت
+           بفرمایید؛ در نخستین فرصت اداری با شما تماس گرفته خواهد شد.</p>
       </div>
 
       <form class="cform" method="post" action="{u_contact()}">
-        <p class="cform-note">{icon('i-clock')} در این نسخه‌ی نمایشی فرم غیرفعال
-          است. برای پاسخ فوری با <b class="num">{PHS}</b> تماس بگیرید.</p>
+        <p class="cform-note">{icon('i-clock')} در این نسخه‌ی نمایشی، فرم غیرفعال
+          است. جهت دریافت پاسخ فوری با شماره <b class="num">{PHS}</b> تماس
+          حاصل فرمایید.</p>
         <div class="cform-grid">
           <label class="ffield"><span>نام</span>
             <input name="first_name" type="text" minlength="2" maxlength="25" required disabled></label>
@@ -1275,7 +1279,61 @@ def build_contact():
 {footer(show_addr=False)}{dock()}"""
 
 
+
+# ---------------------------------------------------------------------------
+# ارقام فارسی در سراسر خروجی
+# ---------------------------------------------------------------------------
+# چرا پس‌پردازش روی HTML نهایی و نه fa() سر هر رشته: ارقام از سه جا می‌آیند —
+# کاتالوگ، متن content.py و قالب‌های خود این فایل — و پوشاندن تک‌تک آن‌ها
+# هم فراموش‌شدنی است هم پرخطا. اینجا یک‌بار، فقط روی متنِ دیده‌شده اعمال
+# می‌شود.
+#
+# چیزهایی که عمداً لاتین می‌مانند، چون اگر فارسی شوند کار نمی‌کنند:
+#   • هر چیزی داخل تگ (href، src، data-price، class، aria-*)
+#   • محتوای <script> و <style>
+#   • موجودیت‌های HTML مثل &#39; و &quot;
+# مرورگر tel: را با رقم فارسی شماره‌گیری نمی‌کند و مرتب‌سازی جدول روی
+# data-price عدد لاتین می‌خواهد.
+_FA = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
+_SKIP = re.compile(r"(?is)<(script|style)\b.*?</\1>")
+_ENT  = re.compile(r"&[#A-Za-z0-9]+;")
+
+
+def fa_digits(html_out):
+    """ارقام لاتینِ متنِ دیده‌شده را فارسی می‌کند."""
+    parts, last = [], 0
+    for blk in _SKIP.finditer(html_out):
+        parts.append((last, blk.start(), True))    # ناحیه‌ی قابل تبدیل
+        parts.append((blk.start(), blk.end(), False))
+        last = blk.end()
+    parts.append((last, len(html_out), True))
+
+    out = []
+    for a, b, convert in parts:
+        seg = html_out[a:b]
+        if not convert:
+            out.append(seg); continue
+        # فقط متنِ بین > و < ، یعنی بیرون از تگ‌ها
+        buf, pos = [], 0
+        for m in re.finditer(r">([^<>]+)<", seg):
+            buf.append(seg[pos:m.start(1)])
+            txt = m.group(1)
+            # موجودیت‌ها را دست‌نخورده نگه دار
+            sub, k = [], 0
+            for e in _ENT.finditer(txt):
+                sub.append(txt[k:e.start()].translate(_FA))
+                sub.append(e.group(0))
+                k = e.end()
+            sub.append(txt[k:].translate(_FA))
+            buf.append("".join(sub))
+            pos = m.end(1)
+        buf.append(seg[pos:])
+        out.append("".join(buf))
+    return "".join(out)
+
+
 def write(path, s):
+    s = fa_digits(s)
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)   # مسیرها حالا تودرتواند
     with open(full, "w", encoding="utf-8") as f:
