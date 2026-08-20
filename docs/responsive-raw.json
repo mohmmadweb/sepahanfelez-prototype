@@ -1,0 +1,122 @@
+{
+ "fouladtofighi.com": {
+  "360": {
+   "sw": 360,
+   "cw": 360,
+   "over": false,
+   "tiny": 3,
+   "fs": 16
+  },
+  "390": {
+   "sw": 390,
+   "cw": 390,
+   "over": false,
+   "tiny": 3,
+   "fs": 16
+  },
+  "768": {
+   "sw": 768,
+   "cw": 768,
+   "over": false,
+   "tiny": 4,
+   "fs": 14
+  },
+  "1440": {
+   "sw": 1440,
+   "cw": 1440,
+   "over": false,
+   "tiny": 2,
+   "fs": 16
+  }
+ },
+ "ahantakhfif.com": {
+  "360": {
+   "sw": 360,
+   "cw": 360,
+   "over": false,
+   "tiny": 15,
+   "fs": 16
+  },
+  "390": {
+   "sw": 390,
+   "cw": 390,
+   "over": false,
+   "tiny": 15,
+   "fs": 16
+  },
+  "768": {
+   "sw": 768,
+   "cw": 768,
+   "over": false,
+   "tiny": 16,
+   "fs": 16
+  },
+  "1440": {
+   "sw": 1440,
+   "cw": 1440,
+   "over": false,
+   "tiny": 50,
+   "fs": 16
+  }
+ },
+ "maftoolkala.com": {
+  "360": {
+   "sw": 360,
+   "cw": 360,
+   "over": false,
+   "tiny": 23,
+   "fs": 14
+  },
+  "390": {
+   "sw": 390,
+   "cw": 390,
+   "over": false,
+   "tiny": 23,
+   "fs": 14
+  },
+  "768": {
+   "sw": 768,
+   "cw": 768,
+   "over": false,
+   "tiny": 19,
+   "fs": 14
+  },
+  "1440": {
+   "sw": 1440,
+   "cw": 1440,
+   "over": false,
+   "tiny": 20,
+   "fs": 14
+  }
+ },
+ "OURS": {
+  "360": {
+   "sw": 360,
+   "cw": 360,
+   "over": false,
+   "tiny": 3,
+   "fs": 17
+  },
+  "390": {
+   "sw": 390,
+   "cw": 390,
+   "over": false,
+   "tiny": 3,
+   "fs": 17
+  },
+  "768": {
+   "sw": 768,
+   "cw": 768,
+   "over": false,
+   "tiny": 3,
+   "fs": 17
+  },
+  "1440": {
+   "sw": 1440,
+   "cw": 1440,
+   "over": false,
+   "tiny": 3,
+   "fs": 18
+  }
+ }
+}
