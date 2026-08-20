@@ -555,63 +555,44 @@ def slide_bg(img):
 
 
 def hero():
-    """بنر اسلایدری تمام‌عرض صفحه‌ی اصلی.
+    """بنر صفحه‌ی اصلی.
 
-    الگو از ahanonline: خودِ تصویر محتواست و اسلایدها جلو می‌روند.
-    چرخش خودکار در assets/hero.js است؛ بدون جاوااسکریپت هم اسلایدها با
-    کشیدن انگشت و نقطه‌های لنگر کار می‌کنند.
+    عکس، خودش پیام است: فقط عنوان روی آن می‌نشیند. زیرعنوان، توضیح،
+    برچسب و دکمه به خواست کارفرما برداشته شدند و روکش سفید هم حذف شد
+    تا تصویر بی‌کم‌وکاست دیده شود.
 
-    متن روی اسلاید اختیاری است: اگر در content.SLIDES کلید title خالی
-    باشد، فقط تصویر نمایش داده می‌شود — همان حالتی که وقتی بنر طراحی‌شده
-    با متن داخل خودش دارید لازم است.
+    ساختار اسلایدر دست‌نخورده مانده: با افزودن عضو دوم به content.SLIDES
+    نقطه‌های پیمایش و چرخش خودکار خودبه‌خود برمی‌گردند.
     """
     slides, dots = [], []
     for i, sl in enumerate(C.SLIDES, 1):
         c = C.CATS.get(sl.get("cat"))
         href = u_cat(sl["cat"]) if c else u_price()
         bg = slide_bg(sl.get("img"))
-        has_text = bool(sl.get("title"))
+        title = sl.get("title")
 
-        inner = ""
-        if has_text:
-            tag = "h1" if i == 1 else 'p class="stitle"'
-            endtag = "h1" if i == 1 else "p"
-            sub = (f'<span>{esc(sl["sub"])}</span>' if sl.get("sub") else "")
-            desc = (f'<p class="sdesc">{esc(sl["desc"])}</p>' if sl.get("desc") else "")
-            eyebrow = (f'<p class="eyebrow">{esc(sl["eyebrow"])}</p>'
-                       if sl.get("eyebrow") else "")
-            if i == 1:
-                cta = (f'<a class="slide-tel" href="tel:{PH}" data-track="call-slide">'
-                       f'{icon("i-phone")}<span>'
-                       f'<span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>'
-                       f'<span class="n num">{PHS}</span></span></a>'
-                       f'<a class="btn btn-ghost" href="{href}">'
-                       f'مشاهده قیمت‌ها {icon("i-chev")}</a>')
-            else:
-                cta = (f'<a class="btn btn-lg" href="{href}">'
-                       f'قیمت روز {esc(sl["title"])} {icon("i-chev")}</a>')
-            inner = f"""<div class="container"><div class="slide-in">
-        {eyebrow}
-        <{tag}>{esc(sl['title'])}{sub}</{endtag}>
-        {desc}
-        <div class="slide-cta">{cta}</div>
-      </div></div>"""
+        if title:
+            tag, endtag = ("h1", "h1") if i == 1 else ('p class="stitle"', "p")
+            inner = (f'<div class="container"><div class="slide-in">'
+                     f'<{tag}>{esc(title)}</{endtag}></div></div>')
         else:
-            # بنر طراحی‌شده: تصویر تنها. لینک روی کل اسلاید تا کلیک هدر نرود.
             inner = (f'<a class="slide-link" href="{href}" '
                      f'aria-label="{esc(sl.get("alt") or "مشاهده قیمت‌ها")}"></a>')
 
-        cls = "slide has-text" if has_text else "slide"
-        label = esc(sl.get("title") or sl.get("alt") or f"اسلاید {i}")
+        cls = "slide has-title" if title else "slide"
+        label = esc(title or sl.get("alt") or f"اسلاید {i}")
         slides.append(f'<article class="{cls}" id="s{i}"{bg} '
                       f'aria-roledescription="اسلاید" aria-label="{label}">'
                       f'{inner}</article>')
         dots.append(f'<a href="#s{i}"><span class="vh">اسلاید {fa(i)}</span></a>')
 
+    # با یک اسلاید، نشانگر معنایی ندارد
+    nav = (f'<nav class="hero-dots" aria-label="انتخاب اسلاید">{"".join(dots)}</nav>'
+           if len(slides) > 1 else "")
     return f"""
 <section class="hero" aria-label="معرفی محصولات" aria-roledescription="اسلایدر">
   <div class="hero-track">{''.join(slides)}</div>
-  <nav class="hero-dots" aria-label="انتخاب اسلاید">{''.join(dots)}</nav>
+  {nav}
 </section>"""
 
 
