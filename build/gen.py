@@ -523,6 +523,37 @@ def price_table(key, caption, limit=None, with_cat=False, search=False):
 #
 # پس‌زمینه SVG درون‌خطی است — بافت توری، یعنی خود محصول. عکس محصولی در
 # مخزن نیست و بافت توری هم در هر اندازه تیز می‌ماند و فایلی هم بار نمی‌کند.
+
+def slide_bg(img):
+    """اعلان background-image اسلاید، با webp و نسخه‌ی رتینا اگر موجود باشند.
+
+    دو اعلان پشت سر هم نوشته می‌شود: اولی url ساده برای مرورگرهای قدیمی،
+    دومی image-set که مرورگر نو آن را می‌فهمد و webp و ۲x را برمی‌دارد.
+    مرورگری که image-set را نشناسد، خط دوم را نادیده می‌گیرد و همان jpg
+    را نشان می‌دهد — پس هیچ‌جا بنر خالی نمی‌ماند.
+    """
+    if not img:
+        return ""
+    stem, _, ext = img.rpartition(".")
+    stem = stem or img
+    base = os.path.join(ROOT, "assets", "slides")
+    have = lambda f: os.path.exists(os.path.join(base, f))
+
+    jpg = f"{stem}.jpg" if have(f"{stem}.jpg") else img
+    parts = []
+    for suffix, dens in ((f"{stem}.webp", "1x"), (f"{stem}@2x.webp", "2x")):
+        if have(suffix):
+            parts.append(f'url(/assets/slides/{suffix}) type("image/webp") {dens}')
+    for suffix, dens in ((jpg, "1x"), (f"{stem}@2x.jpg", "2x")):
+        if have(suffix):
+            parts.append(f'url(/assets/slides/{suffix}) type("image/jpeg") {dens}')
+
+    fallback = f"background-image:url(/assets/slides/{esc(jpg)})"
+    if not parts:
+        return f' style="{fallback}"'
+    return f' style="{fallback};background-image:image-set({esc(", ".join(parts))})"'
+
+
 def hero():
     """بنر اسلایدری تمام‌عرض صفحه‌ی اصلی.
 
@@ -538,8 +569,7 @@ def hero():
     for i, sl in enumerate(C.SLIDES, 1):
         c = C.CATS.get(sl.get("cat"))
         href = u_cat(sl["cat"]) if c else u_price()
-        bg = (f' style="background-image:url(/assets/slides/{esc(sl["img"])})"'
-              if sl.get("img") else "")
+        bg = slide_bg(sl.get("img"))
         has_text = bool(sl.get("title"))
 
         inner = ""
