@@ -523,5 +523,8 @@ SLIDES = [
     {"img": "keshesh-maftool.webp",
      "title": "سالن کشش مفتول",
      "cat": "توری-حصاری"},
+    {"img": "gharghare-galvanize.webp",
+     "title": "سالن کشش مفتولی گالوانیزه ریزبار",
+     "cat": "توری-جوشی--گالوانیزه-رول"},
 ]
 
