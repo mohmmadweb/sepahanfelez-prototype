@@ -708,93 +708,7 @@ footer.site svg{width:18px;height:18px;flex:none}
   footer.site h3,.fcall .number{color:#000}
 }
 
-/* ===========================================================================
-   اسلایدر صفحه‌ی اصلی
-   ---------------------------------------------------------------------------
-   الگو از ahanonline: بنر بزرگ تمام‌عرض با عکس محصول، تیتر روی عکس و
-   شماره‌ی تلفن زیر آن.
 
-   بدون جاوااسکریپت. لغزش با scroll-snap انجام می‌شود و نقطه‌های پایین
-   لینک لنگر (#s1…) هستند — روی موبایل کشیدن با انگشت و روی دسکتاپ کلیک
-   روی نقطه‌ها. چون جاوااسکریپتی در کار نیست، اسلاید خودکار عوض نمی‌شود؛
-   این عمدی است: چرخش خودکار برای مخاطب بالای ۴۰ سال آزاردهنده است و
-   متن را قبل از تمام‌شدن خواندن می‌برد.
-
-   عکس‌ها در assets/slides/ می‌نشینند. اگر عکسی نباشد، پس‌زمینه‌ی روشنِ
-   جایگزین دیده می‌شود و چیزی نمی‌شکند.
-   =========================================================================== */
-.hero{position:relative; background:var(--surface);
-  border-bottom:1px solid var(--line)}
-.hero-track{display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
-  scroll-behavior:smooth; scrollbar-width:none}
-.hero-track::-webkit-scrollbar{display:none}
-
-.slide{flex:0 0 100%; scroll-snap-align:start; position:relative;
-  min-height:440px; display:grid; align-items:center;
-  background-size:cover; background-position:center;
-  background-repeat:no-repeat; background-color:var(--surface-2)}
-
-/* روکش روشن تا متن روی هر عکسی خوانا بماند — از سمت راست که متن آنجاست */
-.slide::before{content:""; position:absolute; inset:0;
-  background:linear-gradient(to left,
-    rgba(255,255,255,.97) 0%, rgba(255,255,255,.93) 38%,
-    rgba(255,255,255,.55) 66%, rgba(255,255,255,.12) 100%)}
-
-.slide > .container{position:relative; width:100%}
-.slide-in{max-width:56ch; padding-block:var(--s7)}
-.slide .eyebrow{display:inline-block; font-size:var(--t-sm); font-weight:700;
-  color:var(--brand-dark); background:var(--brand-soft);
-  border:1px solid rgba(180,35,50,.30); border-radius:999px;
-  padding:6px 14px; margin-bottom:var(--s4)}
-.slide h1,.slide h2.stitle{font-size:var(--t-4xl); font-weight:900;
-  line-height:1.28; letter-spacing:-.02em; color:var(--ink); margin:0}
-.slide h1 span,.slide h2.stitle span{display:block; color:var(--steel-ink);
-  font-weight:800; font-size:var(--t-2xl); margin-top:var(--s2)}
-.slide p.sdesc{color:var(--ink-2); font-size:var(--t-lg); line-height:1.75;
-  margin-top:var(--s4)}
-
-.slide-cta{display:flex; align-items:center; gap:var(--s4);
-  flex-wrap:wrap; margin-top:var(--s6)}
-.slide-tel{display:inline-flex; align-items:center; gap:var(--s3);
-  background:#fff; color:var(--ink); border:2px solid var(--brand);
-  border-radius:var(--radius-lg); padding:12px 20px;
-  box-shadow:var(--sh-1); text-decoration:none}
-.slide-tel svg{width:30px; height:30px; color:var(--brand); flex:none}
-.slide-tel .l{display:block; font-size:var(--t-xs); font-weight:600;
-  color:var(--ink-2)}
-.slide-tel .n{display:block; font-size:var(--t-2xl); font-weight:900;
-  color:var(--brand-dark); line-height:1.2; direction:ltr; text-align:right}
-.slide-tel:hover{background:var(--brand-soft)}
-.slide-tel:focus-visible{outline:none; box-shadow:var(--ring)}
-
-/* ---- نقطه‌های پیمایش ---- */
-.hero-dots{display:flex; justify-content:center; gap:var(--s2);
-  padding:var(--s3) 0 var(--s4); background:var(--surface)}
-.hero-dots a{width:44px; height:44px; display:grid; place-items:center;
-  text-decoration:none; border-radius:var(--radius)}
-.hero-dots a::before{content:""; width:34px; height:5px; border-radius:3px;
-  background:var(--line-2); transition:background .15s}
-.hero-dots a:hover::before{background:var(--steel-ink)}
-.hero-dots a:focus-visible{outline:none; box-shadow:var(--ring)}
-.hero-dots .vh{position:absolute; width:1px; height:1px; overflow:hidden;
-  clip:rect(0 0 0 0); white-space:nowrap}
-
-@media (max-width:1000px){
-  .slide{min-height:auto}
-  .slide-in{padding-block:var(--s6)}
-  .slide h1,.slide h2.stitle{font-size:var(--t-3xl)}
-  .slide::before{background:linear-gradient(to left,
-    rgba(255,255,255,.97) 0%, rgba(255,255,255,.9) 62%,
-    rgba(255,255,255,.7) 100%)}
-}
-@media (max-width:620px){
-  .slide p.sdesc{font-size:var(--t-base)}
-  .slide-tel{width:100%; justify-content:center}
-  .slide h1 span,.slide h2.stitle span{font-size:var(--t-xl)}
-}
-@media (prefers-reduced-motion:reduce){
-  .hero-track{scroll-behavior:auto}
-}
 
 /* ---- پاصفحه ----
    نسخه‌ی قبلی سه ستون بلند بود و فهرست ۹ دسته را که در منو هست تکرار
@@ -1084,3 +998,105 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
    باید ناحیه‌ی لمسی واقعی داشته باشند. ارتفاع نوار دست‌نخورده می‌ماند و
    فقط ناحیه‌ی قابل کلیک با پدینگ عمودی گسترده می‌شود. */
 .utilbar a{min-height:44px; display:inline-flex; align-items:center}
+
+/* ===========================================================================
+   بنر اسلایدری صفحه‌ی اصلی
+   ---------------------------------------------------------------------------
+   الگو از ahanonline: بنر تمام‌عرض که خودِ تصویر محتواست، بدون کادر و
+   بدون حاشیه، با نشانگرهای خطیِ باریک زیر آن.
+
+   نسبت ابعاد ثابت است تا با عوض‌شدن عکس، ارتفاع بنر نپرد و بقیه‌ی صفحه
+   جابه‌جا نشود. عکس با object-fit:cover جا می‌افتد، پس هر عکسی با هر
+   ابعادی بگذارید بنر نمی‌شکند.
+
+   متن روی تصویر اختیاری است: اگر اسلاید تیتر داشته باشد، روی گرادیان
+   خوانا می‌نشیند؛ اگر عکسِ طراحی‌شده بگذارید (مثل خود ahanonline که متن
+   داخل عکس است) کافی است تیتر را در content.SLIDES خالی بگذارید.
+   =========================================================================== */
+.hero{position:relative; background:var(--surface-2);
+  border-bottom:1px solid var(--line)}
+.hero-track{display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+  scroll-behavior:smooth; scrollbar-width:none; -ms-overflow-style:none}
+.hero-track::-webkit-scrollbar{display:none}
+
+/* نسبت ابعاد شکل بنر را می‌دهد، ولی min-height بر آن مقدم است تا متن
+   در عرض‌های میانی (حدود ۱۰۲۴px) که نسبت، ارتفاع کمی می‌سازد بریده نشود.
+   با عکسِ بدون متن، نسبت حاکم است و بنر دقیقاً باریک می‌ماند. */
+.slide{flex:0 0 100%; scroll-snap-align:start; position:relative;
+  aspect-ratio:1900/470; min-height:210px;
+  background-size:cover; background-position:center;
+  background-repeat:no-repeat; background-color:var(--surface-2);
+  display:flex; align-items:center; overflow:hidden}
+.slide > .container{position:relative; width:100%}
+
+/* گرادیان فقط وقتی متن هست، و فقط پشت متن — نه روی کل عکس */
+.slide.has-text::before{content:""; position:absolute; inset:0;
+  background:linear-gradient(to left,
+    rgba(255,255,255,.96) 0%, rgba(255,255,255,.88) 34%,
+    rgba(255,255,255,.45) 62%, rgba(255,255,255,0) 88%)}
+
+.slide-in{max-width:52ch; padding-block:var(--s5)}
+.slide .eyebrow{display:inline-block; font-size:var(--t-sm); font-weight:700;
+  color:var(--brand-dark); background:var(--brand-soft);
+  border:1px solid rgba(180,35,50,.30); border-radius:999px;
+  padding:5px 13px; margin-bottom:var(--s3)}
+.slide h1,.slide .stitle{font-size:var(--t-3xl); font-weight:900;
+  line-height:1.25; letter-spacing:-.02em; color:var(--ink); margin:0}
+.slide h1 span,.slide .stitle span{display:block; color:var(--steel-ink);
+  font-weight:800; font-size:var(--t-xl); margin-top:6px}
+.slide p.sdesc{color:var(--ink-2); font-size:var(--t-base); line-height:1.7;
+  margin-top:var(--s3); max-width:46ch}
+.slide-cta{display:flex; align-items:center; gap:var(--s3);
+  flex-wrap:wrap; margin-top:var(--s4)}
+
+.slide-tel{display:inline-flex; align-items:center; gap:var(--s3);
+  background:#fff; color:var(--ink); border:2px solid var(--brand);
+  border-radius:var(--radius-lg); padding:10px 18px;
+  box-shadow:var(--sh-1); text-decoration:none}
+.slide-tel svg{width:28px; height:28px; color:var(--brand); flex:none}
+.slide-tel .l{display:block; font-size:var(--t-xs); font-weight:600; color:var(--ink-2)}
+.slide-tel .n{display:block; font-size:var(--t-xl); font-weight:900;
+  color:var(--brand-dark); line-height:1.2; direction:ltr; text-align:right;
+  white-space:nowrap}
+.slide-tel:hover{background:var(--brand-soft)}
+.slide-tel:focus-visible{outline:none; box-shadow:var(--ring)}
+
+/* ---- نشانگرهای خطی، مثل نمونه ---- */
+.hero-dots{position:absolute; inset-inline:0; bottom:14px; z-index:2;
+  display:flex; justify-content:center; gap:10px; pointer-events:none}
+.hero-dots a{pointer-events:auto; width:74px; height:26px;
+  display:grid; place-items:center; text-decoration:none}
+.hero-dots a::before{content:""; width:100%; height:4px; border-radius:2px;
+  background:rgba(18,49,82,.28); transition:background .2s}
+.hero-dots a:hover::before{background:rgba(18,49,82,.55)}
+.hero-dots a[aria-current="true"]::before{background:var(--steel-ink)}
+.hero-dots a:focus-visible{outline:none; box-shadow:var(--ring); border-radius:4px}
+.hero-dots .vh{position:absolute; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap}
+
+@media (max-width:1000px){
+  .slide{aspect-ratio:1200/560}
+  .slide h1,.slide .stitle{font-size:var(--t-2xl)}
+  .slide.has-text::before{background:linear-gradient(to left,
+    rgba(255,255,255,.97) 0%, rgba(255,255,255,.92) 58%,
+    rgba(255,255,255,.66) 100%)}
+}
+@media (max-width:620px){
+  .slide{aspect-ratio:auto; min-height:0}
+  .slide-in{padding-block:var(--s5)}
+  .slide h1 span,.slide .stitle span{font-size:var(--t-lg)}
+  .slide-tel{width:100%; justify-content:center}
+  .hero-dots{position:static; padding:10px 0; background:var(--surface)}
+  .hero-dots a{width:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-track{scroll-behavior:auto}
+}
+
+/* اسلاید بدون متن: کل سطح، مقصد کلیک است */
+.slide-link{position:absolute; inset:0; z-index:1}
+.slide-link:focus-visible{outline:none; box-shadow:inset var(--ring)}
+
+/* اسلایدِ متن‌دار هیچ‌وقت کوتاه‌تر از محتوایش نشود */
+.slide.has-text{height:auto; min-height:min(56vh, 420px)}
+@media (max-width:620px){ .slide.has-text{min-height:0} }

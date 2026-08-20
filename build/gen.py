@@ -342,6 +342,7 @@ def dock():
   <a href="{u_price()}">{icon('i-chart')}قیمت‌ها</a>
 </nav>
 <script src="/assets/table.js" defer></script>
+<script src="/assets/hero.js" defer></script>
 </body>
 </html>"""
 
@@ -523,48 +524,62 @@ def price_table(key, caption, limit=None, with_cat=False, search=False):
 # پس‌زمینه SVG درون‌خطی است — بافت توری، یعنی خود محصول. عکس محصولی در
 # مخزن نیست و بافت توری هم در هر اندازه تیز می‌ماند و فایلی هم بار نمی‌کند.
 def hero():
-    """اسلایدر تمام‌عرض صفحه‌ی اصلی.
+    """بنر اسلایدری تمام‌عرض صفحه‌ی اصلی.
 
-    الگو از ahanonline. بدون جاوااسکریپت: لغزش با scroll-snap و نقطه‌های
-    پایین لینک لنگرند. عکس‌ها از assets/slides/ می‌آیند و در content.SLIDES
-    تعریف می‌شوند؛ نبودِ فایل عکس چیزی را نمی‌شکند.
+    الگو از ahanonline: خودِ تصویر محتواست و اسلایدها جلو می‌روند.
+    چرخش خودکار در assets/hero.js است؛ بدون جاوااسکریپت هم اسلایدها با
+    کشیدن انگشت و نقطه‌های لنگر کار می‌کنند.
+
+    متن روی اسلاید اختیاری است: اگر در content.SLIDES کلید title خالی
+    باشد، فقط تصویر نمایش داده می‌شود — همان حالتی که وقتی بنر طراحی‌شده
+    با متن داخل خودش دارید لازم است.
     """
     slides, dots = [], []
     for i, sl in enumerate(C.SLIDES, 1):
-        c = C.CATS.get(sl["cat"])
+        c = C.CATS.get(sl.get("cat"))
         href = u_cat(sl["cat"]) if c else u_price()
-        # عکس درون style چون نام فایل داده است نه کلاس ثابت
         bg = (f' style="background-image:url(/assets/slides/{esc(sl["img"])})"'
               if sl.get("img") else "")
-        # تیتر اسلاید اول h1 است، بقیه h2 — در هر صفحه فقط یک h1
-        tag = "h1" if i == 1 else 'h2 class="stitle"'
-        endtag = "h1" if i == 1 else "h2"
-        # فقط اسلاید اول کارت تلفن می‌گیرد. سه اسلاید با سه دکمه‌ی
-        # یکسانِ تلفن، همان «المان تکراری» است — و چون هر بار فقط یکی
-        # دیده می‌شود، تکرارش هیچ چیزی هم به نرخ تماس اضافه نمی‌کند.
-        # اسلایدهای بعدی به قیمت همان دسته می‌برند، که کارِ خودشان است.
-        if i == 1:
-            cta = (f'<a class="slide-tel" href="tel:{PH}" data-track="call-slide">'
-                   f'{icon("i-phone")}<span>'
-                   f'<span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>'
-                   f'<span class="n num">{PHS}</span></span></a>'
-                   f'<a class="btn btn-ghost" href="{href}">مشاهده قیمت‌ها {icon("i-chev")}</a>')
-        else:
-            cta = (f'<a class="btn btn-lg" href="{href}">'
-                   f'قیمت روز {esc(sl["title"])} {icon("i-chev")}</a>')
-        slides.append(f"""<article class="slide" id="s{i}"{bg}
-        aria-roledescription="اسلاید" aria-label="{esc(sl['title'])}">
-      <div class="container"><div class="slide-in">
-        <p class="eyebrow">{esc(sl['eyebrow'])}</p>
-        <{tag}>{esc(sl['title'])}<span>{esc(sl['sub'])}</span></{endtag}>
-        <p class="sdesc">{esc(sl['desc'])}</p>
+        has_text = bool(sl.get("title"))
+
+        inner = ""
+        if has_text:
+            tag = "h1" if i == 1 else 'p class="stitle"'
+            endtag = "h1" if i == 1 else "p"
+            sub = (f'<span>{esc(sl["sub"])}</span>' if sl.get("sub") else "")
+            desc = (f'<p class="sdesc">{esc(sl["desc"])}</p>' if sl.get("desc") else "")
+            eyebrow = (f'<p class="eyebrow">{esc(sl["eyebrow"])}</p>'
+                       if sl.get("eyebrow") else "")
+            if i == 1:
+                cta = (f'<a class="slide-tel" href="tel:{PH}" data-track="call-slide">'
+                       f'{icon("i-phone")}<span>'
+                       f'<span class="l">دفتر فروش کارخانه — {C.PHONE_LINES}</span>'
+                       f'<span class="n num">{PHS}</span></span></a>'
+                       f'<a class="btn btn-ghost" href="{href}">'
+                       f'مشاهده قیمت‌ها {icon("i-chev")}</a>')
+            else:
+                cta = (f'<a class="btn btn-lg" href="{href}">'
+                       f'قیمت روز {esc(sl["title"])} {icon("i-chev")}</a>')
+            inner = f"""<div class="container"><div class="slide-in">
+        {eyebrow}
+        <{tag}>{esc(sl['title'])}{sub}</{endtag}>
+        {desc}
         <div class="slide-cta">{cta}</div>
-      </div></div>
-    </article>""")
+      </div></div>"""
+        else:
+            # بنر طراحی‌شده: تصویر تنها. لینک روی کل اسلاید تا کلیک هدر نرود.
+            inner = (f'<a class="slide-link" href="{href}" '
+                     f'aria-label="{esc(sl.get("alt") or "مشاهده قیمت‌ها")}"></a>')
+
+        cls = "slide has-text" if has_text else "slide"
+        label = esc(sl.get("title") or sl.get("alt") or f"اسلاید {i}")
+        slides.append(f'<article class="{cls}" id="s{i}"{bg} '
+                      f'aria-roledescription="اسلاید" aria-label="{label}">'
+                      f'{inner}</article>')
         dots.append(f'<a href="#s{i}"><span class="vh">اسلاید {fa(i)}</span></a>')
 
     return f"""
-<section class="hero" aria-label="معرفی محصولات">
+<section class="hero" aria-label="معرفی محصولات" aria-roledescription="اسلایدر">
   <div class="hero-track">{''.join(slides)}</div>
   <nav class="hero-dots" aria-label="انتخاب اسلاید">{''.join(dots)}</nav>
 </section>"""
