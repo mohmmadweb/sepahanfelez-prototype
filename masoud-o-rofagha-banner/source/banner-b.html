@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Lalezar'; src: url('Lalezar-Regular.ttf'); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1920px; height:720px; overflow:hidden; font-family:'Vazirmatn',sans-serif; }
+
+  .banner {
+    position:relative; width:1920px; height:720px;
+    background:
+      radial-gradient(1200px 800px at 15% 30%, rgba(120,32,40,.55), transparent 70%),
+      linear-gradient(105deg, #58141c 0%, #46101a 45%, #320b13 100%);
+  }
+  .vignette { position:absolute; inset:0;
+    background:radial-gradient(140% 120% at 50% 40%, transparent 55%, rgba(0,0,0,.45) 100%); }
+
+  /* subtle damask-ish texture */
+  .texture { position:absolute; inset:0; opacity:.16;
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,.12) 0 2px, transparent 3px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,.08) 0 2px, transparent 3px);
+    background-size:90px 90px;
+  }
+
+  /* photo right side (RTL: left in flow) */
+  .photo-wrap { position:absolute; top:0; bottom:0; left:40px; width:720px; }
+  .photo {
+    position:absolute; inset:0;
+    background:url('photo-clean.png') center 15%/cover no-repeat;
+    -webkit-mask-image: radial-gradient(ellipse 80% 95% at 42% 48%, #000 45%, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 95% at 42% 48%, #000 45%, transparent 75%);
+  }
+  .photo-tint { position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(70,16,26,.18), rgba(50,11,19,.5) 88%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 95% at 42% 48%, #000 45%, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 95% at 42% 48%, #000 45%, transparent 75%);
+  }
+
+  .content { position:absolute; top:96px; right:120px; width:1000px; text-align:center; z-index:3; }
+  .title {
+    font-family:'Lalezar'; font-size:165px; line-height:1; white-space:nowrap; color:#fdf6e8;
+    text-shadow:0 6px 0 rgba(30,5,8,.55), 0 16px 40px rgba(0,0,0,.55);
+  }
+  .subtitle {
+    font-family:'Lalezar'; font-size:66px; color:#f0d9a6; margin-top:2px;
+    text-shadow:0 4px 18px rgba(0,0,0,.6);
+  }
+
+  .tagline-wrap { margin-top:26px; display:flex; align-items:center; justify-content:center; gap:26px; }
+  .tagline-wrap .line { width:170px; height:2px; background:linear-gradient(90deg, transparent, #d9b877, transparent); }
+  .tagline { font-size:38px; font-weight:500; color:#f3e6cf; text-shadow:0 2px 10px rgba(0,0,0,.6); }
+
+  .strip {
+    position:absolute; right:0; left:0; bottom:0; height:150px; z-index:4;
+    background:linear-gradient(180deg, rgba(20,3,6,0), rgba(16,3,6,.85) 45%);
+    display:flex; align-items:center; justify-content:center; gap:70px; padding:26px 90px 8px;
+  }
+  .col { text-align:center; }
+  .col .h { font-family:'Lalezar'; font-size:34px; color:#f0d9a6; margin-bottom:2px; }
+  .col .t { font-size:26px; color:#eadfce; font-weight:500; }
+  .sep { width:2px; height:74px; background:linear-gradient(180deg, transparent, #caa25c, transparent); }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="texture"></div>
+  <div class="vignette"></div>
+
+  <div class="photo-wrap">
+    <div class="photo"></div>
+    <div class="photo-tint"></div>
+  </div>
+
+  <div class="content">
+    <div class="title">مسعود و مصطفی</div>
+    <div class="subtitle">صنایع مفتولی</div>
+    <div class="tagline-wrap">
+      <div class="line"></div>
+      <div class="tagline">اصالتِ آهن، با گرمای رفاقت</div>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="col">
+      <div class="h">تولیدات</div>
+      <div class="t">مفتول گالوانیزه ، سیم خاردار ، توری حصاری</div>
+    </div>
+    <div class="sep"></div>
+    <div class="col">
+      <div class="h">خدمات</div>
+      <div class="t">برش و خم مفتول ، ساخت سفارشی ، ارسال سراسری</div>
+    </div>
+    <div class="sep"></div>
+    <div class="col">
+      <div class="h">افتخار ما</div>
+      <div class="t">کیفیتی محکم‌تر از رفاقت</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

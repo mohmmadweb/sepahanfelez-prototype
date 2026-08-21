@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Lalezar'; src: url('Lalezar-Regular.ttf'); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1920px; height:720px; overflow:hidden; font-family:'Vazirmatn',sans-serif; }
+
+  .banner {
+    position:relative; width:1920px; height:720px;
+    background:
+      radial-gradient(1100px 700px at 88% 40%, rgba(90,18,22,.55), transparent 65%),
+      radial-gradient(900px 600px at 12% 105%, rgba(255,196,60,.16), transparent 60%),
+      linear-gradient(115deg, #101014 0%, #16151a 45%, #241318 78%, #351317 100%);
+  }
+
+  /* wire mesh pattern */
+  .mesh {
+    position:absolute; inset:0; opacity:.35;
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 46px, rgba(255,255,255,.045) 46px 48px),
+      repeating-linear-gradient(-45deg, transparent 0 46px, rgba(255,255,255,.045) 46px 48px);
+  }
+
+  /* photo — right side, blended */
+  .photo-wrap { position:absolute; top:0; bottom:0; left:0; width:760px; }
+  .photo {
+    position:absolute; inset:0;
+    background:url('photo-clean.png') center 18%/cover no-repeat;
+    -webkit-mask-image: radial-gradient(ellipse 78% 92% at 38% 45%, #000 42%, transparent 74%);
+            mask-image: radial-gradient(ellipse 78% 92% at 38% 45%, #000 42%, transparent 74%);
+    filter: contrast(1.05) saturate(1.02);
+  }
+  .photo-tint { position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(53,19,23,.10), rgba(22,21,26,.55) 85%);
+    background-blend-mode:multiply; pointer-events:none;
+    -webkit-mask-image: radial-gradient(ellipse 78% 92% at 38% 45%, #000 42%, transparent 74%);
+            mask-image: radial-gradient(ellipse 78% 92% at 38% 45%, #000 42%, transparent 74%);
+  }
+
+  /* text block */
+  .content { position:absolute; top:70px; right:110px; width:1010px; text-align:center; z-index:3; }
+  .kicker {
+    display:inline-block; font-family:'Lalezar'; font-size:52px; color:#f5d9a8;
+    letter-spacing:1px; padding:0 34px 6px; position:relative;
+  }
+  .kicker::before, .kicker::after {
+    content:''; position:absolute; top:54%; width:150px; height:3px;
+    background:linear-gradient(90deg, transparent, #b8863d, transparent);
+  }
+  .kicker::before { right:-140px; } .kicker::after { left:-140px; }
+
+  .title {
+    font-family:'Lalezar'; font-size:168px; line-height:1.08; margin-top:-6px;
+    background:linear-gradient(180deg, #ffe9b0 12%, #f7b733 45%, #e88b1a 70%, #c96a12 95%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,.65)) drop-shadow(0 2px 0 rgba(120,60,0,.8));
+  }
+
+  .tagline {
+    margin-top:14px; font-size:44px; font-weight:600; color:#f3e9dc;
+    text-shadow:0 3px 14px rgba(0,0,0,.7);
+  }
+  .tagline b { color:#ffb648; }
+
+  /* barbed wire divider */
+  .barb { position:absolute; right:60px; left:640px; top:512px; height:46px; z-index:3; opacity:.9; }
+
+  /* product strip */
+  .strip {
+    position:absolute; right:0; left:0; bottom:0; height:118px; z-index:4;
+    background:linear-gradient(180deg, rgba(10,9,11,.2), rgba(8,7,9,.88) 40%);
+    border-top:2px solid rgba(247,183,51,.55);
+    display:flex; align-items:center; justify-content:center; gap:46px;
+  }
+  .strip .item { font-size:37px; font-weight:700; color:#f6efe3; text-shadow:0 2px 8px rgba(0,0,0,.8); }
+  .strip .dot { width:12px; height:12px; transform:rotate(45deg); background:#f7b733; box-shadow:0 0 14px rgba(247,183,51,.9); }
+
+  /* sparks */
+  .spark { position:absolute; border-radius:50%; z-index:2;
+    background:radial-gradient(circle, rgba(255,214,120,.95), rgba(255,140,30,.35) 55%, transparent 75%);
+    filter:blur(1px);
+  }
+
+  .badge {
+    position:absolute; top:44px; left:730px; z-index:5; text-align:center;
+    width:185px; height:185px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #7c1f26, #4d1116 70%);
+    border:3px solid #e9b95c; box-shadow:0 8px 30px rgba(0,0,0,.6), inset 0 0 24px rgba(233,185,92,.25);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    transform:rotate(-7deg);
+  }
+  .badge .b1 { font-family:'Lalezar'; font-size:44px; color:#ffe9b0; line-height:1; }
+  .badge .b2 { font-size:23px; font-weight:700; color:#f3d9a0; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="mesh"></div>
+
+  <div class="photo-wrap">
+    <div class="photo"></div>
+    <div class="photo-tint"></div>
+  </div>
+
+  <div class="spark" style="width:26px;height:26px;right:220px;top:150px;"></div>
+  <div class="spark" style="width:14px;height:14px;right:410px;top:90px;"></div>
+  <div class="spark" style="width:18px;height:18px;right:120px;top:330px;"></div>
+  <div class="spark" style="width:12px;height:12px;right:860px;top:120px;"></div>
+  <div class="spark" style="width:20px;height:20px;left:700px;top:560px;"></div>
+
+  <div class="content">
+    <div class="kicker">صنایع مفتولی</div>
+    <div class="title">مسعود و مصطفی</div>
+    <div class="tagline">محکم مثل <b>رفاقت</b> ، بُرنده مثل <b>فولاد</b></div>
+  </div>
+
+  <svg class="barb" viewBox="0 0 1200 46" preserveAspectRatio="none">
+    <path d="M0,23 H1200" stroke="#caa14e" stroke-width="3.2"/>
+    <g stroke="#caa14e" stroke-width="3" stroke-linecap="round">
+      <g transform="translate(80,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(260,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(440,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(620,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(800,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(980,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+      <g transform="translate(1140,23)"><path d="M-14,-14 L14,14 M-14,14 L14,-14"/></g>
+    </g>
+  </svg>
+
+  <div class="badge">
+    <div class="b1">تضمین</div>
+    <div class="b2">کیفیت و رفاقت</div>
+  </div>
+
+  <div class="strip">
+    <span class="item">مفتول گالوانیزه</span><span class="dot"></span>
+    <span class="item">توری حصاری</span><span class="dot"></span>
+    <span class="item">سیم خاردار</span><span class="dot"></span>
+    <span class="item">رابیتس</span><span class="dot"></span>
+    <span class="item">میخ و سیم آرماتور</span>
+  </div>
+</div>
+</body>
+</html>
