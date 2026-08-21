@@ -472,6 +472,8 @@ for i, (slug, c) in enumerate(COPY.items(), 1):
         sm = " strip-sm" if len(rows) >= 13 else ""
         if len(hero_files) == 1:
             sm += " strip-one"
+        elif len(hero_files) == 2:
+            sm += " strip-two"
         strip_html = f'<div class="photo-strip{sm}">{cells}</div>'
 
     notes_html = ""
@@ -666,6 +668,8 @@ table.spec tr:nth-child(even) td {{ background: #F7F8FB; }}
 .photo-strip .ph img {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
 .photo-strip .ph:first-child {{ border-bottom-color: {RED}; }}
 .photo-strip.strip-sm .ph {{ height: 22mm; }}
+.photo-strip.strip-two {{ grid-template-columns: 1.3fr 1fr; }}
+.photo-strip.strip-two .ph {{ height: 34mm; }}
 .photo-strip.strip-one {{ grid-template-columns: 1fr; }}
 .photo-strip.strip-one .ph {{ height: 37mm; border-bottom-color: {RED}; }}
 
@@ -692,18 +696,18 @@ table.spec tr:nth-child(even) td {{ background: #F7F8FB; }}
 /* ---------- back cover ---------- */
 .back {{ background: linear-gradient(200deg, {NAVY} 0%, #1B2347 58%, #151B38 100%); color: #fff; }}
 .back-inner {{ position: relative; height: 100%; display: flex; flex-direction: column; align-items: center;
-  padding-top: 26mm; gap: 5mm; }}
-.back-logo img {{ height: 40mm; }}
-.back-title {{ font-size: 19pt; margin-top: 4mm; }}
-.back-tel {{ font-size: 27pt; font-weight: 700; background: {RED}; padding: 3mm 14mm; border-radius: 3mm; }}
-.back-rows {{ width: 132mm; margin-top: 5mm; display: flex; flex-direction: column; gap: 3mm; }}
+  padding-top: 16mm; gap: 4mm; }}
+.back-logo img {{ height: 32mm; }}
+.back-title {{ font-size: 17pt; margin-top: 2mm; }}
+.back-tel {{ font-size: 25pt; font-weight: 700; background: {RED}; padding: 2.6mm 13mm; border-radius: 3mm; }}
+.back-rows {{ width: 134mm; margin-top: 3mm; display: flex; flex-direction: column; gap: 2.4mm; }}
 .back-row {{ display: flex; justify-content: space-between; gap: 6mm; background: rgba(255,255,255,.06);
-  border: 0.35mm solid rgba(255,255,255,.14); border-radius: 2.4mm; padding: 3.2mm 5mm; font-size: 10pt; }}
+  border: 0.35mm solid rgba(255,255,255,.14); border-radius: 2.4mm; padding: 2.7mm 5mm; font-size: 9.6pt; }}
 .back-row b {{ color: #C9CFE4; font-weight: 500; flex-shrink: 0; }}
-.back-qr {{ margin-top: 5mm; display: flex; flex-direction: column; align-items: center; gap: 2.6mm; }}
-.back-qr img {{ width: 26mm; height: 26mm; background: #fff; padding: 2.4mm; border-radius: 2.4mm; }}
-.back-qr span {{ font-size: 9pt; color: #C9CFE4; }}
-.back-foot {{ position: absolute; bottom: 10mm; left: 0; right: 0; text-align: center; font-size: 8.4pt; color: #8A92B5; }}
+.back-qr {{ margin-top: 3mm; display: flex; flex-direction: column; align-items: center; gap: 2mm; }}
+.back-qr img {{ width: 22mm; height: 22mm; background: #fff; padding: 2mm; border-radius: 2.2mm; }}
+.back-qr span {{ font-size: 8.6pt; color: #C9CFE4; }}
+.back-foot {{ position: absolute; bottom: 8mm; left: 0; right: 0; text-align: center; font-size: 8.2pt; color: #8A92B5; }}
 '''
 
 html = f'''<!doctype html>
