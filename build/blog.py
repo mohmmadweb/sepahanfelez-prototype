@@ -121,7 +121,8 @@ PLACEHOLDER = ("data:image/svg+xml;utf8,"
 
 
 def _img(a, cls=""):
-    src = a.get("image") or PLACEHOLDER
+    # مقاله‌ی بی‌عکس: عکس واقعی دستهٔ مرتبط، نه جای خالی
+    src = a.get("image") or cat_photo(related_products(a)[0], 0) or PLACEHOLDER
     return f'<img src="{esc(src)}" alt="{esc(a["title"])}" loading="lazy" decoding="async"{(" class=%s" % cls) if cls else ""}>'
 
 
@@ -283,8 +284,9 @@ def build_article(a):
     rel = "".join(card(x) for x in same_cat_articles(a))
     tags = ("".join(f'<span class="tag">{icon("i-tag")}{esc(t)}</span>' for t in a["tags"])
             if a.get("tags") else "")
-    hero = (f'<figure class="post-hero"><img src="{esc(a["image"])}" alt="{esc(a["title"])}" decoding="async"></figure>'
-            if a.get("image") else "")
+    hero_src = a.get("image") or cat_photo(related_products(a)[0], 0)
+    hero = (f'<figure class="post-hero"><img src="{esc(hero_src)}" alt="{esc(a["title"])}" decoding="async"></figure>'
+            if hero_src else "")
     d = date_str(a)
     body = f"""
   <article class="post">

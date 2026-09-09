@@ -87,10 +87,10 @@ def plants():
     return f"""<div class="plants plants-3">
 {plant("/assets/factory/toloue-sepahan-1.mp4", "/assets/factory/toloue-sepahan-1.jpg",
        "نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان، واحد یک، شهرک صنعتی منتظریه نجف‌آباد",
-       "کارخانه — واحد یک", "اصفهان، شهرک صنعتی منتظریه؛ سالن‌های کشش مفتول، گالوانیزه و بافت")}
+       "کارخانه — واحد یک", "اصفهان، شهرک صنعتی منتظریه (ویلاشهر)، خیابان قادری، پلاک ۱۸۱")}
 {plant("/assets/factory/toloue-sepahan-2.mp4", "/assets/factory/toloue-sepahan-2.jpg",
        "نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان، واحد دو، شهرک صنعتی منتظریه نجف‌آباد",
-       "کارخانه — واحد دو", "اصفهان، شهرک صنعتی منتظریه؛ سالن‌های تولید و محوطه‌ی بارگیری")}
+       "کارخانه — واحد دو", "اصفهان، کمربندی نجف‌آباد، شهرک صنعتی منتظریه، خیابان ۱۰۱")}
 {plant("/assets/factory/tehran-office.mp4", "/assets/factory/tehran-office.jpg",
        "نمای هوایی دفتر تهران سپاهان فلز در بازار آهن شادآباد، مجتمع پارس فلز",
        "دفتر تهران", "بازار آهن شادآباد، بلوار شهید قربانخوانی، مجتمع پارس فلز، پلاک ۹", TEHRAN_MAP)}
@@ -209,21 +209,10 @@ def build_price():
   </section>
 
   <section class="section price-section">
-    <div class="container price-layout">
-      <div class="price-main">
+    <div class="container price-full">
         {changes_table(10)}
         {tables}
-      </div>
-      <aside class="price-side">
-        <div class="side-box sticky">
-          <h3>{icon('i-list')} دسته‌ها</h3>
-          <ul class="jump">{jump}</ul>
-          <a class="side-call" href="tel:{PH}" data-track="call-price-side">
-            {icon('i-phone')}<span><span class="l">استعلام قیمت قطعی</span><span class="n num">{PHS}</span></span></a>
-          <a class="side-wa" href="https://wa.me/{WA}">{icon('i-whatsapp')} ارسال لیست در واتساپ</a>
-          <p class="side-note">ستون «نوسان» تغییر نسبت به آخرین قیمت ثبت‌شده است. قیمت قطعی سفارش به تناژ و مقصد بار بستگی دارد.</p>
-        </div>
-      </aside>
+        <p class="tnote">ستون «نوسان» تغییر نسبت به آخرین قیمت ثبت‌شده است. قیمت قطعی سفارش به تناژ و مقصد بار بستگی دارد و در تماس اعلام می‌شود.</p>
     </div>
   </section>
 {callband()}"""
@@ -523,7 +512,7 @@ def build_contact():
           <a class="fmail" href="mailto:info@sepahanfelez.ir">{icon('i-mail')}info@sepahanfelez.ir</a>
         </div>
         <div class="contact-addr">
-          <h2>کارخانه، دفتر و انبار</h2>
+          <h2>کارخانه و دفتر فروش</h2>
           <ul class="faddr">{addr}</ul>
           <a class="maplink" href="{TEHRAN_MAP}" target="_blank" rel="noopener">
             <img src="/assets/factory/tehran-office.jpg" alt="نمای هوایی دفتر تهران در بازار آهن شادآباد" loading="lazy">
@@ -550,5 +539,5 @@ def build_contact():
   </section>
 {callband()}"""
     return page_shell("تماس با سپاهان فلز — دفتر فروش کارخانه",
-                      f"تماس با دفتر فروش صنایع مفتولی طلوع سپاهان: {C.PHONE_SHOW} با {C.PHONE_LINES}. نشانی کارخانه‌ی اصفهان، دفتر تهران در بازار آهن شادآباد و انبار خاورشهر.",
+                      f"تماس با دفتر فروش صنایع مفتولی طلوع سپاهان: {C.PHONE_SHOW} با {C.PHONE_LINES}. نشانی دو واحد کارخانه در شهرک صنعتی منتظریه‌ی اصفهان و دفتر تهران در بازار آهن شادآباد.",
                       "contact", body, crumbs=[("خانه", u_home()), ("تماس با ما", "#")], show_addr=False)

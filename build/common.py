@@ -352,7 +352,7 @@ def footer(show_addr=True):
     addr = "".join(
         f'<li><span class="a-t">{esc(t)}</span>{esc(a)}</li>'
         for t, a in C.ADDRESSES)
-    addr_col = (f'<div class="fcol-addr"><h3>کارخانه، دفتر و انبار</h3>'
+    addr_col = (f'<div class="fcol-addr"><h3>کارخانه و دفتر فروش</h3>'
                 f'<ul class="faddr">{addr}</ul></div>') if show_addr else ""
     soc = "".join(
         f'<a href="{u}" aria-label="{esc(n)} سپاهان فلز" '

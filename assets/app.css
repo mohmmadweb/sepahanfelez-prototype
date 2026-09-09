@@ -1859,3 +1859,21 @@ table.pt th{padding:9px 12px}
 .toc a{min-height:40px; display:flex; align-items:center}
 .jump a{min-height:44px}
 .flinks a{min-height:44px; display:inline-flex; align-items:center}
+
+/* ---- نسخه ۲۰: بازخورد کارفرما ---- */
+/* کارت شاخص مجله: متن روی عکس باید بی‌زحمت خوانده شود */
+.mag-feature .mag-txt{background:linear-gradient(to top, rgba(11,18,32,.94) 0%, rgba(11,18,32,.82) 45%, rgba(11,18,32,.35) 80%, rgba(11,18,32,0) 100%);
+  padding-top:var(--s8)}
+.mag-feature h2,.mag-feature h2 a{color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.mag-feature p{color:#fff; opacity:.96; text-shadow:0 1px 4px rgba(0,0,0,.6); font-weight:500}
+.mag-feature .mag-meta{color:#fff; opacity:.9}
+.mag-feature .chip{background:rgba(255,255,255,.22); color:#fff; border-color:rgba(255,255,255,.45); backdrop-filter:blur(2px)}
+/* صفحه‌ی قیمت: بدون نوار کناری، جدول تمام‌عرض */
+.price-full{display:block}
+@media (min-width:1100px){table.pt .pt-lo{display:table-cell}}
+.price-full table.pt th,.price-full table.pt td{padding:10px 16px}
+.price-full table.pt .pt-price b{font-size:20px}
+.price-full .tnote{margin-top:var(--s2)}
+
+/* قرمز فقط برای تماس: تیتر جدول تغییرات سرمه‌ای */
+.ch-card .pt-title h2{color:var(--ink)}
