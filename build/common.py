@@ -1,0 +1,436 @@
+# -*- coding: utf-8 -*-
+"""
+قطعات مشترک همه‌ی صفحات: کمکی‌ها، نشانی‌ها، سر و پاصفحه.
+
+هر چیزی که در بیش از یک صفحه تکرار می‌شود اینجاست تا یک تغییر
+(مثلاً شماره‌ی تلفن یا ساعت بروزرسانی) یک‌جا اعمال شود.
+"""
+import json, os, re, html, unicodedata, datetime
+import content as C
+from icons import ICONS
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CAT  = json.load(open(os.path.join(ROOT, "build", "catalog.json"), encoding="utf-8"))
+
+_photos_path = os.path.join(ROOT, "build", "photos.json")
+PHOTOS = json.load(open(_photos_path, encoding="utf-8")) if os.path.exists(_photos_path) else {}
+
+PH, PHS, WA, WAS = C.PHONE_RAW, C.PHONE_SHOW, C.WHATSAPP, C.WA_SHOW
+
+# تعداد کل نوع کالای فعال — از کاتالوگ خوانده می‌شود.
+TOTAL_SKUS = sum(len(CAT[k]["rows"]) for k in C.ORDER if k in CAT and CAT[k].get("rows"))
+N_CATS = len(C.ORDER)
+
+# ساعت بروزرسانی روزانه — به خواست کارفرما ۱۲:۳۰
+UPDATE_TIME = "۱۲:۳۰"
+
+# ---------------------------------------------------------------------------
+# تاریخ شمسی — بدون وابستگی خارجی
+# ---------------------------------------------------------------------------
+JMONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+           "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
+JDAYS = {0: "دوشنبه", 1: "سه‌شنبه", 2: "چهارشنبه", 3: "پنجشنبه",
+         4: "جمعه", 5: "شنبه", 6: "یکشنبه"}
+
+
+def jalali(gy, gm, gd):
+    """گرگوری → شمسی. الگوریتم متعارف (jdf)."""
+    g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+    gy2 = gy + 1 if gm > 2 else gy
+    days = (355666 + (365 * gy) + ((gy2 + 3) // 4) - ((gy2 + 99) // 100)
+            + ((gy2 + 399) // 400) + gd + g_d_m[gm - 1])
+    jy = -1595 + (33 * (days // 12053))
+    days %= 12053
+    jy += 4 * (days // 1461)
+    days %= 1461
+    if days > 365:
+        jy += (days - 1) // 365
+        days = (days - 1) % 365
+    if days < 186:
+        jm = 1 + days // 31
+        jd = 1 + days % 31
+    else:
+        jm = 7 + (days - 186) // 30
+        jd = 1 + (days - 186) % 30
+    return jy, jm, jd
+
+
+def jalali_str(d, with_day=False):
+    jy, jm, jd = jalali(d.year, d.month, d.day)
+    s = f"{jd} {JMONTHS[jm-1]} {jy}"
+    return f"{JDAYS[d.weekday()]} {s}" if with_day else s
+
+
+def jalali_short(d):
+    jy, jm, jd = jalali(d.year, d.month, d.day)
+    return f"{jy}/{jm:02d}/{jd:02d}"
+
+
+_today = datetime.date.today()
+TODAY = jalali_str(_today)              # «۱۸ شهریور ۱۴۰۵»
+TODAY_ISO = _today.isoformat()
+TODAY_SHORT = jalali_short(_today)      # «۱۴۰۵/۰۶/۱۸»
+
+# ---------------------------------------------------------------------------
+# کمکی‌ها
+# ---------------------------------------------------------------------------
+FA_DIGITS = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
+
+
+def fa(s):
+    return str(s).translate(FA_DIGITS)
+
+
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+
+def money(s):
+    d = re.sub(r"[^0-9]", "", str(s))
+    return int(d) if d else 0
+
+
+def fmt(n):
+    return f"{n:,}"
+
+
+def slugify(s):
+    s = unicodedata.normalize("NFKC", str(s)).strip()
+    s = s.replace("*", "x").replace("/", "-").replace('"', "").replace("،", "")
+    s = re.sub(r"\s+", "-", s)
+    s = re.sub(r"[^\w\-؀-ۿ]", "", s)
+    return re.sub(r"-{2,}", "-", s).strip("-")
+
+
+def tidy_decimals(s):
+    """3/0 → 3 ، 2/20 → 2/2 ، 1/200 → 1/2 — صفرهای بی‌معنی اعشار حذف می‌شوند."""
+    def _fix(m):
+        a, b = m.group(1), m.group(2).rstrip("0")
+        return f"{a}/{b}" if b else a
+    return re.sub(r"(?<![\d/])(\d+)/(\d+)(?![\d/])", _fix, str(s))
+
+
+def clean_name(s):
+    """نام محصول برای نمایش: فاصله‌های جاافتاده، «امتر» و اعشارهای اضافه.
+    فقط نمایش؛ اسلاگ و نشانی از نام خام ساخته می‌شود تا با بک‌اند بخواند."""
+    s = str(s).strip()
+    s = s.replace("سانتیمترعرض", "سانتیمتر عرض").replace(" امتر ", " ۱ متر ")
+    s = s.replace("سانتیمتر", "سانتی‌متر").replace("سانتی متر", "سانتی‌متر")
+    s = re.sub(r"(\d)([آ-ی])", r"\1 \2", s)
+    s = re.sub(r"([آ-ی])(\d)", r"\1 \2", s)
+    s = s.replace("*", "×").replace("1.5", "1/5")
+    s = re.sub(r"\s+", " ", s)
+    return tidy_decimals(s)
+
+
+def clean_val(v):
+    """مقدار مشخصات فنی برای نمایش."""
+    s = str(v or "").strip()
+    if not s:
+        return "—"
+    s = s.replace('"', "").replace("*", "×")
+    s = s.replace("کیلو گرم", "کیلوگرم")
+    return tidy_decimals(s)
+
+
+def price_of(row):
+    for k in row:
+        if k.startswith("قیمت روز"):
+            return money(row[k])
+    return 0
+
+
+def delta_of(row):
+    for k in row:
+        if k.startswith("نوسان"):
+            return money(row[k])
+    return 0
+
+
+def unit_of(row):
+    return row.get("واحد", "")
+
+
+def num_key(v):
+    m = re.search(r"\d+(?:[/.]\d+)?", str(v))
+    return float(m.group(0).replace("/", ".")) if m else 9e9
+
+
+def pct(price, prev):
+    if not price or not prev:
+        return 0.0
+    return (price - prev) / prev * 100
+
+
+def icon(name, cls=""):
+    c = f' class="{cls}"' if cls else ""
+    return f'<svg{c} aria-hidden="true"><use href="#{name}"/></svg>'
+
+
+# ---------------------------------------------------------------------------
+# نشانی‌ها — دقیقاً همان قرارداد بک‌اند لاراول (routes/web.php)
+# ---------------------------------------------------------------------------
+SLUGMAP = {}
+_slugmap_path = os.path.join(ROOT, "build", "slugs.json")
+if os.path.exists(_slugmap_path):
+    SLUGMAP = {k: v for k, v in
+               json.load(open(_slugmap_path, encoding="utf-8")).items()
+               if not k.startswith("_")}
+
+
+def prod_slug(name):
+    return SLUGMAP.get(name) or slugify(name)
+
+
+def u_home():                return "/"
+def u_price():               return "/price"
+def u_catlist():             return "/category/"
+def u_about():               return "/about"
+def u_contact():             return "/contact"
+def u_blog():                return "/blog"
+def u_blogcat(slug):         return f"/blog/{slug}"
+def u_article(cat, slug):    return f"/blog/{cat}/{slug}"
+def u_cat(key):              return f"/category/{key}"
+def u_prod(key, name):       return f"/category/{key}/{prod_slug(name)}"
+
+
+def out_path(url):
+    u = url.strip("/")
+    return "index.html" if not u else f"{u}/index.html"
+
+
+# ---------------------------------------------------------------------------
+# آمار هر دسته
+# ---------------------------------------------------------------------------
+def cat_stats(key):
+    rows = CAT[key]["rows"]
+    prices = [price_of(r) for r in rows
+              if price_of(r) > 0 and r["نام محصول"] not in C.SUSPECT]
+    return {
+        "n": len(rows),
+        "min": min(prices) if prices else 0,
+        "max": max(prices) if prices else 0,
+        "avg": sum(prices) // len(prices) if prices else 0,
+        "unit": unit_of(rows[0]) if rows else "",
+    }
+
+
+def cat_photo(key, i=0, thumb=False):
+    lst = PHOTOS.get(key) or []
+    if not lst:
+        return ""
+    p = lst[min(i, len(lst) - 1)]
+    return p.replace("/photo-", "/thumb-") if thumb else p
+
+
+# ---------------------------------------------------------------------------
+# قطعات مشترک صفحه
+# ---------------------------------------------------------------------------
+def head(title, desc, css="/assets/app.css", extra=""):
+    return f"""<!doctype html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="theme-color" content="#B42332">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Black.woff2" crossorigin>
+<link rel="stylesheet" href="{css}">{extra}
+</head>
+<body>
+{ICONS}
+<a class="skip" href="#main">رفتن به محتوای اصلی</a>"""
+
+
+UTILBAR = f"""
+<div class="utilbar">
+  <div class="container">
+    <ul class="util-left">
+      <li>{icon('i-clock')} شنبه تا چهارشنبه ۸ تا ۱۷ — پنجشنبه ۸ تا ۱۳</li>
+      <li><a href="mailto:info@sepahanfelez.ir">{icon('i-mail')} info@sepahanfelez.ir</a></li>
+    </ul>
+    <ul>
+      <li><a href="#">{icon('i-cart')} لیست سفارش (۰)</a></li>
+      <li><a href="#">{icon('i-user')} ناحیه کاربری</a></li>
+    </ul>
+  </div>
+</div>"""
+
+
+def masthead():
+    return f"""
+<header class="masthead">
+  <div class="container">
+    <a class="brand" href="{u_home()}">
+      <svg class="mark" viewBox="0 0 54 54" aria-hidden="true">
+        <rect width="54" height="54" rx="9" fill="#B42332"/>
+        <path d="M13 35c0-6.2 4.2-9.3 9.3-9.3h8.3c3.1 0 5.2-2.1 5.2-4.2s-2.1-4.2-5.2-4.2H15" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <path d="M41 19c0 6.2-4.2 9.3-9.3 9.3h-8.3c-3.1 0-5.2 2.1-5.2 4.2s2.1 4.2 5.2 4.2H39" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".55"/>
+      </svg>
+      <span><span class="name">سپاهان فلز</span><br><span class="sub">فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان</span></span>
+    </a>
+    <div class="search">
+      <label class="vh" for="q">جستجوی محصول</label>
+      <input id="q" type="search" placeholder="جستجوی محصول یا نوع کالا">
+      <button type="button" aria-label="جستجو">{icon('i-search')}</button>
+    </div>
+    <a class="callbox" href="tel:{PH}" data-track="call-header">
+      <span class="icon">{icon('i-phone')}</span>
+      <span>
+        <span class="label">مشاوره و استعلام قیمت</span>
+        <span class="number num">{PHS}</span>
+        <span class="hint">۱۰ خط ویژه — پاسخگویی همین حالا</span>
+      </span>
+    </a>
+  </div>
+</header>"""
+
+
+def mainnav(current=None):
+    def a(href, label, key, cls=""):
+        cur = ' aria-current="page"' if current == key else ""
+        c = f' class="{cls}"' if cls else ""
+        return f'<a href="{href}"{cur}{c}>{label}</a>'
+    links = [a(u_price(), "قیمت لحظه‌ای", "price", "nav-price")]
+    for key in C.ORDER:
+        c = C.CATS[key]
+        links.append(a(u_cat(key), c["nav"], c["slug"]))
+    links.append('<span class="spacer"></span>')
+    links.append(a(u_blog(), "مجله", "blog"))
+    links.append(a(u_about(), "درباره کارخانه", "about"))
+    links.append(a(u_contact(), "تماس با ما", "contact"))
+    return f"""
+<nav class="mainnav" aria-label="منوی اصلی">
+  <div class="container">
+    <div class="nav-scroll">{''.join(links)}</div>
+  </div>
+</nav>"""
+
+
+def stamp(short=False):
+    """نشان بروزرسانی — تاریخ در زمان ساخت نوشته می‌شود و site.js آن را
+    با تاریخ روزِ بازدید جایگزین می‌کند."""
+    t = f'<time data-live-date datetime="{TODAY_ISO}">{TODAY}</time>'
+    if short:
+        return f'<span class="stamp"><span class="dot"></span>بروزرسانی: {t}</span>'
+    return (f'<span class="stamp"><span class="dot"></span>'
+            f'بروزرسانی: امروز {t} — ساعت {UPDATE_TIME}</span>')
+
+
+def callband():
+    return f"""
+<section class="callband" aria-labelledby="cb-h">
+  <div class="container">
+    <div>
+      <h2 id="cb-h">قیمت قطعی خود را از کارشناسان ما بگیرید</h2>
+      <p>جدول، قیمت مبنای روز است. برای تناژ بالا، بار مخلوط، تولید
+         سفارشی یا تحویل در محل، کارشناس فروش قیمت نهایی و زمان تحویل را در کمتر
+         از دو دقیقه اعلام می‌کند.</p>
+      <p class="hours">{icon('i-clock')} شنبه تا چهارشنبه ۸ تا ۱۷ — پنجشنبه ۸ تا ۱۳</p>
+    </div>
+    <div class="lines">
+      <a class="line primary" href="tel:{PH}" data-track="call-band">
+        <span class="label">استعلام قیمت و ثبت سفارش</span>
+        <span class="number num">{PHS}</span>
+        <span class="who">دفتر فروش — {C.PHONE_LINES}</span>
+      </a>
+      <a class="line" href="https://wa.me/{WA}" data-track="whatsapp-band">
+        <span class="label">واتساپ کارشناس فروش</span>
+        <span class="number num">{WAS}</span>
+        <span class="who">ارسال لیست و پیش‌فاکتور</span>
+      </a>
+    </div>
+  </div>
+</section>"""
+
+
+def footer(show_addr=True):
+    addr = "".join(
+        f'<li><span class="a-t">{esc(t)}</span>{esc(a)}</li>'
+        for t, a in C.ADDRESSES)
+    addr_col = (f'<div class="fcol-addr"><h3>کارخانه، دفتر و انبار</h3>'
+                f'<ul class="faddr">{addr}</ul></div>') if show_addr else ""
+    soc = "".join(
+        f'<a href="{u}" aria-label="{esc(n)} سپاهان فلز" '
+        f'rel="noopener" target="_blank">{icon(i)}</a>'
+        for i, n, u in C.SOCIALS)
+    quick = "".join(f'<li><a href="{h}">{l}</a></li>' for h, l in [
+        (u_price(), "قیمت لحظه‌ای"), (u_catlist(), "دسته‌های محصول"),
+        (u_blog(), "مجله سپاهان فلز"), (u_about(), "درباره کارخانه"),
+        (u_contact(), "تماس با ما")])
+    return f"""
+<footer class="site">
+  <div class="container">
+    <div class="fgrid fgrid-3">
+      <div class="fcol-call">
+        <h3>تماس با سپاهان فلز</h3>
+        <p class="fwho">فروشگاه اینترنتی کارخانه‌ی
+          <b>{C.FACTORY['name']}</b> — کامل‌ترین سبد کالایی صنایع مفتولی کشور</p>
+        <a class="fcall" href="tel:{PH}" data-track="call-footer">
+          <span class="label">دفتر فروش — {C.PHONE_LINES}</span>
+          <span class="number num">{PHS}</span>
+        </a>
+        <p class="fmob">واتساپ و شبکه‌های اجتماعی:
+          <a href="https://wa.me/{WA}" class="num">{WAS}</a></p>
+        <div class="socials">{soc}</div>
+        <a class="fmail" href="mailto:info@sepahanfelez.ir">
+          {icon('i-mail')}info@sepahanfelez.ir</a>
+      </div>
+      <div class="fcol-links"><h3>دسترسی سریع</h3><ul class="flinks">{quick}</ul></div>
+      {addr_col}
+    </div>
+    <p class="copyright">فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان</p>
+  </div>
+</footer>"""
+
+
+def dock():
+    return f"""
+<nav class="dock" aria-label="تماس سریع">
+  <a class="primary" href="tel:{PH}" data-track="call-dock">
+    <span class="l">تماس با کارشناس فروش</span>
+    <span class="n num">{PHS}</span>
+  </a>
+  <a href="https://wa.me/{WA}">{icon('i-whatsapp')}واتساپ</a>
+  <a href="{u_price()}">{icon('i-chart')}قیمت‌ها</a>
+</nav>
+<script src="/assets/table.js" defer></script>
+<script src="/assets/hero.js" defer></script>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>"""
+
+
+def crumb(items):
+    out = []
+    for i, (label, href) in enumerate(items):
+        last = i == len(items) - 1
+        if last:
+            out.append(f'<li aria-current="page">{esc(label)}</li>')
+        else:
+            out.append(f'<li><a href="{href}">{esc(label)}</a></li><li class="sep">/</li>')
+    return f'<nav class="crumb" aria-label="مسیر"><div class="container"><ol>{"".join(out)}</ol></div></nav>'
+
+
+def delta_badge(d, price):
+    """تغییر نسبت به آخرین قیمت ثبت‌شده."""
+    if not d or not price:
+        return f'<span class="delta flat">{icon("i-flat")}<span class="num">۰</span></span>'
+    p = pct(price, d)
+    if p > 0.05:
+        return f'<span class="delta up">{icon("i-up")}<span class="num">+{p:.1f}٪</span></span>'
+    if p < -0.05:
+        return f'<span class="delta down">{icon("i-down")}<span class="num">{p:.1f}٪</span></span>'
+    return f'<span class="delta flat">{icon("i-flat")}<span class="num">۰</span></span>'
+
+
+def page_shell(title, desc, nav_key, body, crumbs=None, show_addr=True):
+    """اسکلت کامل صفحه: head + نوارها + main + footer + dock."""
+    return (head(title, desc) + UTILBAR + masthead() + mainnav(nav_key)
+            + (crumb(crumbs) if crumbs else "")
+            + f'\n<main id="main" tabindex="-1">{body}\n</main>'
+            + footer(show_addr) + dock())

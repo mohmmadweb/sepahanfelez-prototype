@@ -1114,3 +1114,748 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
   background:rgba(11,18,32,.62);
   -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
   text-shadow:0 1px 3px rgba(0,0,0,.5)}
+
+/* ===========================================================================
+   نسخه‌ی ۱۹ — بازطراحی به خواست کارفرما (شهریور ۱۴۰۵)
+   ---------------------------------------------------------------------------
+   • نوار تولیدکننده حذف شد؛ • جدول قیمت فشرده به سبک آهن آنلاین؛
+   • صفحه‌ی «قیمت لحظه‌ای» با ستون کناری؛ • صفحه‌ی محصول خلوت با گالری؛
+   • مجله به سبک دیجی‌کالا مگ؛ • سه واحد (دو کارخانه + دفتر تهران).
+   =========================================================================== */
+.factorybar{display:none}
+.dim{color:var(--ink-3); font-weight:500}
+.btn-sm{min-height:40px; padding:0 var(--s3); font-size:var(--t-xs)}
+.btn-lg2{min-height:56px; font-size:var(--t-base); padding:0 var(--s5); border-radius:var(--radius-lg); gap:10px}
+.btn-lg2 .num{font-weight:900}
+.btn-cta{min-height:54px; padding:0 var(--s5); font-size:var(--t-base); border-radius:var(--radius-lg)}
+.btn-cta svg{width:20px;height:20px}
+.section-head .btn-cta{color:#fff}
+.section-head .btn-cta:hover{text-decoration:none}
+
+/* ---- برچسب دسته ---- */
+.chip{display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:0 14px;
+  border-radius:999px; background:var(--surface-2); color:var(--steel-ink);
+  font-size:var(--t-xs); font-weight:700; border:1px solid var(--line); white-space:nowrap}
+.chip:hover{background:var(--line); text-decoration:none}
+.chip.is-on{background:var(--steel-ink); color:#fff; border-color:var(--steel-ink)}
+.chiprow .chip{min-height:40px}
+
+/* ---- کارت دسته در صفحه‌ی اصلی و فهرست دسته‌ها ---- */
+.homecats{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:var(--s4)}
+.hc{display:flex; flex-direction:column; gap:6px; background:#fff; border:1.5px solid var(--line);
+  border-radius:var(--radius-lg); overflow:hidden; min-height:220px;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease}
+.hc:hover{border-color:var(--line-2); box-shadow:var(--sh-2); transform:translateY(-2px)}
+.hc-img{display:block; aspect-ratio:16/10; background:var(--surface-2); overflow:hidden}
+.hc-img img{width:100%; height:100%; object-fit:cover; display:block}
+.hc-t{font-weight:800; color:var(--ink); font-size:var(--t-base); padding:var(--s2) var(--s4) 0; line-height:1.4}
+.hc-n{font-size:var(--t-xs); color:var(--ink-2); padding:0 var(--s4)}
+.hc-pr{font-size:var(--t-xs); color:var(--ink-2); padding:0 var(--s4)}
+.hc-pr b{color:var(--ink); font-weight:800}
+.hc-go{margin-top:auto; padding:var(--s2) var(--s4) var(--s4); display:inline-flex; align-items:center; gap:6px;
+  color:var(--brand-dark); font-weight:700; font-size:var(--t-sm)}
+.hc-go svg{width:16px;height:16px}
+
+/* ===========================================================================
+   جدول قیمت فشرده
+   =========================================================================== */
+.pt-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg);
+  margin-bottom:var(--s5); overflow:hidden}
+.pt-card[hidden]{display:none}
+.pt-head{display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+  padding:var(--s3) var(--s4); border-bottom:1px solid var(--line); flex-wrap:wrap}
+.pt-title{display:flex; align-items:baseline; gap:var(--s3); flex-wrap:wrap}
+.pt-title h2{font-size:var(--t-lg); font-weight:800; color:var(--ink); margin:0}
+.pt-title h2 a:hover{color:var(--brand-dark)}
+.pt-meta{font-size:var(--t-xs); color:var(--ink-2)}
+.pt-upd{display:inline-flex; align-items:center; gap:6px; font-size:var(--t-xs); color:var(--ink-2)}
+.pt-upd svg{width:16px;height:16px}
+.pt-upd b{color:var(--up); font-weight:800}
+.pt-upd time{direction:ltr; unicode-bidi:isolate}
+.pt-wrap{overflow-x:auto; overscroll-behavior-x:contain}
+table.pt{width:100%; border-collapse:collapse; font-size:var(--t-sm); min-width:760px}
+table.pt th{background:var(--surface); color:var(--ink-2); font-weight:700; font-size:var(--t-xs);
+  text-align:center; padding:10px 8px; white-space:nowrap; border-bottom:1px solid var(--line)}
+table.pt td{padding:8px 8px; text-align:center; border-bottom:1px solid var(--line); vertical-align:middle;
+  color:var(--ink); white-space:nowrap; line-height:1.5}
+table.pt tbody tr:nth-child(even){background:#F8F9FB}
+table.pt tbody tr:hover{background:var(--surface-2)}
+table.pt tbody tr:last-child td{border-bottom:0}
+table.pt th.pt-name, table.pt td.pt-name{text-align:start; white-space:normal; min-width:220px}
+table.pt td.pt-name a{font-weight:700; color:var(--steel-ink)}
+table.pt td.pt-name a:hover{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px}
+table.pt td.pt-name .review{margin-inline-start:8px; font-size:12px; padding:0 6px}
+table.pt td.pt-unit{color:var(--ink-2); font-size:var(--t-xs)}
+table.pt td.pt-price b{font-size:var(--t-lg); font-weight:900; letter-spacing:-.01em}
+table.pt td.pt-delta .delta{font-size:var(--t-xs); padding:1px 6px; font-weight:800}
+table.pt td.pt-act{width:84px; padding-inline:4px}
+table.pt td.pt-act{display:table-cell}
+.pt-call,.pt-more{display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px;
+  border-radius:8px; border:1px solid var(--line-2); background:#fff; color:var(--steel-ink); margin:0 2px;
+  vertical-align:middle}
+.pt-call{border-color:var(--brand); color:var(--brand)}
+.pt-call:hover{background:var(--brand); color:#fff}
+.pt-more:hover{background:var(--surface); color:var(--ink)}
+.pt-call svg,.pt-more svg{width:17px;height:17px}
+.pt-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s4); flex-wrap:wrap;
+  padding:var(--s3) var(--s4); border-top:1px solid var(--line); font-size:var(--t-xs); color:var(--ink-2); background:var(--surface)}
+.pt-foot a{color:var(--steel-ink); font-weight:700; display:inline-flex; align-items:center; gap:4px; min-height:32px}
+.pt-foot a svg{width:15px;height:15px}
+.pt-foot a:hover{text-decoration:underline; text-underline-offset:3px}
+@media (max-width:1100px){table.pt .pt-lo{display:none}}
+.tfilter.slim{border:0; border-bottom:1px solid var(--line); border-radius:0; margin:0; padding:var(--s3) var(--s4); background:var(--surface)}
+.tfilter.slim .ffield > span{font-size:13px}
+.tfilter.slim .ffield input,.tfilter.slim .ffield select{height:44px; font-size:var(--t-sm)}
+.tfilter.slim .tfilter-foot{margin-top:var(--s2)}
+.tfilter.slim .tfilter-foot output{font-size:var(--t-sm)}
+/* جدول کوچک محصولات هم‌دسته */
+.pt-wrap.sib{border:1px solid var(--line); border-radius:var(--radius-lg)}
+table.pt-mini{min-width:0}
+table.pt-mini td.pt-price b{font-size:var(--t-base)}
+
+/* جدول آخرین تغییرات */
+.ch-card .pt-title h2{color:var(--brand-dark)}
+
+
+/* ===========================================================================
+   صفحه‌ی قیمت لحظه‌ای
+   =========================================================================== */
+.board-price{padding-block:var(--s6) var(--s5)}
+.board-price .board-head{margin-bottom:var(--s5)}
+.price-tools{display:grid; gap:var(--s3)}
+.gsearch{display:flex; align-items:center; gap:10px; background:#fff; border:1.5px solid var(--line-2);
+  border-radius:var(--radius-lg); padding:0 var(--s4); min-height:58px; max-width:760px}
+.gsearch > svg{width:22px;height:22px; color:var(--steel-ink); flex:none}
+.gsearch input{flex:1; min-width:0; border:0; outline:0; font:inherit; font-size:var(--t-base); background:transparent; height:56px; color:var(--ink)}
+.gsearch input::placeholder{color:var(--ink-3)}
+.gsearch:focus-within{border-color:var(--brand); box-shadow:0 0 0 3px rgba(180,35,50,.12)}
+.gsearch output{font-size:var(--t-xs); color:var(--ink-2); white-space:nowrap; font-weight:700}
+.price-section{padding-block:var(--s6)}
+.price-layout{display:grid; grid-template-columns:1fr 300px; gap:var(--s5); align-items:start}
+.price-layout > *{min-width:0}
+.side-box{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.side-box.sticky{position:sticky; top:72px}
+.side-box h3{font-size:var(--t-base); display:flex; align-items:center; gap:8px; margin-bottom:var(--s3); color:var(--ink)}
+.side-box h3 svg{width:18px;height:18px; color:var(--steel-ink)}
+.jump{display:grid; gap:2px; margin-bottom:var(--s4)}
+.jump a{display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:42px; padding:0 10px;
+  border-radius:8px; color:var(--steel-ink); font-weight:600; font-size:var(--t-sm)}
+.jump a:hover{background:var(--surface)}
+.jump a .num{font-size:12px; color:var(--ink-3); background:var(--surface-2); border-radius:999px; padding:0 8px; min-width:26px; text-align:center}
+.side-call{display:flex; align-items:center; gap:12px; background:var(--brand-soft); border:2px solid var(--brand);
+  border-radius:var(--radius-lg); padding:10px 14px; min-height:64px; margin-bottom:var(--s3)}
+.side-call svg{width:24px;height:24px; color:var(--brand); flex:none}
+.side-call .l{display:block; font-size:12px; color:var(--brand-dark); font-weight:600}
+.side-call .n{display:block; font-size:var(--t-xl); font-weight:900; color:var(--brand-dark); line-height:1.15}
+.side-call:hover{background:#fff}
+.side-wa{display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 12px; border-radius:8px;
+  border:1px solid var(--line-2); color:var(--steel-ink); font-weight:700; font-size:var(--t-sm); width:100%; justify-content:center}
+.side-wa svg{width:18px;height:18px}
+.side-wa:hover{background:var(--surface)}
+.side-note{font-size:13px; color:var(--ink-2); line-height:1.7; margin-top:var(--s3)}
+.side-more{display:inline-flex; align-items:center; gap:4px; min-height:40px; font-size:var(--t-xs); font-weight:700; color:var(--steel-ink)}
+.side-more svg{width:14px;height:14px}
+@media (max-width:1024px){.price-layout{grid-template-columns:1fr} .price-side{order:-1} .side-box.sticky{position:static} .jump{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+
+/* ===========================================================================
+   صفحه‌ی دسته — عکس‌های محصول کنار شاخص‌ها
+   =========================================================================== */
+.board-grid{display:grid; grid-template-columns:1fr auto; gap:var(--s4); align-items:stretch}
+.board-grid > *{min-width:0}
+.board-photos{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; align-content:stretch}
+.board-photos .ph{display:block; width:150px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--board-line); background:#fff; aspect-ratio:4/3}
+.board-photos .ph img{width:100%; height:100%; object-fit:cover; display:block}
+@media (max-width:1200px){.board-photos .ph{width:120px}}
+@media (max-width:860px){.board-grid{grid-template-columns:1fr} .board-photos .ph{width:auto}}
+
+/* ===========================================================================
+   کارخانه: سه واحد و متن تمام‌عرض
+   =========================================================================== */
+.plants.plants-3{grid-template-columns:repeat(3,1fr)}
+.plant figcaption b a{display:inline-flex; align-items:center; gap:6px; color:var(--ink)}
+.plant figcaption b a:hover{color:var(--brand-dark)}
+.plant figcaption b a svg{width:14px;height:14px; color:var(--ink-3)}
+.prose.wide{max-width:none}
+.prose.cols-2{column-count:2; column-gap:var(--s7)}
+.prose.cols-2 p{break-inside:avoid}
+.prose ul.cols-3{column-count:3; column-gap:var(--s5)}
+@media (max-width:1024px){.plants.plants-3{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){.prose.cols-2{column-count:1} .prose ul.cols-3{column-count:2}}
+@media (max-width:640px){.plants.plants-3{grid-template-columns:1fr} .prose ul.cols-3{column-count:1}}
+
+/* پاصفحه سه ستونه */
+.fgrid.fgrid-3{grid-template-columns:1.2fr .8fr 1.2fr}
+.flinks{display:grid; gap:2px}
+.flinks a{min-height:40px; font-weight:600; color:var(--ink-2)}
+@media (max-width:820px){.fgrid.fgrid-3{grid-template-columns:1fr}}
+
+/* ===========================================================================
+   مجله — به سبک دیجی‌کالا مگ
+   =========================================================================== */
+.mag-img{display:block; aspect-ratio:16/9; background:var(--surface-2); overflow:hidden; border-radius:var(--radius-lg)}
+.mag-img img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease}
+article:hover .mag-img img{transform:scale(1.03)}
+.mag-meta{display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-3); margin-top:auto; flex-wrap:wrap}
+.mag-meta svg{width:14px;height:14px}
+.mag-meta i{font-style:normal; color:var(--line-2)}
+.mag-txt{display:flex; flex-direction:column; gap:8px; align-items:flex-start}
+.mag-txt h2,.mag-txt h3{margin:0; color:var(--ink); line-height:1.5}
+.mag-txt h2 a:hover,.mag-txt h3 a:hover{color:var(--brand-dark)}
+.mag-txt p{font-size:var(--t-sm); color:var(--ink-2); line-height:1.75; margin:0}
+.mag-card{display:flex; flex-direction:column; gap:12px; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:12px; height:100%}
+.mag-card .mag-img{border-radius:var(--radius)}
+.mag-card h3{font-size:var(--t-base); font-weight:800}
+.mag-card .mag-txt{padding:0 4px 4px; flex:1}
+.mag-card:hover{border-color:var(--line-2); box-shadow:var(--sh-2)}
+.mag-sm{display:grid; grid-template-columns:150px 1fr; gap:12px; align-items:start; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:10px}
+.mag-sm .mag-img{aspect-ratio:4/3; border-radius:var(--radius)}
+.mag-sm h3{font-size:var(--t-sm); font-weight:800}
+.mag-sm .mag-txt{gap:6px; padding-top:2px; height:100%}
+.mag-sm:hover{border-color:var(--line-2); box-shadow:var(--sh-1)}
+.mag-feature{position:relative; display:grid; border-radius:var(--radius-lg); overflow:hidden; min-height:420px; background:var(--steel-ink); height:100%}
+.mag-feature .mag-img{position:absolute; inset:0; aspect-ratio:auto; border-radius:0}
+.mag-feature .mag-img img{height:100%}
+.mag-feature .mag-txt{position:relative; z-index:1; margin-top:auto; padding:var(--s6) var(--s5) var(--s5); color:#fff;
+  background:linear-gradient(180deg, rgba(11,18,32,0) 0%, rgba(11,18,32,.55) 35%, rgba(11,18,32,.92) 100%)}
+.mag-feature h2{font-size:var(--t-2xl); color:#fff; font-weight:900; max-width:26ch}
+.mag-feature h2 a:hover{color:#FFD9DD}
+.mag-feature p{color:#E6EDF6; max-width:56ch}
+.mag-feature .mag-meta{color:#C6D4E4}
+.mag-feature .chip{background:rgba(255,255,255,.14); color:#fff; border-color:rgba(255,255,255,.25)}
+.mag-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:var(--s4)}
+.mag-grid-3{grid-template-columns:repeat(3,1fr)}
+.mag-home-grid,.mag-hero{display:grid; grid-template-columns:1.4fr 1fr; gap:var(--s4); align-items:stretch}
+.mag-home-side,.mag-hero-side{display:grid; gap:var(--s3); align-content:start}
+.mag-home-grid > *,.mag-hero > *{min-width:0}
+.mag-head{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s4); flex-wrap:wrap; margin-bottom:var(--s5)}
+.mag-head h1{font-size:var(--t-3xl); color:var(--ink)}
+.mag-head .lede{font-size:var(--t-base); color:var(--ink-2); max-width:60ch; margin-top:var(--s2)}
+.mag-chips{display:flex; flex-wrap:wrap; gap:8px}
+.mag-chips .chip{min-height:40px}
+.mag-top{padding-bottom:var(--s6)}
+@media (max-width:1024px){.mag-home-grid,.mag-hero{grid-template-columns:1fr} .mag-grid-3{grid-template-columns:repeat(2,1fr)} .mag-feature{min-height:340px}}
+@media (max-width:640px){.mag-grid-3{grid-template-columns:1fr} .mag-sm{grid-template-columns:120px 1fr} .mag-feature{min-height:300px} .mag-feature h2{font-size:var(--t-xl)}}
+
+/* ---- صفحه‌ی مقاله ---- */
+.container.narrow{max-width:900px}
+.post-head{padding-block:var(--s6) var(--s4)}
+.post-head h1{font-size:var(--t-3xl); color:var(--ink); margin-top:var(--s3); line-height:1.4}
+.post-lede{font-size:var(--t-lg); color:var(--ink-2); margin-top:var(--s3); line-height:1.75}
+.post-meta{display:flex; flex-wrap:wrap; gap:var(--s4); margin-top:var(--s4); font-size:var(--t-xs); color:var(--ink-2)}
+.post-meta span{display:inline-flex; align-items:center; gap:6px}
+.post-meta svg{width:16px;height:16px; color:var(--ink-3)}
+.post-hero{margin:0 0 var(--s5); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-2); aspect-ratio:16/8}
+.post-hero img{width:100%; height:100%; object-fit:cover; display:block}
+.post-grid{display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:var(--s6); align-items:start; padding-bottom:var(--s6)}
+.post-side{display:grid; gap:var(--s4); position:sticky; top:72px}
+.toc{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.toc h3{font-size:var(--t-sm); display:flex; align-items:center; gap:8px; color:var(--ink); margin-bottom:var(--s2)}
+.toc h3 svg{width:16px;height:16px; color:var(--steel-ink)}
+.toc ol{list-style:none; margin:0; padding:0; counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc li a{display:flex; gap:8px; min-height:38px; align-items:center; font-size:13px; color:var(--ink-2); font-weight:600; line-height:1.5}
+.toc li a::before{content:counter(toc,persian); color:var(--ink-3); font-weight:800; flex:none; width:16px}
+.toc li a:hover{color:var(--brand-dark)}
+.relprod{display:grid; grid-template-columns:72px 1fr auto; gap:12px; align-items:center; padding:8px; border:1px solid var(--line);
+  border-radius:var(--radius); margin-bottom:8px; background:var(--surface)}
+.relprod:hover{border-color:var(--line-2); background:#fff}
+.relprod-img{display:block; width:72px; aspect-ratio:1; border-radius:8px; overflow:hidden; background:var(--surface-2)}
+.relprod-img img{width:100%; height:100%; object-fit:cover; display:block}
+.relprod-txt{display:grid; gap:2px; min-width:0}
+.relprod-txt b{color:var(--ink); font-size:var(--t-sm); font-weight:800}
+.relprod-txt span{font-size:12px; color:var(--ink-2)}
+.relprod-pr b{font-size:12px; color:var(--ink)}
+.relprod > svg{width:16px;height:16px; color:var(--ink-3)}
+.post-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:var(--s5); padding-top:var(--s4); border-top:1px solid var(--line)}
+.tag{display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-2); background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:4px 12px}
+.tag svg{width:13px;height:13px}
+/* بدنه‌ی مقاله (HTML ویرایشگر سایت فعلی) */
+.article-body{font-size:var(--t-base); line-height:1.95; color:var(--ink); max-width:76ch}
+.article-body h2{font-size:var(--t-xl); margin:var(--s6) 0 var(--s3); color:var(--steel-ink); scroll-margin-top:80px}
+.article-body h3{font-size:var(--t-lg); margin:var(--s5) 0 var(--s2); color:var(--steel-ink)}
+.article-body h4{font-size:var(--t-base); margin:var(--s4) 0 var(--s2)}
+.article-body h2:first-child{margin-top:0}
+.article-body p{margin:0 0 var(--s4)}
+.article-body ul,.article-body ol{margin:0 0 var(--s4); padding-inline-start:var(--s5); list-style:disc}
+.article-body ol{list-style:persian}
+.article-body li{margin-bottom:6px}
+.article-body a{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px; font-weight:600}
+.article-body img{display:block; max-width:100%; height:auto; border-radius:var(--radius-lg); margin:var(--s4) auto; border:1px solid var(--line)}
+.article-body table{width:100%; border-collapse:collapse; font-size:var(--t-sm); margin:0 0 var(--s4); display:block; overflow-x:auto}
+.article-body th,.article-body td{border:1px solid var(--line); padding:8px 10px; text-align:start; vertical-align:top}
+.article-body th{background:var(--surface-2); font-weight:700}
+.article-body blockquote{margin:0 0 var(--s4); padding:var(--s3) var(--s4); border-inline-start:4px solid var(--brand); background:var(--surface); border-radius:var(--radius)}
+.article-body strong{font-weight:800}
+@media (max-width:1024px){.post-grid{grid-template-columns:1fr} .post-side{position:static; grid-template-columns:1fr 1fr} .toc{grid-column:1/-1}}
+@media (max-width:640px){.post-side{grid-template-columns:1fr} .post-head h1{font-size:var(--t-2xl)} .post-hero{aspect-ratio:16/10}}
+
+/* ===========================================================================
+   صفحه‌ی محصول
+   =========================================================================== */
+.product{padding-block:var(--s5) var(--s6)}
+.pgrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:var(--s6); align-items:start}
+.gallery{position:sticky; top:72px}
+.gallery-main{aspect-ratio:4/3; border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-2); border:1px solid var(--line)}
+.gallery-main img{width:100%; height:100%; object-fit:cover; display:block}
+.gallery-thumbs{display:flex; gap:8px; margin-top:8px}
+.thumb{width:84px; height:64px; border-radius:8px; overflow:hidden; border:2px solid var(--line); background:#fff; padding:0; cursor:pointer}
+.thumb img{width:100%; height:100%; object-fit:cover; display:block}
+.thumb.is-on{border-color:var(--brand)}
+.thumb:focus-visible{outline:none; box-shadow:var(--ring)}
+.gallery-note{font-size:12px; color:var(--ink-3); margin-top:8px}
+.pinfo h1{font-size:var(--t-2xl); color:var(--ink); margin-top:var(--s3); line-height:1.4}
+.plede{font-size:var(--t-sm); color:var(--ink-2); margin-top:var(--s2); line-height:1.7}
+.pcard{background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4) var(--s5); margin-top:var(--s4); box-shadow:var(--sh-1)}
+.pcard-price{display:flex; flex-direction:column; gap:4px}
+.pcard-price .k{font-size:var(--t-xs); color:var(--ink-2); font-weight:600}
+.pcard-price .v b{font-size:var(--t-3xl); font-weight:900; color:var(--ink); letter-spacing:-.02em; line-height:1.1}
+.pcard-price .u{font-size:var(--t-sm); color:var(--ink-2); font-weight:600}
+.pcard-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:var(--t-xs); color:var(--ink-2); margin-top:4px}
+.pcard-prev{color:var(--ink-3)}
+.pcard-upd{margin-top:var(--s3); font-size:var(--t-xs); color:var(--ink-2); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.pcard-cta{display:grid; grid-template-columns:1fr auto; gap:10px; margin-top:var(--s4)}
+.pcard-cta .btn{justify-content:center}
+.pcard-note{font-size:13px; color:var(--ink-2); margin-top:var(--s3); line-height:1.7}
+.callout.slim{padding:var(--s3) var(--s4); margin:var(--s3) 0 0; font-size:var(--t-xs)}
+.kvgrid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:var(--s4)}
+.kv{display:flex; justify-content:space-between; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; min-height:48px}
+.kv .k{font-size:13px; color:var(--ink-2); font-weight:600}
+.kv .v{font-weight:800; color:var(--ink); font-size:var(--t-sm); text-align:end}
+.kv .v a{color:var(--steel-ink); text-decoration:underline; text-underline-offset:3px}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7); align-items:start}
+.two-col > *{min-width:0}
+.tips{margin:0 0 var(--s4); padding:0; list-style:none; display:grid; gap:10px}
+.tips li{position:relative; padding:12px 44px 12px 16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); line-height:1.8; font-size:var(--t-sm)}
+.tips li::before{content:""; position:absolute; inset-inline-start:16px; top:20px; width:10px; height:10px; border-radius:3px; background:var(--brand)}
+.tips li a{color:var(--steel-ink); font-weight:700; text-decoration:underline; text-underline-offset:3px}
+.guidelink{display:inline-flex; align-items:center; gap:6px; min-height:44px; font-weight:800; color:var(--steel-ink)}
+.guidelink svg{width:16px;height:16px}
+.guidelink:hover{color:var(--brand-dark)}
+.ixgrid.ix-tight .ix{min-height:100px}
+@media (max-width:1024px){.pgrid{grid-template-columns:1fr} .gallery{position:static} .two-col{grid-template-columns:1fr; gap:var(--s6)}}
+@media (max-width:640px){.kvgrid{grid-template-columns:1fr} .pcard-cta{grid-template-columns:1fr} .pcard-price .v b{font-size:var(--t-2xl)}}
+
+/* ---- تماس: نقشه‌ی دفتر تهران ---- */
+.maplink{display:block; margin-top:var(--s4); border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; background:#fff}
+.maplink img{width:100%; aspect-ratio:16/8; object-fit:cover; display:block}
+.maplink span{display:flex; align-items:center; gap:8px; padding:10px 14px; font-weight:700; color:var(--steel-ink); font-size:var(--t-sm)}
+.maplink span svg{width:16px;height:16px}
+.maplink:hover span{color:var(--brand-dark)}
+
+/* اصلاحات کوچک */
+.board h1 span{font-size:var(--t-lg)}
+.section-head > a.btn{color:#fff}
+.mainnav .nav-price{color:var(--brand-dark); font-weight:800}
+.stamp time{direction:rtl}
+
+/* ===========================================================================
+   نسخه ۱۹ — بازطراحی به خواست کارفرما (۱۸ شهریور ۱۴۰۵)
+   ---------------------------------------------------------------------------
+   خلوت، کاربردی، ردیف کوتاه. الگوی جدول از آهن آنلاین. نوار کارخانه حذف شد،
+   جدول از صفحه‌ی اصلی رفت، صفحه‌ی «قیمت لحظه‌ای» و «مجله» اضافه شد.
+   =========================================================================== */
+
+/* ---- کمکی‌های عمومی ---- */
+.chip{display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:0 14px;
+  border-radius:999px; background:var(--surface); border:1px solid var(--line);
+  color:var(--steel-ink); font-size:var(--t-xs); font-weight:700; white-space:nowrap}
+.chip:hover{border-color:var(--line-2); background:#fff}
+.chip.is-on{background:var(--steel-ink); color:#fff; border-color:var(--steel-ink)}
+.chiprow .chip{min-height:40px}
+.btn-sm{min-height:40px; padding:0 var(--s3); font-size:var(--t-xs)}
+.btn-lg2{min-height:56px; font-size:var(--t-base); padding:0 var(--s5); border-radius:var(--radius-lg)}
+.btn-cta{min-height:56px; font-size:var(--t-base); padding:0 var(--s5); border-radius:var(--radius-lg)}
+.dim{color:var(--ink-3); font-size:var(--t-xs)}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7)}
+.two-col > *{min-width:0}
+@media (max-width:900px){.two-col{grid-template-columns:1fr; gap:var(--s6)}}
+
+/* متن تمام‌عرض زیر عکس‌های کارخانه — قبلاً ۷۶ch بود و از عرض کارت‌ها کوتاه‌تر می‌افتاد */
+.prose.wide{max-width:none}
+.prose.cols-2{column-count:2; column-gap:var(--s7)}
+.prose.cols-2 p{break-inside:avoid}
+@media (max-width:900px){.prose.cols-2{column-count:1}}
+.prose ul.cols-3{column-count:3; column-gap:var(--s5)}
+@media (max-width:700px){.prose ul.cols-3{column-count:1}}
+
+/* ---- سه واحد: دو کارخانه + دفتر تهران ---- */
+.plants.plants-3{grid-template-columns:repeat(3,1fr); gap:var(--s4)}
+.plant figcaption b a{display:inline-flex; align-items:center; gap:6px; color:var(--steel-ink)}
+.plant figcaption b a:hover{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px}
+.plant figcaption b a svg{width:16px; height:16px}
+@media (max-width:1000px){.plants.plants-3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.plants.plants-3{grid-template-columns:1fr}}
+
+/* ---- کارت‌های دسته در صفحه‌ی اصلی (بدون قیمت) ---- */
+.homecats{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s4)}
+.hc{display:flex; flex-direction:column; background:#fff; border:1.5px solid var(--line);
+  border-radius:var(--radius-lg); overflow:hidden; min-height:100%;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease}
+.hc:hover{border-color:var(--line-2); box-shadow:var(--sh-2); transform:translateY(-2px)}
+.hc-img{display:block; aspect-ratio:16/9; background:var(--surface-2); overflow:hidden}
+.hc-img img{width:100%; height:100%; object-fit:cover}
+.hc-t{font-weight:800; color:var(--ink); font-size:var(--t-lg); padding:var(--s3) var(--s4) 0; line-height:1.4}
+.hc-n{font-size:var(--t-xs); color:var(--ink-2); padding:4px var(--s4) 0}
+.hc-pr{font-size:var(--t-sm); color:var(--ink-2); padding:6px var(--s4) 0}
+.hc-pr b{color:var(--ink)}
+.hc-go{display:inline-flex; align-items:center; gap:6px; margin-top:auto; padding:var(--s3) var(--s4) var(--s4);
+  font-size:var(--t-sm); font-weight:700; color:var(--brand-dark)}
+.hc-go svg{width:16px; height:16px}
+@media (max-width:1000px){.homecats{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.homecats{grid-template-columns:1fr}}
+.section-head .btn-cta{flex:none}
+
+/* ===========================================================================
+   جدول قیمت فشرده (.pt) — خلوت، کوتاه، کاربردی
+   =========================================================================== */
+.pt-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg);
+  box-shadow:var(--sh-1); margin-bottom:var(--s6); overflow:hidden}
+.pt-card:target{box-shadow:0 0 0 3px var(--brand-soft), 0 0 0 5px var(--brand)}
+.pt-head{display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+  padding:var(--s4) var(--s5); border-bottom:1px solid var(--line); background:var(--surface); flex-wrap:wrap}
+.pt-title{display:flex; align-items:baseline; gap:var(--s3); flex-wrap:wrap}
+.pt-title h2{font-size:var(--t-xl); margin:0}
+.pt-title h2 a{color:var(--ink)}
+.pt-title h2 a:hover{color:var(--brand-dark)}
+.pt-meta{font-size:var(--t-xs); color:var(--ink-2); font-weight:600}
+.pt-upd{display:inline-flex; align-items:center; gap:6px; font-size:var(--t-xs); color:var(--ink-2);
+  background:#fff; border:1px solid var(--line); border-radius:999px; padding:4px 12px; white-space:nowrap}
+.pt-upd svg{width:15px; height:15px; color:var(--fresh)}
+.pt-upd b{color:var(--ink)}
+.pt-wrap{overflow-x:auto; overscroll-behavior-x:contain}
+table.pt{width:100%; border-collapse:collapse; font-size:var(--t-sm)}
+table.pt th{background:#fff; color:var(--ink-2); font-weight:700; font-size:var(--t-xs);
+  text-align:start; padding:10px 14px; border-bottom:1.5px solid var(--line-2); white-space:nowrap}
+table.pt td{padding:9px 14px; border-bottom:1px solid var(--line); vertical-align:middle; white-space:nowrap}
+table.pt tbody tr:nth-child(even){background:#F8F9FB}
+table.pt tbody tr:hover{background:var(--surface-2)}
+table.pt tbody tr:last-child td{border-bottom:0}
+table.pt .pt-name{white-space:normal; min-width:220px}
+table.pt .pt-name a{font-weight:700; color:var(--ink); line-height:1.5; display:inline-flex; align-items:center; min-height:32px}
+table.pt .pt-name a:hover{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px}
+table.pt .pt-name .review{margin-inline-start:8px; vertical-align:middle}
+table.pt .pt-spec{color:var(--ink); font-variant-numeric:tabular-nums}
+table.pt .pt-unit{color:var(--ink-2); font-size:var(--t-xs)}
+table.pt .pt-price{text-align:start}
+table.pt .pt-price b{font-size:19px; font-weight:900; color:var(--ink); letter-spacing:-.02em}
+table.pt .pt-delta .delta{font-size:13px; padding:1px 7px}
+table.pt .pt-act{text-align:end; width:1%}
+.pt-call,.pt-more{display:inline-grid; place-items:center; width:40px; height:40px; border-radius:var(--radius);
+  border:1.5px solid var(--line-2); color:var(--steel-ink); background:#fff; vertical-align:middle}
+.pt-call{border-color:var(--brand); color:var(--brand); margin-inline-end:6px}
+.pt-call:hover{background:var(--brand); color:#fff}
+.pt-more:hover{background:var(--surface)}
+.pt-call svg,.pt-more svg{width:19px; height:19px}
+.pt-foot{display:flex; align-items:center; justify-content:space-between; gap:var(--s4); flex-wrap:wrap;
+  padding:var(--s3) var(--s5); border-top:1px solid var(--line); font-size:var(--t-xs); color:var(--ink-2); background:var(--surface)}
+.pt-foot a{display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--brand-dark); min-height:40px}
+.pt-foot a svg{width:15px; height:15px}
+.pt-foot:empty{display:none}
+@media (max-width:1100px){table.pt .pt-lo{display:none}}
+table.pt.pt-mini th,table.pt.pt-mini td{padding:8px 12px}
+table.pt.pt-mini .pt-price b{font-size:16px}
+.pt-wrap.sib{border:1px solid var(--line); border-radius:var(--radius-lg)}
+
+/* نوار فیلتر باریک روی جدول */
+.tfilter.slim{border:0; border-bottom:1px solid var(--line); border-radius:0; margin:0; padding:var(--s3) var(--s5); background:#fff}
+.tfilter.slim .tfilter-row{grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:var(--s2) var(--s3)}
+.tfilter.slim .ffield > span{font-size:13px}
+.tfilter.slim .ffield input,.tfilter.slim .ffield select{height:44px; font-size:var(--t-sm)}
+.tfilter.slim .tfilter-foot{margin-top:var(--s2)}
+.tfilter.slim .tfilter-foot output{font-size:var(--t-sm)}
+
+/* جدول تغییرات */
+table.pt.ch .ch-dir{width:1%}
+table.pt.ch .ch-dir svg{width:16px; height:16px; vertical-align:middle}
+table.pt.ch .ch-dir.up{color:var(--up)} table.pt.ch .ch-dir.down{color:var(--down)}
+table.pt.ch .ch-name{white-space:normal; min-width:220px}
+table.pt.ch .ch-name a{font-weight:700; color:var(--ink)}
+table.pt.ch .ch-cat{display:block; font-size:13px; color:var(--ink-2)}
+table.pt.ch .ch-price b{font-size:18px; font-weight:900}
+table.pt.ch .ch-diff .up{color:var(--up); font-weight:700} table.pt.ch .ch-diff .down{color:var(--down); font-weight:700}
+table.pt.ch .ch-when{color:var(--ink-2); font-size:var(--t-xs)}
+
+/* موبایل: جدول → کارت فشرده (نه کارت بلند قبلی) */
+@media (max-width:820px){
+  .pt-wrap{overflow:visible}
+  table.pt thead{display:none}
+  table.pt,table.pt tbody,table.pt tr,table.pt td{display:block; width:100%; white-space:normal}
+  table.pt tr{padding:var(--s3) var(--s4); border-bottom:1px solid var(--line); position:relative}
+  table.pt tbody tr:nth-child(even){background:#F8F9FB}
+  table.pt td{padding:2px 0; border:0; display:flex; justify-content:space-between; align-items:center; gap:var(--s3)}
+  table.pt td::before{content:attr(data-label); font-size:13px; color:var(--ink-2); font-weight:600}
+  table.pt .pt-name{display:block; padding-bottom:6px; min-width:0; padding-inline-end:96px}
+  table.pt .pt-name::before{display:none}
+  table.pt .pt-lo{display:flex}
+  table.pt .pt-price{padding-block:4px}
+  table.pt .pt-price b{font-size:20px}
+  table.pt .pt-act{position:absolute; top:var(--s3); inset-inline-end:var(--s4); width:auto; padding:0}
+  table.pt .pt-act::before{display:none}
+  table.pt.ch .ch-dir{position:absolute; top:var(--s3); inset-inline-end:var(--s4); width:auto; padding:0}
+  table.pt.ch .ch-dir::before,table.pt.ch .ch-name::before{display:none}
+  table.pt.ch .ch-name{display:block; padding-inline-end:32px}
+  table.pt.pt-mini td{display:flex}
+  table.pt.pt-mini td:first-child{display:block; padding-inline-end:0}
+  table.pt.pt-mini td:first-child::before{display:none}
+  table.pt.pt-mini td::before{content:attr(data-label)}
+}
+
+/* ===========================================================================
+   صفحه‌ی قیمت لحظه‌ای
+   =========================================================================== */
+.board-price{padding-block:var(--s6) var(--s5)}
+.board-price .board-head{margin-bottom:var(--s4)}
+.price-tools{display:grid; gap:var(--s3)}
+.gsearch{position:relative; display:flex; align-items:center; gap:var(--s3); background:#fff;
+  border:1.5px solid var(--line-2); border-radius:var(--radius-lg); padding:0 var(--s4); min-height:56px}
+.gsearch > svg{width:22px; height:22px; color:var(--steel-ink); flex:none}
+.gsearch input{flex:1; min-width:0; border:0; height:52px; font:inherit; font-size:var(--t-base); background:transparent; color:var(--ink)}
+.gsearch input:focus{outline:none}
+.gsearch:focus-within{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft)}
+.gsearch output{font-size:var(--t-xs); color:var(--ink-2); font-weight:700; white-space:nowrap}
+.price-layout{display:grid; grid-template-columns:1fr 280px; gap:var(--s6); align-items:start}
+.price-layout > *{min-width:0}
+.price-section{padding-block:var(--s6)}
+.side-box{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.side-box.sticky{position:sticky; top:72px}
+.side-box h3{display:flex; align-items:center; gap:8px; font-size:var(--t-base); margin-bottom:var(--s3)}
+.side-box h3 svg{width:18px; height:18px; color:var(--steel-ink)}
+.jump{display:grid; gap:2px; margin-bottom:var(--s4)}
+.jump a{display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:42px;
+  padding:0 var(--s3); border-radius:var(--radius); font-size:var(--t-sm); font-weight:600; color:var(--ink)}
+.jump a:hover{background:var(--surface); color:var(--brand-dark)}
+.jump a .num{font-size:13px; color:var(--ink-3); background:var(--surface); border-radius:999px; padding:0 8px}
+.side-call{display:flex; align-items:center; gap:var(--s3); background:var(--brand-soft); border:2px solid var(--brand);
+  border-radius:var(--radius-lg); padding:var(--s3) var(--s4); min-height:68px; margin-bottom:var(--s3)}
+.side-call svg{width:26px; height:26px; color:var(--brand); flex:none}
+.side-call .l{display:block; font-size:13px; font-weight:600; color:var(--brand-dark)}
+.side-call .n{display:block; font-size:var(--t-xl); font-weight:900; color:var(--brand-dark); line-height:1.15}
+.side-call:hover{background:#fff}
+.side-wa{display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 var(--s3); width:100%;
+  border:1.5px solid var(--line-2); border-radius:var(--radius); font-size:var(--t-sm); font-weight:700; color:var(--steel-ink)}
+.side-wa svg{width:20px; height:20px; color:#0A6E44}
+.side-wa:hover{background:var(--surface)}
+.side-note{font-size:13px; color:var(--ink-2); line-height:1.7; margin-top:var(--s3)}
+.side-more{display:inline-flex; align-items:center; gap:6px; margin-top:var(--s3); font-size:var(--t-sm); font-weight:700; color:var(--brand-dark); min-height:40px}
+.side-more svg{width:15px; height:15px}
+@media (max-width:1000px){
+  .price-layout{grid-template-columns:1fr}
+  .price-side{order:-1}
+  .side-box.sticky{position:static}
+  .jump{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
+
+/* ---- صفحه‌ی دسته: شبکه‌ی بالای صفحه با عکس ---- */
+.board-grid{display:grid; grid-template-columns:1fr auto; gap:var(--s4); align-items:stretch}
+.board-grid > *{min-width:0}
+.board-photos{display:grid; grid-template-columns:repeat(3,110px); gap:8px; align-content:start}
+.board-photos .ph{display:block; aspect-ratio:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--board-line); background:#fff}
+.board-photos .ph img{width:100%; height:100%; object-fit:cover; transition:transform .2s ease}
+.board-photos .ph:hover img{transform:scale(1.05)}
+@media (max-width:1000px){.board-grid{grid-template-columns:1fr}.board-photos{grid-template-columns:repeat(3,1fr)}.board-photos .ph{aspect-ratio:4/3}}
+
+/* ===========================================================================
+   صفحه‌ی محصول — خلوت
+   =========================================================================== */
+.product{padding-block:var(--s6)}
+.pgrid{display:grid; grid-template-columns:minmax(0,460px) 1fr; gap:var(--s7); align-items:start}
+.pgrid > *{min-width:0}
+.gallery-main{aspect-ratio:4/3; border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface)}
+.gallery-main img{width:100%; height:100%; object-fit:cover}
+.gallery-thumbs{display:flex; gap:8px; margin-top:8px}
+.thumb{width:76px; height:76px; padding:0; border:1.5px solid var(--line); border-radius:var(--radius); overflow:hidden; background:#fff; cursor:pointer}
+.thumb img{width:100%; height:100%; object-fit:cover}
+.thumb.is-on{border-color:var(--brand)}
+.thumb:focus-visible{outline:none; box-shadow:var(--ring)}
+.gallery-note{font-size:13px; color:var(--ink-3); margin-top:8px}
+.pinfo h1{font-size:var(--t-2xl); margin:var(--s3) 0 var(--s2); line-height:1.35}
+.plede{color:var(--ink-2); font-size:var(--t-sm); margin-bottom:var(--s4)}
+.pcard{background:var(--board); border:1px solid var(--board-line); border-radius:var(--radius-lg); padding:var(--s4) var(--s5); margin-bottom:var(--s4)}
+.pcard-price .k{display:block; font-size:var(--t-xs); color:var(--ink-2); font-weight:600}
+.pcard-price .v{display:block; margin-top:2px}
+.pcard-price .v b{font-size:var(--t-3xl); font-weight:900; color:var(--ink); letter-spacing:-.02em; line-height:1.15}
+.pcard-price .u{font-size:var(--t-sm); color:var(--ink-2); font-weight:600}
+.pcard-meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; font-size:var(--t-xs); color:var(--ink-2)}
+.pcard-prev{color:var(--ink-3)}
+.pcard-upd{margin-top:var(--s3); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.pcard-cta{display:flex; gap:var(--s2); flex-wrap:wrap; margin-top:var(--s4)}
+.pcard-cta .btn-call .num{font-weight:900; margin-inline-start:6px}
+.pcard-note{font-size:13px; color:var(--ink-2); margin-top:var(--s3)}
+.callout.slim{padding:var(--s3) var(--s4); margin:var(--s3) 0 0; font-size:var(--t-sm)}
+.kvgrid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.kv{display:flex; justify-content:space-between; align-items:center; gap:var(--s3); background:#fff; border:1px solid var(--line);
+  border-radius:var(--radius); padding:10px var(--s3); min-height:48px}
+.kv .k{font-size:13px; color:var(--ink-2); font-weight:600}
+.kv .v{font-weight:800; color:var(--ink); font-size:var(--t-sm); text-align:end}
+.kv .v a{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px}
+.tips{display:grid; gap:var(--s3)}
+.tips li{position:relative; padding-inline-start:var(--s5); line-height:1.8; color:var(--ink); font-size:var(--t-sm)}
+.tips li::before{content:""; position:absolute; inset-inline-start:4px; top:12px; width:8px; height:8px; border-radius:2px; background:var(--brand)}
+.tips li a{color:var(--brand-dark); font-weight:700; text-decoration:underline; text-underline-offset:3px}
+.guidelink{display:inline-flex; align-items:center; gap:6px; margin-top:var(--s4); font-weight:700; color:var(--brand-dark); min-height:44px}
+.guidelink svg{width:16px; height:16px}
+@media (max-width:900px){.pgrid{grid-template-columns:1fr; gap:var(--s5)}}
+@media (max-width:560px){.kvgrid{grid-template-columns:1fr}.pcard-price .v b{font-size:var(--t-2xl)}}
+
+/* ===========================================================================
+   مجله — به سبک دیجی‌کالا مگ
+   =========================================================================== */
+.mag-head{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s5); flex-wrap:wrap; margin-bottom:var(--s5)}
+.mag-head h1{font-size:var(--t-3xl); font-weight:900}
+.mag-head .lede{color:var(--ink-2); font-size:var(--t-base); margin-top:var(--s2); max-width:60ch}
+.mag-chips{display:flex; gap:8px; flex-wrap:wrap}
+.mag-img{display:block; aspect-ratio:16/9; overflow:hidden; background:var(--surface-2)}
+.mag-img img{width:100%; height:100%; object-fit:cover; transition:transform .25s ease}
+article:hover .mag-img img{transform:scale(1.03)}
+.mag-meta{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-3); margin-top:auto; padding-top:8px}
+.mag-meta svg{width:14px; height:14px}
+.mag-meta i{font-style:normal; margin:0 2px}
+.mag-txt{display:flex; flex-direction:column; align-items:flex-start; gap:6px; padding:var(--s3) var(--s4) var(--s4)}
+.mag-txt h2,.mag-txt h3{margin:0; line-height:1.45; color:var(--ink)}
+.mag-txt h2 a,.mag-txt h3 a{color:inherit}
+.mag-txt h2 a:hover,.mag-txt h3 a:hover{color:var(--brand-dark)}
+.mag-txt p{color:var(--ink-2); font-size:var(--t-sm); line-height:1.75}
+.mag-txt .chip{min-height:30px; padding:0 10px; font-size:13px}
+.mag-card,.mag-feature,.mag-sm{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column;
+  transition:box-shadow .18s ease, transform .18s ease}
+.mag-card:hover,.mag-feature:hover,.mag-sm:hover{box-shadow:var(--sh-2); transform:translateY(-2px)}
+.mag-card h3{font-size:var(--t-lg); font-weight:800}
+.mag-feature h2{font-size:var(--t-2xl); font-weight:900}
+.mag-feature .mag-txt{padding:var(--s4) var(--s5) var(--s5)}
+.mag-sm{flex-direction:row; align-items:stretch}
+.mag-sm .mag-img{flex:0 0 150px; aspect-ratio:auto}
+.mag-sm h3{font-size:var(--t-base); font-weight:800}
+.mag-sm .mag-txt{padding:var(--s3)}
+.mag-hero{display:grid; grid-template-columns:1.4fr 1fr; gap:var(--s4)}
+.mag-hero-side{display:grid; gap:var(--s3); align-content:stretch}
+.mag-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s4)}
+.mag-grid > *{min-width:0}
+.mag-home-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:var(--s4)}
+.mag-home-side{display:grid; gap:var(--s3)}
+@media (max-width:1000px){.mag-hero,.mag-home-grid{grid-template-columns:1fr}.mag-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.mag-grid{grid-template-columns:1fr}.mag-sm .mag-img{flex-basis:120px}}
+
+/* مقاله */
+.post-head{padding-block:var(--s6) var(--s4); background:var(--surface); border-bottom:1px solid var(--line)}
+.container.narrow{max-width:960px}
+.post-head h1{font-size:var(--t-3xl); font-weight:900; line-height:1.35; margin:var(--s3) 0}
+.post-lede{color:var(--ink-2); font-size:var(--t-lg); line-height:1.75; max-width:70ch}
+.post-meta{display:flex; flex-wrap:wrap; gap:var(--s4); margin-top:var(--s4); font-size:var(--t-xs); color:var(--ink-2)}
+.post-meta span{display:inline-flex; align-items:center; gap:6px}
+.post-meta svg{width:16px; height:16px}
+.post-hero{margin:var(--s5) 0 0; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); background:var(--surface-2)}
+.post-hero img{width:100%; height:auto; max-height:520px; object-fit:cover}
+.post-grid{display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:var(--s7); padding-block:var(--s6); align-items:start}
+.post-grid > *{min-width:0}
+.post-side{position:sticky; top:72px; display:grid; gap:var(--s4)}
+.toc{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.toc h3{display:flex; align-items:center; gap:8px; font-size:var(--t-sm); margin-bottom:var(--s2)}
+.toc h3 svg{width:16px; height:16px}
+.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+.toc a{display:block; padding:6px 10px; border-radius:6px; font-size:var(--t-xs); color:var(--ink-2); line-height:1.6}
+.toc a:hover{background:var(--surface); color:var(--brand-dark)}
+.relprod{display:flex; align-items:center; gap:var(--s3); padding:10px; border:1px solid var(--line); border-radius:var(--radius); margin-bottom:8px; color:var(--ink)}
+.relprod:hover{border-color:var(--brand); background:var(--brand-soft)}
+.relprod-img{flex:0 0 64px; width:64px; height:64px; border-radius:8px; overflow:hidden; background:var(--surface-2)}
+.relprod-img img{width:100%; height:100%; object-fit:cover}
+.relprod-txt{flex:1; min-width:0; display:grid; gap:2px}
+.relprod-txt b{font-size:var(--t-sm); font-weight:800}
+.relprod-txt span{font-size:13px; color:var(--ink-2)}
+.relprod-pr b{font-size:13px; color:var(--ink)}
+.relprod > svg{width:16px; height:16px; color:var(--ink-3); flex:none}
+.article-body{max-width:76ch; font-size:var(--t-base); line-height:1.95; color:var(--ink)}
+.article-body h2{font-size:var(--t-xl); margin:var(--s6) 0 var(--s3); scroll-margin-top:80px}
+.article-body h3{font-size:var(--t-lg); margin:var(--s5) 0 var(--s2)}
+.article-body h4{font-size:var(--t-base); margin:var(--s4) 0 var(--s2)}
+.article-body p{margin:0 0 var(--s4)}
+.article-body ul,.article-body ol{margin:0 0 var(--s4); padding-inline-start:var(--s5)}
+.article-body ul{list-style:disc} .article-body ol{list-style:decimal}
+.article-body li{margin-bottom:6px}
+.article-body a{color:var(--brand-dark); text-decoration:underline; text-underline-offset:3px; font-weight:600}
+.article-body img{border-radius:var(--radius-lg); margin:var(--s3) auto var(--s4); max-width:100%; height:auto}
+.article-body table{width:100%; border-collapse:collapse; font-size:var(--t-sm); margin:0 0 var(--s4); display:block; overflow-x:auto}
+.article-body th,.article-body td{border:1px solid var(--line); padding:8px 12px; text-align:start; white-space:nowrap}
+.article-body th{background:var(--surface-2); font-weight:800}
+.article-body blockquote{border-inline-start:4px solid var(--brand); background:var(--surface); padding:var(--s3) var(--s4); margin:0 0 var(--s4); border-radius:var(--radius)}
+.post-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:var(--s6)}
+.tag{display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:0 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:13px; color:var(--ink-2)}
+.tag svg{width:13px; height:13px}
+@media (max-width:1000px){.post-grid{grid-template-columns:1fr; gap:var(--s5)}.post-side{position:static}.post-head h1{font-size:var(--t-2xl)}}
+
+/* ---- تماس: نقشه‌ی دفتر تهران ---- */
+.maplink{display:block; margin-top:var(--s4); border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; background:#fff}
+.maplink img{width:100%; aspect-ratio:16/8; object-fit:cover; display:block}
+.maplink span{display:flex; align-items:center; gap:8px; padding:var(--s3) var(--s4); font-weight:700; color:var(--steel-ink); min-height:48px}
+.maplink span svg{width:18px; height:18px}
+.maplink:hover span{color:var(--brand-dark)}
+
+/* ---- پاصفحه: سه ستون ---- */
+.fgrid.fgrid-3{grid-template-columns:1.2fr .8fr 1.2fr}
+.flinks{display:grid; gap:2px}
+.flinks a{min-height:40px; color:var(--ink-2); font-weight:600}
+@media (max-width:900px){.fgrid.fgrid-3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.fgrid.fgrid-3{grid-template-columns:1fr}}
+
+/* درباره: اعداد ۶ تایی */
+.factnums .fact .v{font-size:var(--t-xl)}
+
+/* بخش مجله در صفحه‌ی اصلی روی زمینه‌ی روشن */
+.mag-home .mag-card,.mag-home .mag-feature,.mag-home .mag-sm{border-color:var(--line)}
+
+/* ---- اصلاحات پس از اسکرین‌شات (نسخه ۱۹) ---- */
+/* لینک سرتیتر بخش‌ها با رنگ --steel تقریباً سفید و نامرئی بود */
+.section-head a{color:var(--steel-ink)}
+/* قرمز فقط برای تماس: لینک‌های دیگر سرمه‌ای */
+.hc-go,.pt-foot a,.guidelink,.side-more,.tips li a,.kv .v a,.catcard .go{color:var(--steel-ink)}
+.hc-go:hover,.pt-foot a:hover,.guidelink:hover,.side-more:hover{color:var(--brand-dark)}
+/* منوی اصلی در ۱۴۴۰ جا شود */
+.nav-scroll a{padding:0 12px; font-size:15px}
+/* جدول: ستون واحد زیر قیمت رفت */
+.pt-u{display:block; font-size:12px; color:var(--ink-3); font-weight:600; line-height:1.2}
+table.pt td{padding:8px 12px}
+table.pt th{padding:9px 12px}
+.price-layout table.pt .pt-lo{display:none}
+@media (min-width:1360px){.price-layout table.pt .pt-lo{display:table-cell}}
+@media (min-width:1001px){.price-layout{grid-template-columns:1fr 260px}}
+.pt-call{margin-inline-end:0}
+/* دکمه‌های صفحه‌ی محصول در موبایل تمام‌عرض */
+@media (max-width:600px){
+  .pcard-cta .btn{flex:1 1 100%; white-space:normal; text-align:center}
+}
+/* موبایل: ردیف جدول فشرده — مشخصات در دو ستون */
+@media (max-width:820px){
+  table.pt tr{display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; align-items:center}
+  table.pt .pt-name{grid-column:1/-1; padding-inline-end:52px; padding-bottom:4px}
+  table.pt .pt-spec{font-size:14px}
+  table.pt .pt-spec::before{font-size:12px}
+  table.pt .pt-price{grid-column:1/-1; display:flex; justify-content:space-between; align-items:baseline; border-top:1px dashed var(--line); margin-top:4px; padding-top:8px}
+  table.pt .pt-price b{font-size:20px}
+  table.pt .pt-u{display:inline; margin-inline-start:6px}
+  table.pt .pt-delta{grid-column:1/-1; justify-content:flex-start; gap:8px}
+  table.pt .pt-delta::before{content:"نوسان نسبت به آخرین ثبت"}
+  table.pt .pt-act{grid-column:auto}
+  table.pt.ch tr{grid-template-columns:1fr}
+  table.pt.pt-mini tr{grid-template-columns:1fr 1fr}
+  table.pt.pt-mini td:first-child{grid-column:1/-1}
+  table.pt.pt-mini .pt-price{grid-column:1/-1}
+}
+/* موبایل: جلوگیری از پهن‌شدن ستون‌های 1fr با محتوای نشکن */
+@media (max-width:820px){
+  table.pt{width:100%; min-width:0; table-layout:fixed}
+  table.pt tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr); width:100%; min-width:0}
+  table.pt td{min-width:0; overflow-wrap:anywhere}
+  table.pt.ch tr{grid-template-columns:minmax(0,1fr)}
+  table.pt.pt-mini tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width:820px){
+  table.pt.ch td{overflow-wrap:normal}
+  table.pt.ch td.ch-diff{white-space:nowrap}
+  table.pt.ch td.ch-diff::before{white-space:normal}
+}
+/* ناحیه‌ی لمس: هیچ لینک یا دکمه‌ای زیر ۴۴px */
+.chip{min-height:44px}
+.mag-txt .chip{min-height:36px}
+.pt-call{width:44px; height:44px}
+.toc a{min-height:40px; display:flex; align-items:center}
+.jump a{min-height:44px}
+.flinks a{min-height:44px; display:inline-flex; align-items:center}
