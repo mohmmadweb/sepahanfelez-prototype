@@ -1,0 +1,305 @@
+{
+ "/category/": {
+  "status": 200
+ },
+ "categories": {
+  "تست3": {
+   "rows": 1,
+   "products_linked": 0,
+   "filters": 2,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 859,
+   "imgs": 28,
+   "h1": 1
+  },
+  "توری-جوشی--گالوانیزه-رول": {
+   "rows": 13,
+   "products_linked": 0,
+   "filters": 5,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2339,
+   "imgs": 29,
+   "h1": 1
+  },
+  "توری-حصاری": {
+   "rows": 14,
+   "products_linked": 0,
+   "filters": 8,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2468,
+   "imgs": 33,
+   "h1": 1
+  },
+  "توری-فرنگی": {
+   "rows": 4,
+   "products_linked": 0,
+   "filters": 8,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2321,
+   "imgs": 33,
+   "h1": 1
+  },
+  "توری-مرغی": {
+   "rows": 5,
+   "products_linked": 0,
+   "filters": 8,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2752,
+   "imgs": 35,
+   "h1": 1
+  },
+  "توری-پرسی": {
+   "rows": 14,
+   "products_linked": 0,
+   "filters": 5,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2339,
+   "imgs": 33,
+   "h1": 1
+  },
+  "توری-کششی(expanded-metal)": {
+   "rows": 1,
+   "products_linked": 0,
+   "filters": 5,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2357,
+   "imgs": 32,
+   "h1": 1
+  },
+  "توری-گابیون": {
+   "rows": 10,
+   "products_linked": 0,
+   "filters": 7,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2738,
+   "imgs": 32,
+   "h1": 1
+  },
+  "رابیتس-متفرقه": {
+   "rows": 1,
+   "products_linked": 0,
+   "filters": 5,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 1825,
+   "imgs": 29,
+   "h1": 1
+  },
+  "رابیتس-مسعود": {
+   "rows": 1,
+   "products_linked": 0,
+   "filters": 6,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 948,
+   "imgs": 29,
+   "h1": 1
+  },
+  "سیم-خاردار": {
+   "rows": 4,
+   "products_linked": 2,
+   "filters": 7,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2359,
+   "imgs": 30,
+   "h1": 1
+  },
+  "سیم-سیاه-و-آرماتور-بندی": {
+   "rows": 9,
+   "products_linked": 0,
+   "filters": 5,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2538,
+   "imgs": 33,
+   "h1": 1
+  },
+  "مش-جوشی-یا-مش-آهنی": {
+   "rows": 6,
+   "products_linked": 0,
+   "filters": 7,
+   "chart": true,
+   "video": false,
+   "features_sec": false,
+   "usage_sec": false,
+   "comments": true,
+   "related_articles": true,
+   "print_pdf": true,
+   "add_to_cart": false,
+   "words": 2368,
+   "imgs": 29,
+   "h1": 1
+  },
+  "مفتول-گالوانیزه": {
+   "err": "HTTP Error 404: Not Found"
+  }
+ },
+ "products_sample": {
+  "سیم-خاردار/سیم-خاردار-حلقوی-60": {
+   "status": 200,
+   "words": 1080,
+   "has_image": true,
+   "chart": true,
+   "specs": 1,
+   "description": true
+  },
+  "سیم-خاردار/سیم-خاردار-حلقوی-90": {
+   "status": 200,
+   "words": 818,
+   "has_image": true,
+   "chart": true,
+   "specs": 1,
+   "description": true
+  }
+ },
+ "product_count": 2,
+ "product_urls": [
+  "https://sepahanfelez.ir/category/سیم-خاردار/سیم-خاردار-حلقوی-60",
+  "https://sepahanfelez.ir/category/سیم-خاردار/سیم-خاردار-حلقوی-90"
+ ],
+ "/about": {
+  "status": 200,
+  "words": 847,
+  "title": "درباره سپاهان فلز | تولیدکننده مفتول و توری صنعتی"
+ },
+ "/contact": {
+  "status": 200,
+  "words": 719,
+  "title": "تماس با سپاهان فلز | شماره تماس، آدرس و ساعت کاری"
+ },
+ "/login": {
+  "status": 200,
+  "words": 31,
+  "title": "ورود | سپاهان فلز"
+ },
+ "/register": {
+  "status": 200,
+  "words": 50,
+  "title": "ثبت نام | سپاهان فلز"
+ },
+ "/cart": {
+  "status": 200,
+  "words": 31,
+  "title": "ورود | سپاهان فلز"
+ },
+ "/blog": {
+  "status": 200,
+  "words": 1018,
+  "title": "مجله سپاهان فلز | مقالات تخصصی مفتول، توری و سیم خاردار"
+ },
+ "/news": {
+  "status": 410
+ },
+ "/price": {
+  "status": 200,
+  "words": 1256,
+  "title": "قیمت آهن لحظه ای | بروزرسانی روزانه توسط سپاهان فلز"
+ },
+ "/user/profile": {
+  "status": 200,
+  "words": 31,
+  "title": "ورود | سپاهان فلز"
+ },
+ "/sitemap.xml": {
+  "status": 200,
+  "words": 232,
+  "title": ""
+ },
+ "/robots.txt": {
+  "status": 200,
+  "words": 22,
+  "title": ""
+ },
+ "/authors/1": {
+  "status": 404
+ },
+ "blog": {
+  "categories": [
+   "Wires",
+   "خاموت",
+   "میلگرد"
+  ],
+  "articles_linked": 22
+ }
+}
