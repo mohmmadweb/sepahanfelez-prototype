@@ -2170,3 +2170,50 @@ table.pt.ch .pt-act{width:1%}
   .cr-toggle{grid-column:span 2}
   .chart-ranges button,.cr-toggle{min-height:44px; font-size:13px}
 }
+
+/* ── جست‌وجوی سراسری ─────────────────────────────────────────────────── */
+.gs-wrap{position:relative}
+.gs-results{position:absolute; inset-inline:0; top:calc(100% + 6px); z-index:80;
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg);
+  box-shadow:0 18px 44px rgba(11,18,32,.18); max-height:min(70vh,480px);
+  overflow-y:auto; overscroll-behavior:contain; padding:6px}
+.gs-results[hidden]{display:none}
+.gs-group{font-size:var(--t-xs); font-weight:800; color:var(--ink-3);
+  padding:8px 10px 4px; letter-spacing:.02em}
+.gs-item{display:grid; grid-template-columns:auto 1fr auto; align-items:center;
+  gap:10px; min-height:52px; padding:8px 10px; border-radius:var(--radius);
+  color:var(--ink); text-decoration:none}
+.gs-item:hover,.gs-item.is-on{background:var(--surface)}
+.gs-item.is-on{outline:2px solid var(--steel); outline-offset:-2px}
+.gs-t{font-weight:700; font-size:var(--t-sm); line-height:1.4; min-width:0}
+.gs-t mark{background:#FFF1B8; color:inherit; padding:0 1px; border-radius:3px}
+.gs-sub{font-size:var(--t-xs); color:var(--ink-3); white-space:nowrap}
+.gs-price{font-size:var(--t-xs); color:var(--ink-2); white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.gs-price b{font-size:var(--t-sm); font-weight:900; color:var(--ink)}
+/* نشان نوع: رنگ فقط برای تفکیک، نه برای جلب توجه */
+.gs-k{font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px;
+  white-space:nowrap; background:var(--surface-2); color:var(--ink-2)}
+.gs-k.k-prod{background:#EAF3EC; color:#1F6B35}
+.gs-k.k-cat{background:#E9EEF6; color:#2C4A73}
+.gs-k.k-art{background:#F4EDF7; color:#5B3A72}
+.gs-k.k-page{background:var(--surface-2); color:var(--ink-2)}
+.gs-empty{padding:16px 12px; font-size:var(--t-sm); color:var(--ink-2)}
+.gs-empty a{color:var(--brand); font-weight:700}
+
+@media (max-width:1000px){
+  /* در موبایل کادر جست‌وجو در هدر نیست؛ اگر جایی بود، نتایج تمام‌عرض شود */
+  .gs-results{position:fixed; inset-inline:var(--s4); top:auto;
+    max-height:60vh; margin-top:6px}
+}
+
+/* نوار جست‌وجوی موبایل. فقط زیر ۱۰۰۰px دیده می‌شود، چون بالای آن
+   کادر جست‌وجوی هدر هست و دو کادر همزمان گیج‌کننده است. */
+.msearch{display:none}
+@media (max-width:1000px){
+  .msearch{display:block; background:#fff; border-bottom:1px solid var(--line);
+    padding:var(--s3) 0}
+  .msearch .search{display:block; max-width:none}
+  .msearch .gs-results{position:absolute; inset-inline:0; top:calc(100% + 6px)}
+}
+@media print{.msearch{display:none}}

@@ -78,7 +78,9 @@ def main():
         write(out_path(u_blogcat(slug)), B.build_blog_category(slug)); n += 1
     for a in B.ARTS:
         write(out_path(u_article(a["cat_slug"], a["slug"])), B.build_article(a)); n += 1
-    print(f"ساخته شد: {n} صفحه")
+    import searchindex as SI
+    m = SI.write(os.path.join(ROOT, "assets", "search-index.json"))
+    print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد")
 
 
 if __name__ == "__main__":

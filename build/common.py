@@ -55,9 +55,18 @@ def jalali(gy, gm, gd):
     return jy, jm, jd
 
 
-def jalali_str(d, with_day=False):
+def jalali_str(d, with_day=False, bidi=False):
+    """تاریخ شمسی بلند. با bidi=True روز و سال داخل <bdi> می‌روند.
+
+    بدون آن، «۳۱ شهریور ۱۴۰۵» وقتی کنار متن یا آیکن فارسی بنشیند با
+    الگوریتم bidi جابه‌جا می‌شود و روز و سال به هم می‌چسبند؛ کاربر
+    «شهریور ۳۱۱۴۰۵» می‌بیند.
+    """
     jy, jm, jd = jalali(d.year, d.month, d.day)
-    s = f"{jd} {JMONTHS[jm-1]} {jy}"
+    if bidi:
+        s = f"<bdi>{jd}</bdi> {JMONTHS[jm-1]} <bdi>{jy}</bdi>"
+    else:
+        s = f"{jd} {JMONTHS[jm-1]} {jy}"
     return f"{JDAYS[d.weekday()]} {s}" if with_day else s
 
 
@@ -68,6 +77,7 @@ def jalali_short(d):
 
 _today = datetime.date.today()
 TODAY = jalali_str(_today)              # «۱۸ شهریور ۱۴۰۵»
+TODAY_BIDI = jalali_str(_today, bidi=True)   # همان، با <bdi> دور اعداد
 TODAY_ISO = _today.isoformat()
 TODAY_SHORT = jalali_short(_today)      # «۱۴۰۵/۰۶/۱۸»
 
@@ -282,8 +292,8 @@ def masthead():
       <span><span class="name">سپاهان فلز</span><br><span class="sub">فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان</span></span>
     </a>
     <div class="search">
-      <label class="vh" for="q">جستجوی محصول</label>
-      <input id="q" type="search" placeholder="جستجوی محصول یا نوع کالا">
+      <label class="vh" for="q">جست‌وجو در کل سایت</label>
+      <input id="q" type="search" placeholder="جست‌وجو در کالاها، مجله و صفحه‌های سایت">
       <button type="button" aria-label="جستجو">{icon('i-search')}</button>
     </div>
     <a class="callbox" href="tel:{PH}" data-track="call-header">
@@ -316,13 +326,25 @@ def mainnav(current=None):
   <div class="container">
     <div class="nav-scroll">{''.join(links)}</div>
   </div>
-</nav>"""
+</nav>
+<!-- کادر جست‌وجوی موبایل: کادر هدر زیر ۱۰۰۰px پنهان می‌شود و بدون این،
+     کاربر موبایل اصلاً راهی برای جست‌وجو نداشت. -->
+<div class="msearch">
+  <div class="container">
+    <div class="search">
+      <label class="vh" for="q-m">جست‌وجو در کل سایت</label>
+      <input id="q-m" data-site-search type="search"
+             placeholder="جست‌وجو در کالاها، مجله و صفحه‌ها">
+      <button type="button" aria-label="جست‌وجو">{icon('i-search')}</button>
+    </div>
+  </div>
+</div>"""
 
 
 def stamp(short=False):
     """نشان بروزرسانی — تاریخ در زمان ساخت نوشته می‌شود و site.js آن را
     با تاریخ روزِ بازدید جایگزین می‌کند."""
-    t = f'<time data-live-date datetime="{TODAY_ISO}">{TODAY}</time>'
+    t = f'<time data-live-date datetime="{TODAY_ISO}">{TODAY_BIDI}</time>'
     if short:
         return f'<span class="stamp"><span class="dot"></span>بروزرسانی: {t}</span>'
     return (f'<span class="stamp"><span class="dot"></span>'
@@ -428,6 +450,7 @@ def dock():
 <script src="/assets/table.js" defer></script>
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
+<script src="/assets/search.js" defer></script>
 <script src="/assets/chart.js" defer></script>
 <script src="/assets/tools.js" defer></script>
 {GOFTINO}
