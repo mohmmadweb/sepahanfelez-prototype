@@ -391,7 +391,18 @@ def build_article(a):
          "articleSection": cat_title(a["cat_slug"])},
         SC.breadcrumb([("خانه", "/"), ("مجله", "/blog"),
                        (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], None)]))
-    return page_shell(f"{a['title']} | مجله سپاهان فلز", meta_desc(a), "blog", body,
+    # عنوان بلندتر از ۶۰ نویسه در نتایج گوگل بریده می‌شود. عنوان خود
+    # مقاله مهم‌تر از پسوند برند است، پس وقتی جا کم است پسوند حذف می‌شود
+    # و اگر باز هم بلند بود، عنوان از مرز کلمه کوتاه می‌شود.
+    _t = a["title"].strip()
+    _full = f"{_t} | مجله سپاهان فلز"
+    if len(_full) <= 60:
+        page_title = _full
+    elif len(_t) <= 60:
+        page_title = _t
+    else:
+        page_title = _t[:57].rsplit(" ", 1)[0] + "…"
+    return page_shell(page_title, meta_desc(a), "blog", body,
                       crumbs=[("خانه", "/"), ("مجله", u_blog()),
                               (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], "#")],
                       canonical=art_url, jsonld=ld)
