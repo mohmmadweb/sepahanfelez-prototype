@@ -2085,3 +2085,88 @@ table.pt.ch .pt-act{width:1%}
     bottom:82px !important;
   }
 }
+
+/* دو آیکن ردیف جدول هم‌اندازه شوند: pt-call در قاعده‌ی لمسی به ۴۴px
+   رسیده بود ولی pt-chart روی ۴۰px مانده بود و آیکن‌ها هم ۱۹ و ۱۸ بودند.
+   هر دو را با هم تعریف می‌کنیم تا از این به بعد از هم جدا نیفتند. */
+.pt-call,.pt-chart{width:44px; height:44px; border-width:1.5px}
+.pt-call svg,.pt-chart svg{width:19px; height:19px}
+
+/* ── بازه‌ی دلخواه نمودار ─────────────────────────────────────────────── */
+/* دکمه‌ی «بازه‌ی دلخواه» داخل همان نوار بازه‌هاست ولی با جداکننده، چون
+   رفتارش فرق دارد: پنل باز می‌کند و بازه‌اش عددی ثابت نیست. */
+.cr-toggle{min-height:36px; padding:0 14px; border:0; border-radius:999px;
+  background:transparent; font:inherit; font-size:13px; font-weight:700;
+  color:var(--ink-2); position:relative; margin-inline-start:4px}
+.cr-toggle::before{content:""; position:absolute; inset-inline-start:-4px; top:8px; bottom:8px;
+  width:1px; background:var(--line-2)}
+.cr-toggle.is-on{background:var(--steel-ink); color:#fff}
+.cr-toggle.is-on::before{display:none}
+.cr-toggle:hover{color:var(--ink)}
+
+.cr-panel{display:flex; flex-wrap:wrap; align-items:flex-end; gap:var(--s4);
+  margin-top:var(--s3); padding:var(--s4); background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--radius-lg)}
+.cr-panel[hidden]{display:none}
+.cr-field{display:flex; flex-direction:column; gap:6px}
+.cr-lbl{font-size:var(--t-xs); font-weight:700; color:var(--ink-2)}
+/* ورودی‌ها در RTL باید سال، ماه، روز از راست به چپ خوانده شوند؛
+   خودِ کادرها ltr نمی‌شوند چون ترتیبشان معنادار است، نه محتوایشان. */
+.cr-date{display:flex; gap:4px}
+.cr-date input{width:74px; min-height:44px; padding:0 8px; text-align:center;
+  border:1px solid var(--line-2); border-radius:var(--radius); background:#fff;
+  font:inherit; font-size:var(--t-sm); font-weight:700; color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.cr-date input.cr-m,.cr-date input.cr-d{width:62px}
+.cr-date input:focus{border-color:var(--steel); outline:2px solid var(--steel); outline-offset:1px}
+/* فلش‌های ریز number در فارسی بیشتر مزاحم‌اند تا مفید */
+.cr-date input::-webkit-outer-spin-button,.cr-date input::-webkit-inner-spin-button{
+  -webkit-appearance:none; margin:0}
+.cr-date input[type=number]{-moz-appearance:textfield}
+.cr-apply{min-height:44px; align-self:flex-end}
+.cr-err{flex-basis:100%; margin:0; color:var(--brand); font-size:var(--t-sm); font-weight:700}
+.cr-err[hidden]{display:none}
+
+@media (max-width:640px){
+  .chart-head{flex-wrap:wrap}
+  .chart-ranges{flex-wrap:wrap; border-radius:var(--radius-lg)}
+  .cr-toggle::before{display:none}
+  .cr-field{flex:1 1 100%}
+  .cr-date{justify-content:stretch}
+  .cr-date input{flex:1 1 0; width:auto}
+  .cr-apply{flex:1 1 100%}
+}
+
+/* زیرنویس ثابت هر کادر تاریخ. placeholder با تایپ محو می‌شود و کاربر
+   دیگر نمی‌داند کدام کادر سال بود و کدام ماه. */
+.cr-one{display:flex; flex-direction:column; align-items:center; gap:3px}
+.cr-cap{font-size:11px; font-weight:700; color:var(--ink-3)}
+.cr-date input::placeholder{color:var(--ink-3); font-weight:600}
+
+/* پنج دکمه‌ی بازه در ۳۹۰px داخل نوار قرص‌شکل جا نمی‌شوند و «بازه‌ی دلخواه»
+   بیرون می‌زد. زیر ۷۶۸px نوار را شبکه‌ای می‌کنیم تا همه دیده شوند. */
+@media (max-width:768px){
+  .chart-head{flex-direction:column; align-items:stretch; gap:var(--s3)}
+  .chart-ranges{display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
+    border-radius:var(--radius-lg); padding:6px}
+  .chart-ranges button,.cr-toggle{margin:0; padding:0 6px; font-size:12px}
+  .cr-toggle{grid-column:span 3}
+  .cr-toggle::before{display:none}
+}
+
+/* سه کادر تاریخ عرض ثابت ۷۴/۶۲px داشتند و در ۳۹۰px مجموعشان از کارت
+   بیرون می‌زد و کل صفحه را پهن می‌کرد (مرورگر موبایل هم zoom out می‌شد).
+   کادرها باید بتوانند جمع شوند. */
+.chart,.cr-panel,.cr-field,.cr-date,.cr-one,.chart-ranges{min-width:0}
+.cr-one{flex:1 1 0; min-width:0}
+.cr-date input{width:100%; min-width:0}
+.cr-date input.cr-m,.cr-date input.cr-d{width:100%}
+.chart-ranges button,.cr-toggle{min-width:0; white-space:nowrap}
+
+/* پنج دکمه در شبکه‌ی ۳ستونه یک خانه‌ی خالی می‌گذاشت. ۲ستونه پر می‌شود:
+   چهار بازه در دو ردیف و «بازه‌ی دلخواه» تمام‌عرض زیرشان. */
+@media (max-width:768px){
+  .chart-ranges{grid-template-columns:1fr 1fr}
+  .cr-toggle{grid-column:span 2}
+  .chart-ranges button,.cr-toggle{min-height:44px; font-size:13px}
+}

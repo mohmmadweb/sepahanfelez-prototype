@@ -13,19 +13,61 @@ from common import (CAT, esc, fa, fmt, icon, price_of, delta_of, unit_of, clean_
 # ---------------------------------------------------------------------------
 # نمودار
 # ---------------------------------------------------------------------------
-def chart(id_, price, prev, key, title, sub="", days=30, compact=False):
+# بازه‌های نمودار. «روزانه» یعنی ۱ روز نمودار نمی‌شود، پس کوتاه‌ترین
+# بازه‌ی معنادار ۱۴ روز است و برچسبش «روزانه» می‌ماند چون کاربر نوسان
+# روز-به-روز را می‌بیند. سالانه ۳۶۵ روز.
+RANGES = ((14, "روزانه"), (90, "هفتگی"), (180, "ماهانه"), (365, "سالانه"))
+
+
+def range_buttons(days):
+    return "".join(
+        f'<button type="button" data-range="{d}" aria-pressed="{"true" if d == days else "false"}"'
+        f' class="{"is-on" if d == days else ""}">{lbl}</button>'
+        for d, lbl in RANGES)
+
+
+def custom_range(id_):
+    """دکمه‌ی باز/بسته کردن پنل بازه‌ی دلخواه."""
+    return (f'<button type="button" class="cr-toggle" data-cr-toggle'
+            f' aria-expanded="false" aria-controls="cr-{esc(id_)}">بازه‌ی دلخواه</button>')
+
+
+def custom_panel(id_):
+    """پنل بازه‌ی دلخواه که زیر سربرگ نمودار باز می‌شود."""
+    uid = esc(id_)
+    def triple(pfx, lbl):
+        # هر کادر زیرنویس ثابت دارد (سال/ماه/روز)، نه فقط placeholder:
+        # placeholder با تایپ‌کردن محو می‌شود و کاربر یادش می‌رود کدام کدام است.
+        def one(cls, ph, name, mn, mx):
+            return (f'<span class="cr-one">'
+                    f'<input type="text" class="{cls}" maxlength="4" placeholder="{ph}"'
+                    f' data-min="{mn}" data-max="{mx}"'
+                    f' aria-label="{name} {lbl}" inputmode="numeric" autocomplete="off">'
+                    f'<span class="cr-cap">{name}</span></span>')
+        return (f'<div class="cr-field"><span class="cr-lbl">{lbl}</span>'
+                f'<span class="cr-date" data-cr="{pfx}">'
+                f'{one("cr-y", "۱۴۰۵", "سال", 1390, 1420)}'
+                f'{one("cr-m", "۰۱", "ماه", 1, 12)}'
+                f'{one("cr-d", "۰۱", "روز", 1, 31)}'
+                f'</span></div>')
+    return (f'<div class="cr-panel" id="cr-{uid}" hidden>'
+            f'{triple("from", "از تاریخ")}{triple("to", "تا تاریخ")}'
+            f'<button type="button" class="btn btn-sm cr-apply" data-cr-apply>نمایش بازه</button>'
+            f'<p class="cr-err" role="alert" hidden></p></div>')
+
+
+def chart(id_, price, prev, key, title, sub="", days=90, compact=False):
     """بلوک نمودار. داده‌ی واقعی: دو نقطه (prev → price)؛ سری روزانه در
     مرورگر ساخته می‌شود و زیرش نوشته می‌شود که نمونه است."""
     if not price:
         return ""
-    ranges = "".join(
-        f'<button type="button" data-range="{d}" aria-pressed="{"true" if d == days else "false"}" class="{"is-on" if d == days else ""}">{lbl}</button>'
-        for d, lbl in ((7, "هفتگی"), (30, "ماهانه"), (90, "سه‌ماهه")))
+    ranges = range_buttons(days) + custom_range(id_)
     head = "" if compact else f'<div class="chart-head"><div><h3>{esc(title)}</h3>{f"<span class=dim>{esc(sub)}</span>" if sub else ""}</div><div class="chart-ranges" role="group" aria-label="بازه">{ranges}</div></div>'
     if compact:
         head = f'<div class="chart-head"><div class="chart-title">{esc(title)}</div><div class="chart-ranges" role="group" aria-label="بازه">{ranges}</div></div>'
     return f"""<div class="chart" id="{esc(id_)}" data-price="{price}" data-prev="{prev or price}" data-key="{esc(key)}" data-days="{days}">
   {head}
+  {custom_panel(id_)}
   <div class="chart-svg"></div>
   <div class="chart-stats"></div>
   <p class="chart-note">دو نقطه‌ی واقعی: آخرین قیمت ثبت‌شده (<b class="num">{fmt(prev or price)}</b> ریال) و قیمت روز (<b class="num">{fmt(price)}</b> ریال). سری روزانه در این نسخه‌ی نمایشی است و پس از اتصال به بک‌اند از تاریخچه‌ی واقعی ثبت قیمت‌ها خوانده می‌شود.</p>
@@ -36,7 +78,7 @@ def product_chart(key, row):
     p, d = price_of(row), delta_of(row)
     name = clean_name(row["نام محصول"])
     return chart("chart-product", p, d, row["نام محصول"], f"نمودار قیمت {name}",
-                 f"ریال / {unit_of(row)} · مبنای روز درب کارخانه", days=30)
+                 f"ریال / {unit_of(row)} · مبنای روز درب کارخانه", days=90)
 
 
 def category_chart(key):
@@ -55,15 +97,22 @@ def category_chart(key):
 CHART_DIALOG = """<dialog id="chart-dialog" class="chart-dialog" aria-label="نمودار قیمت">
   <div class="chart-dialog-in">
     <button type="button" class="chart-close" data-close aria-label="بستن">×</button>
-    <div class="chart" data-price="0" data-prev="0" data-key="" data-days="30">
+    <div class="chart" id="chart-modal" data-price="0" data-prev="0" data-key="" data-days="90">
       <div class="chart-head"><div class="chart-title"></div>
         <div class="chart-ranges" role="group" aria-label="بازه">
-          <button type="button" data-range="7" class="">هفتگی</button><button type="button" data-range="30" class="is-on">ماهانه</button><button type="button" data-range="90">سه‌ماهه</button></div></div>
+          __RANGES__</div></div>
+      __PANEL__
       <div class="chart-svg"></div><div class="chart-stats"></div>
       <p class="chart-note">دو نقطه‌ی واقعی (آخرین ثبت و قیمت روز)؛ سری روزانه نمایشی است و با اتصال به بک‌اند از تاریخچه‌ی واقعی خوانده می‌شود.</p>
     </div>
   </div>
 </dialog>"""
+
+# جای‌گذاری بعد از تعریف کمکی‌ها، چون CHART_DIALOG ثابت ماژول است و
+# باید دقیقاً همان دکمه‌ها و پنلِ نمودارهای درون‌صفحه را داشته باشد.
+CHART_DIALOG = (CHART_DIALOG
+                .replace("__RANGES__", range_buttons(90) + custom_range("chart-modal"))
+                .replace("__PANEL__", custom_panel("chart-modal")))
 
 
 # ---------------------------------------------------------------------------

@@ -30,27 +30,65 @@
     var jd = 1 + (days < 186 ? days % 31 : (days - 186) % 30);
     return [jy, jm, jd];
   }
+  // شمسی → میلادی. معکوس toJalali بالا؛ برای بازه‌ی دلخواه لازم است.
+  function toGregorian(jy, jm, jd) {
+    var gy = jy <= 979 ? 621 : 1600; jy -= jy <= 979 ? 0 : 979;
+    var days = 365 * jy + Math.floor(jy / 33) * 8 + Math.floor(((jy % 33) + 3) / 4) + 78 + jd +
+               (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
+    gy += 400 * Math.floor(days / 146097); days %= 146097;
+    if (days > 36524) {
+      gy += 100 * Math.floor(--days / 36524); days %= 36524;
+      if (days >= 365) days++;
+    }
+    gy += 4 * Math.floor(days / 1461); days %= 1461;
+    if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    var gd = days + 1;
+    var sal_a = [0, 31, (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0 ? 29 : 28,
+                 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var gm = 0;
+    for (gm = 1; gm <= 12 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+    return new Date(gy, gm - 1, gd);
+  }
+
   var MONTHS = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
   function label(d) { var j = toJalali(d); return fa(j[2]) + ' ' + MONTHS[j[1] - 1]; }
 
-  function series(prev, cur, days, seed) {
+  // طول هر «پله»ی قیمت برحسب بازه. قیمت کارخانه هر چند روز یک‌بار عوض
+  // می‌شود، ولی اگر گام را همیشه ۷ بگذاریم نمودار ۱۴روزه و ۳۶۵روزه یک
+  // شکل می‌شوند. گام با بازه بزرگ می‌شود تا هر نما تفکیک خودش را داشته باشد.
+  function stepFor(days) {
+    if (days <= 21) return 1;      // روزانه: هر روز یک نقطه
+    if (days <= 100) return 4;     // هفتگی
+    if (days <= 200) return 12;    // ماهانه
+    return 26;                     // سالانه
+  }
+
+  function series(prev, cur, days, seed, endDate) {
     // مسیر نرم از prev به cur با نوسان‌های کوچک؛ نقطه‌ی آخر دقیقاً cur است
-    var r = rng(seed), out = [], today = new Date();
+    var r = rng(seed), out = [], today = endDate ? new Date(endDate) : new Date();
     if (!prev) prev = cur;
-    var steps = Math.max(2, Math.floor(days / 7));       // قیمت کارخانه هفتگی عوض می‌شود
-    var levels = [], v = prev;
+    var step = stepFor(days);
+    var steps = Math.max(2, Math.ceil(days / step));
+    var levels = [];
     for (var s = 0; s < steps; s++) {
-      var t = s / (steps - 1);
+      var t = steps > 1 ? s / (steps - 1) : 1;
       var target = prev + (cur - prev) * t;
       var noise = (r() - 0.5) * Math.abs(cur - prev || cur * 0.02) * 0.25;
-      v = s === steps - 1 ? cur : Math.round((target + noise) / 1000) * 1000;
-      levels.push(v);
+      levels.push(s === steps - 1 ? cur : Math.round((target + noise) / 1000) * 1000);
     }
-    for (var i = days - 1; i >= 0; i--) {
+    // برای بازه‌های بلند هر روز یک نقطه نمی‌کشیم؛ نمونه‌برداری می‌کنیم تا
+    // تعداد نقطه‌ها زیر ~۱۸۰ بماند و هاور روی نقطه‌ها دقیق کار کند.
+    var every = Math.max(1, Math.ceil(days / 180));
+    for (var i = days - 1; i >= 0; i -= every) {
       var d = new Date(today); d.setDate(today.getDate() - i);
-      var idx = Math.min(steps - 1, Math.floor((days - 1 - i) / 7));
+      var idx = Math.min(steps - 1, Math.floor((days - 1 - i) / step));
       out.push({ d: d, v: levels[idx] });
     }
+    // نقطه‌ی پایان همیشه باید دقیقاً روز پایانی و قیمت روز باشد
+    var last = out[out.length - 1];
+    if (!last || last.d.getTime() !== today.getTime()) {
+      out.push({ d: new Date(today), v: cur });
+    } else { last.v = cur; }
     return out;
   }
 
@@ -115,17 +153,113 @@
     var cur = +el.getAttribute('data-price') || 0, prev = +el.getAttribute('data-prev') || cur;
     if (!cur) return;
     var seed = hash(el.getAttribute('data-key') || el.id || 'x');
-    var days = +el.getAttribute('data-days') || 30;
-    function render(dd) { draw(el, series(prev, cur, dd, seed)); }
+    var days = +el.getAttribute('data-days') || 90;
+    function render(dd, endDate) { draw(el, series(prev, cur, dd, seed, endDate)); }
     var btns = el.querySelectorAll('[data-range]');
-    Array.prototype.forEach.call(btns, function (b) {
-      b.addEventListener('click', function () {
-        Array.prototype.forEach.call(btns, function (x) { x.classList.remove('is-on'); x.setAttribute('aria-pressed', 'false'); });
-        b.classList.add('is-on'); b.setAttribute('aria-pressed', 'true');
-        render(+b.getAttribute('data-range'));
+
+    function clearOn() {
+      Array.prototype.forEach.call(btns, function (x) {
+        x.classList.remove('is-on'); x.setAttribute('aria-pressed', 'false');
+      });
+      var ct = el.querySelector('[data-cr-toggle]');
+      if (ct) ct.classList.remove('is-on');
+    }
+
+    if (!el.__rangeBound) {
+      el.__rangeBound = true;
+      Array.prototype.forEach.call(btns, function (b) {
+        b.addEventListener('click', function () {
+          clearOn();
+          b.classList.add('is-on'); b.setAttribute('aria-pressed', 'true');
+          hidePanel();
+          el.__render(+b.getAttribute('data-range'));
+        });
+      });
+      bindCustom(el, clearOn);
+    }
+    el.__render = render;
+
+    function hidePanel() {
+      var p = el.querySelector('.cr-panel'), t = el.querySelector('[data-cr-toggle]');
+      if (p) p.hidden = true;
+      if (t) t.setAttribute('aria-expanded', 'false');
+    }
+
+    render(days);
+  }
+
+  /* ---- بازه‌ی دلخواه ----
+   * کاربر شروع و پایان را به تاریخ شمسی می‌دهد. ورودی‌ها سال/ماه/روز جداست
+   * چون تقویم بومی مرورگر میلادی است و برای کاربر فارسی گیج‌کننده. */
+  function bindCustom(el, clearOn) {
+    var toggle = el.querySelector('[data-cr-toggle]');
+    var panel = el.querySelector('.cr-panel');
+    if (!toggle || !panel) return;
+    var err = panel.querySelector('.cr-err');
+    var apply = panel.querySelector('[data-cr-apply]');
+
+    toggle.addEventListener('click', function () {
+      var open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { var f = panel.querySelector('input'); if (f) f.focus(); }
+    });
+
+    // ارقام فارسی و عربی را به لاتین برگردان تا کاربر با کیبورد فارسی
+    // هم بتواند تایپ کند.
+    function digits(v) {
+      return String(v)
+        .replace(/[۰-۹]/g, function (c) { return c.charCodeAt(0) - 1776; })
+        .replace(/[٠-٩]/g, function (c) { return c.charCodeAt(0) - 1632; })
+        .replace(/[^0-9]/g, '');
+    }
+
+    function readTriple(which) {
+      var box = panel.querySelector('[data-cr="' + which + '"]');
+      var y = +digits(box.querySelector('.cr-y').value),
+          m = +digits(box.querySelector('.cr-m').value),
+          d = +digits(box.querySelector('.cr-d').value);
+      if (!y || !m || !d) return null;
+      if (m < 1 || m > 12) return null;
+      if (d < 1 || d > 31) return null;
+      if (m > 6 && d > 30) return null;          // نیمه‌ی دوم سال ۳۰ روزه است
+      return toGregorian(y, m, d);
+    }
+
+    function fail(msg) {
+      err.textContent = msg; err.hidden = false;
+    }
+
+    apply.addEventListener('click', function () {
+      err.hidden = true;
+      var a = readTriple('from'), b = readTriple('to');
+      if (!a) return fail('تاریخ شروع کامل و معتبر نیست. سال، ماه و روز را وارد کنید.');
+      if (!b) return fail('تاریخ پایان کامل و معتبر نیست. سال، ماه و روز را وارد کنید.');
+      if (a >= b) return fail('تاریخ شروع باید پیش از تاریخ پایان باشد.');
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      if (b > today) return fail('تاریخ پایان از امروز جلوتر است.');
+      var dd = Math.round((b - a) / 86400000) + 1;
+      if (dd < 3) return fail('بازه باید دست‌کم سه روز باشد.');
+      clearOn();
+      toggle.classList.add('is-on');
+      el.__render(dd, b);
+    });
+
+    panel.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); apply.click(); }
+    });
+
+    // نمایش ارقام به فارسی، چون بقیه‌ی اعداد سایت فارسی است و کادر لاتین
+    // وسط صفحه ناهماهنگ دیده می‌شود.
+    var FAD = '۰۱۲۳۴۵۶۷۸۹';
+    Array.prototype.forEach.call(panel.querySelectorAll('input'), function (inp) {
+      inp.addEventListener('input', function () {
+        var raw = digits(inp.value);
+        var max = +inp.getAttribute('data-max') || 9999;
+        if (raw && +raw > max) raw = raw.slice(0, -1);
+        inp.value = raw.replace(/[0-9]/g, function (d) { return FAD[+d]; });
       });
     });
-    render(days);
   }
 
   /* ---- هاور: اطلاعات همان نقطه ----
@@ -230,9 +364,22 @@
       box.setAttribute('data-prev', tr.getAttribute('data-prev') || tr.getAttribute('data-price') || '0');
       box.setAttribute('data-key', name);
       ttl.textContent = 'نمودار قیمت ' + name.replace(/[0-9]/g, function (d) { return FA[+d]; });
-      var first = box.querySelector('[data-range]');
-      Array.prototype.forEach.call(box.querySelectorAll('[data-range]'), function (x) { x.classList.remove('is-on'); });
-      if (first) first.classList.add('is-on');
+      // بازه را به پیش‌فرض همین نمودار برگردان، نه به اولین دکمه؛ وگرنه
+      // دکمه‌ی روشن با نموداری که کشیده می‌شود یکی نبود.
+      var def = box.getAttribute('data-days') || '90';
+      Array.prototype.forEach.call(box.querySelectorAll('[data-range]'), function (x) {
+        var on = x.getAttribute('data-range') === def;
+        x.classList.toggle('is-on', on);
+        x.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      // حالت بازه‌ی دلخواهِ ردیف قبلی نباید روی ردیف بعدی بماند
+      var ct = box.querySelector('[data-cr-toggle]'), cp = box.querySelector('.cr-panel');
+      if (ct) { ct.classList.remove('is-on'); ct.setAttribute('aria-expanded', 'false'); }
+      if (cp) {
+        cp.hidden = true;
+        Array.prototype.forEach.call(cp.querySelectorAll('input'), function (i) { i.value = ''; });
+        var ce = cp.querySelector('.cr-err'); if (ce) ce.hidden = true;
+      }
       setup(box);
       if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
     });

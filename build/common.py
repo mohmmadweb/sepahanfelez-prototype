@@ -402,17 +402,16 @@ GOFTINO = """<script type="text/javascript">
   !function(){var i="fugB8i",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}();
 </script>"""
 
-CHART_DIALOG = """<dialog id="chart-dialog" class="chart-dialog" aria-label="نمودار قیمت">
-  <div class="chart-dialog-in">
-    <button type="button" class="chart-close" data-close aria-label="بستن">×</button>
-    <div class="chart" data-price="0" data-prev="0" data-key="" data-days="30">
-      <div class="chart-head"><div class="chart-title"></div>
-        <div class="chart-ranges" role="group" aria-label="بازه"><button type="button" data-range="7">هفتگی</button><button type="button" data-range="30" class="is-on">ماهانه</button><button type="button" data-range="90">سه‌ماهه</button></div></div>
-      <div class="chart-svg"></div><div class="chart-stats"></div>
-      <p class="chart-note">دو نقطه‌ی واقعی (آخرین ثبت و قیمت روز)؛ سری روزانه نمایشی است و با اتصال به بک‌اند از تاریخچه‌ی واقعی خوانده می‌شود.</p>
-    </div>
-  </div>
-</dialog>"""
+# دیالوگ نمودار یک مرجع دارد: features.CHART_DIALOG. اینجا تعریفش
+# نمی‌کنیم چون دو نسخه از هم جدا می‌افتند — دقیقاً همان اتفاقی که افتاد
+# و دکمه‌های بازه‌ی قدیمی در دیالوگ باقی مانده بود.
+
+
+def _chart_dialog():
+    """دیالوگ نمودار از features خوانده می‌شود. import داخل تابع است چون
+    features خودش common را وارد می‌کند و import بالای فایل حلقه می‌سازد."""
+    import features
+    return features.CHART_DIALOG
 
 
 def dock():
@@ -425,7 +424,7 @@ def dock():
   <a href="https://wa.me/{WA}">{icon('i-whatsapp')}واتساپ</a>
   <a href="{u_price()}">{icon('i-chart')}قیمت‌ها</a>
 </nav>
-{CHART_DIALOG}
+{_chart_dialog()}
 <script src="/assets/table.js" defer></script>
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
