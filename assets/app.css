@@ -2076,3 +2076,12 @@ table.pt.ch .pt-act{width:1%}
 .expert-tel,.expert-wa{max-width:100%}
 .chart-with-rep{grid-template-columns:minmax(0,1fr) 320px}
 @media (max-width:1024px){.chart-with-rep{grid-template-columns:1fr}}
+
+/* حباب چت گفتینو خودش fixed پایین صفحه می‌نشیند و روی داک تماس می‌افتد،
+   یعنی روی مهم‌ترین دکمه‌ی سایت. روی موبایل بالاتر از داک (۶۸px + فاصله)
+   می‌بریمش. سلکتورها هر دو نام‌گذاری گفتینو را پوشش می‌دهند. */
+@media (max-width:1000px){
+  #goftino_w,.goftino-widget,[id^="goftino"]{
+    bottom:82px !important;
+  }
+}
