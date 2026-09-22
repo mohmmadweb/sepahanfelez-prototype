@@ -55,7 +55,10 @@
   }
 
   function draw(el, data) {
-    var W = 640, H = 240, L = 46, R = 46, T = 18, B = 34;
+    // R حاشیه‌ی راست است و برچسب محور قیمت از W-R+4 شروع می‌شود و به راست
+    // می‌رود؛ عدد هفت‌رقمی فارسی حدود ۵۰px می‌خواهد، پس R باید ≥۵۶ باشد
+    // وگرنه آخرین رقم بیرون از viewBox بریده می‌شود.
+    var W = 660, H = 240, L = 40, R = 58, T = 18, B = 34;
     var vs = data.map(function (p) { return p.v; });
     var min = Math.min.apply(null, vs), max = Math.max.apply(null, vs);
     if (max === min) { max = min * 1.02; min = min * 0.98; }
@@ -86,14 +89,26 @@
       grid + '<path d="' + area + '" fill="url(#' + id + ')"/>' +
       '<path d="' + line + '" fill="none" stroke="' + col + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' +
       '<circle cx="' + x(data.length - 1).toFixed(1) + '" cy="' + y(last.v).toFixed(1) + '" r="5" fill="#fff" stroke="' + col + '" stroke-width="2.5"/>' +
-      ticks + '</svg>';
+      ticks +
+      // لایه‌ی هاور: خط عمودی و نقطه‌ی برجسته، در حالت عادی پنهان.
+      '<g class="chart-hover" style="opacity:0;pointer-events:none">' +
+        '<line y1="' + T + '" y2="' + (H - B) + '" stroke="#123152" stroke-width="1" stroke-dasharray="4 3"/>' +
+        '<circle r="6" fill="#fff" stroke="' + col + '" stroke-width="3"/>' +
+      '</g></svg>';
+    // مختصات هر نقطه را نگه می‌داریم تا لایه‌ی هاور بتواند نزدیک‌ترین را پیدا کند.
+    el._pts = data.map(function (p, i) { return { x: x(i), y: y(p.v), v: p.v, d: p.d, label: p.label }; });
+    el._geo = { W: W, H: H, T: T, B: B, col: col };
+
     var lo = Math.min.apply(null, vs), hi = Math.max.apply(null, vs);
     var chg = first.v ? (last.v - first.v) / first.v * 100 : 0;
     var stats = el.querySelector('.chart-stats');
+    if (el.__bindHover) { /* re-bound below */ }
     if (stats) stats.innerHTML =
       '<span><i>کمترین</i><b class="num">' + fmt(lo) + '</b></span>' +
       '<span><i>بیشترین</i><b class="num">' + fmt(hi) + '</b></span>' +
       '<span><i>تغییر بازه</i><b class="num ' + (chg >= 0 ? 'up' : 'down') + '">' + (chg >= 0 ? '+' : '') + fa(chg.toFixed(1)) + '٪</b></span>';
+
+    bindHover(el);
   }
 
   function setup(el) {
@@ -111,6 +126,93 @@
       });
     });
     render(days);
+  }
+
+  /* ---- هاور: اطلاعات همان نقطه ----
+   * یک tooltip روی نزدیک‌ترین نقطه‌ی داده. با ماوس و با لمس کار می‌کند و
+   * با صفحه‌کلید هم (فلش چپ/راست) تا با موس‌نداشتن از دست نرود. */
+  function bindHover(el) {
+    var svg = el.querySelector('svg');
+    if (!svg || !el._pts || !el._pts.length) return;
+    var tip = el.querySelector('.chart-tip');
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.className = 'chart-tip';
+      tip.setAttribute('role', 'status');
+      el.querySelector('.chart-svg').appendChild(tip);
+    }
+    var g = svg.querySelector('.chart-hover');
+    var line = g.querySelector('line'), dot = g.querySelector('circle');
+    var geo = el._geo, pts = el._pts, idx = -1;
+
+    function show(i) {
+      if (i < 0 || i >= pts.length) return;
+      idx = i;
+      var p = pts[i];
+      line.setAttribute('x1', p.x); line.setAttribute('x2', p.x);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      g.style.opacity = '1';
+
+      var when = p.label ? fa(String(p.label).replace(/-/g, ' ')) : (p.d ? label(p.d) : '');
+      // تغییر نسبت به نقطه‌ی قبل — همان چیزی که خریدار دنبالش است.
+      // مقایسه با آخرین قیمتِ *متفاوت*، نه با روز قبل: قیمت کارخانه چند روز
+      // ثابت می‌ماند و مقایسه با روز قبل همیشه «بدون تغییر» می‌داد.
+      var delta = '';
+      var prevDiff = -1;
+      for (var k = i - 1; k >= 0; k--) { if (pts[k].v !== p.v) { prevDiff = k; break; } }
+      if (prevDiff >= 0 && pts[prevDiff].v) {
+        var dv = p.v - pts[prevDiff].v, dp = dv / pts[prevDiff].v * 100;
+        delta = '<span class="' + (dv > 0 ? 'up' : 'down') + '">' +
+                (dv > 0 ? '▲ +' : '▼ ') + fa(Math.abs(dp).toFixed(1)) + '٪' +
+                ' (' + (dv > 0 ? '+' : '−') + fmt(Math.abs(dv)) + ' ریال)</span>';
+      } else if (i > 0) {
+        delta = '<span class="flat">بدون تغییر نسبت به ثبت قبلی</span>';
+      }
+      tip.innerHTML = '<b class="num">' + fmt(p.v) + '</b> <span class="u">ریال</span>' +
+                      (when ? '<i>' + when + '</i>' : '') + delta;
+
+      // جایگذاری افقی با در نظر گرفتن لبه‌ها (نمودار ممکن است باریک باشد)
+      var box = svg.getBoundingClientRect();
+      var px = p.x / geo.W * box.width;
+      var py = p.y / geo.H * box.height;
+      tip.style.left = px + 'px';
+      tip.style.top = py + 'px';
+      tip.classList.toggle('flip-x', px > box.width * 0.6);
+      tip.classList.toggle('flip-y', py < 70);
+      tip.style.opacity = '1';
+    }
+
+    function hide() { g.style.opacity = '0'; tip.style.opacity = '0'; idx = -1; }
+
+    function nearest(clientX) {
+      var box = svg.getBoundingClientRect();
+      var vx = (clientX - box.left) / box.width * geo.W;
+      var best = 0, bd = Infinity;
+      for (var i = 0; i < pts.length; i++) {
+        var d = Math.abs(pts[i].x - vx);
+        if (d < bd) { bd = d; best = i; }
+      }
+      return best;
+    }
+
+    svg.addEventListener('mousemove', function (e) { show(nearest(e.clientX)); });
+    svg.addEventListener('mouseleave', hide);
+    svg.addEventListener('touchstart', function (e) {
+      if (e.touches[0]) show(nearest(e.touches[0].clientX));
+    }, { passive: true });
+    svg.addEventListener('touchmove', function (e) {
+      if (e.touches[0]) show(nearest(e.touches[0].clientX));
+    }, { passive: true });
+    svg.addEventListener('touchend', hide);
+
+    // دسترسی با صفحه‌کلید
+    svg.setAttribute('tabindex', '0');
+    svg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); show(idx <= 0 ? pts.length - 1 : idx - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(idx < 0 || idx >= pts.length - 1 ? 0 : idx + 1); }
+      if (e.key === 'Escape') hide();
+    });
+    svg.addEventListener('blur', hide);
   }
 
   // مودال نمودار برای ردیف‌های جدول

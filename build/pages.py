@@ -224,7 +224,7 @@ def build_price():
         <p class="tnote">ستون «نوسان» تغییر نسبت به آخرین قیمت ثبت‌شده است. آیکون نمودار در هر ردیف، روند قیمت همان کالا را باز می‌کند. قیمت قطعی سفارش به تناژ و مقصد بار بستگی دارد و در تماس اعلام می‌شود.</p>
     </div>
   </section>
-{F.experts_grid("کارشناسان فروش — با داخلی مستقیم")}
+{F.sales_unit_section()}
 {callband()}"""
     return page_shell(f"قیمت لحظه‌ای صنایع مفتولی — {fa(TOTAL_SKUS)} نوع کالا | سپاهان فلز",
                       f"جدول قیمت لحظه‌ای {fa(TOTAL_SKUS)} نوع کالای مفتولی طلوع سپاهان در {fa(N_CATS)} دسته با مشخصات فنی و آخرین تغییرات قیمت. قیمت به ریال، بروزرسانی هر روز ساعت {UPDATE_TIME}.",
@@ -554,7 +554,7 @@ def build_about():
       </div>
     </div>
   </section>
-{F.experts_grid("کارشناسان فروش کارخانه")}
+{F.sales_unit_section()}
 {callband()}"""
     return page_shell("درباره کارخانه‌ی صنایع مفتولی طلوع سپاهان | سپاهان فلز",
                       f"صنایع مفتولی طلوع سپاهان، {SABAD}: تولیدکننده‌ی توری و محصولات مفتولی در شهرک صنعتی منتظریه‌ی اصفهان با دفتر فروش در بازار آهن تهران.",
@@ -593,8 +593,8 @@ def build_contact():
             <span>{icon('i-map')} دفتر تهران روی نقشه‌ی گوگل {icon('i-external')}</span></a>
         </div>
       </div>
-      <div class="section-head"><div><h2>کارشناسان فروش</h2><div class="sub">شماره‌ی دفتر را بگیرید و داخلی کارشناس دسته‌ی خود را وارد کنید</div></div></div>
-      <div class="experts-grid">{''.join(F.expert_card(e) for e in C.EXPERTS)}</div>
+      <div class="section-head"><div><h2>واحد فروش</h2><div class="sub">شماره‌ی دفتر را بگیرید و داخلی کارشناس مربوط به محصول خود را وارد کنید</div></div></div>
+      <div class="unit-rep unit-rep-wide">{F.rep_card(F.rep_for(None))}</div>
       <div class="prose wide cols-2">
         <h2>راهنمای تماس</h2>
         {''.join(f'<h3>{esc(t)}</h3><p>{esc(d)}</p>' for t, d in C.CONTACT_HELP)}

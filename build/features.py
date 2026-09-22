@@ -69,41 +69,77 @@ CHART_DIALOG = """<dialog id="chart-dialog" class="chart-dialog" aria-label="ن�
 # ---------------------------------------------------------------------------
 # کارشناسان فروش
 # ---------------------------------------------------------------------------
-def experts_for(key=None):
+def rep_for(key=None):
+    """کارشناس مسئول یک دسته.
+
+    با یک عضو تیم هم درست کار می‌کند: همان یک نفر مسئول همه‌ی دسته‌هاست و
+    هیچ‌جا گفته نمی‌شود چند نفرند. با چند عضو، ASSIGN تعیین می‌کند کدام
+    دسته به کدام کارشناس برسد.
+    """
+    team = C.SALES_TEAM
+    if not team:
+        return None
     if key:
-        return [e for e in C.EXPERTS if key in e["cats"]] or C.EXPERTS[:1]
-    return C.EXPERTS
+        who = C.ASSIGN.get(key)
+        if who:
+            for m in team:
+                if m["id"] == who:
+                    return m
+    return team[0]
 
 
-def expert_card(e, compact=False):
+def rep_card(e, compact=False):
+    """کارت کارشناس. هیچ شمارشی از تیم نشان نمی‌دهد."""
+    if not e:
+        return ""
+    wa_text = esc(f"سلام، درباره‌ی قیمت سؤال دارم.")
     return f"""<div class="expert{' compact' if compact else ''}">
-  <img src="{esc(e['photo'])}" alt="{esc(e['name'])}" width="72" height="72" loading="lazy">
+  <img src="{esc(e['photo'])}" alt="{esc(e['name'])} — {esc(e['role'])}" width="72" height="72" loading="lazy" decoding="async">
   <div class="expert-t">
     <b>{esc(e['name'])}</b><span>{esc(e['role'])}</span>
     <div class="expert-links">
-      <a class="expert-tel" href="tel:{PH},{e['ext']}"><span class="num">{PHS}</span> <em>داخلی <b class="num">{fa(e['ext'])}</b></em></a>
-      <a class="expert-wa" href="https://wa.me/{WA}?text={esc('سلام، درباره‌ی قیمت با ' + e['name'] + ' سؤال دارم.')}" rel="noopener">{icon('i-whatsapp')} واتساپ</a>
+      <a class="expert-tel" href="tel:{PH},{e['ext']}" data-track="call-expert"><span class="num">{PHS}</span> <em>داخلی <b class="num">{fa(e['ext'])}</b></em></a>
+      <a class="expert-wa" href="https://wa.me/{WA}?text={wa_text}" rel="noopener">{icon('i-whatsapp')} واتساپ</a>
     </div>
     <span class="dim">{esc(e['hours'])}</span>
   </div>
 </div>"""
 
 
-def experts_box(key=None, title="کارشناسان فروش این دسته"):
-    cards = "".join(expert_card(e) for e in experts_for(key))
-    return f"""<aside class="experts" aria-label="{esc(title)}">
-  <h3>{icon('i-user')} {esc(title)}</h3>
-  {cards}
-  <p class="dim">برای استعلام تلفنی، شماره‌ی دفتر را بگیرید و داخلی کارشناس را وارد کنید.</p>
+def experts_box(key=None, title=None):
+    """جعبه‌ی کناری: واحد فروش + کارشناس مسئول همین دسته."""
+    e = rep_for(key)
+    if not e:
+        return ""
+    return f"""<aside class="experts" aria-label="واحد فروش">
+  <h3>{icon('i-user')} {esc(title or 'کارشناس مسئول این دسته')}</h3>
+  {rep_card(e)}
+  <p class="dim">شماره‌ی دفتر را بگیرید و داخلی را وارد کنید تا مستقیم به کارشناس همین محصول وصل شوید.</p>
 </aside>"""
 
 
-def experts_grid(title="کارشناسان فروش"):
-    cards = "".join(expert_card(e) for e in C.EXPERTS)
-    return f"""<section class="section alt" id="experts">
+def sales_unit_section():
+    """بخش «واحد فروش» — جای شبکه‌ی چندنفره‌ی قبلی.
+
+    به‌جای چیدن چند کارت کنار هم (که تعداد تیم را لو می‌دهد)، سه تعهد
+    عملیاتی واحد فروش را می‌گوید و یک کارشناس مسئول را معرفی می‌کند.
+    """
+    u = C.SALES_UNIT
+    e = rep_for(None)
+    rows = "".join(
+        f'<div class="trustitem">{icon(ic)}<div><div class="t">{esc(t)}</div><div class="d">{esc(d)}</div></div></div>'
+        for ic, t, d in u["promise"])
+    return f"""<section class="section alt" id="sales-unit">
   <div class="container">
-    <div class="section-head"><div><h2>{esc(title)}</h2><div class="sub">هر دسته یک کارشناس مشخص دارد؛ تماس با داخلی، بی‌واسطه به همان کارشناس وصل می‌شود.</div></div></div>
-    <div class="experts-grid">{cards}</div>
+    <div class="section-head"><div><h2>{esc(u['title'])}</h2><div class="sub">{esc(u['lede'])}</div></div></div>
+    <div class="unit-grid">
+      <div class="trustgrid unit-promise">{rows}</div>
+      <div class="unit-rep">
+        <h3>{icon('i-user')} کارشناس پاسخگو</h3>
+        {rep_card(e)}
+        <a class="btn btn-call btn-lg2 unit-call" href="tel:{PH}" data-track="call-unit">{icon('i-phone')} تماس با واحد فروش <span class="num">{PHS}</span></a>
+      </div>
+    </div>
   </div>
 </section>"""
 
