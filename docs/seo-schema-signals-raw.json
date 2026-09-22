@@ -1,0 +1,94 @@
+{
+ "دمو (پروتوتایپ)": {
+  "types": [
+   "Organization",
+   "WebSite",
+   "CollectionPage",
+   "ItemList",
+   "FAQPage",
+   "BreadcrumbList"
+  ],
+  "faqs": 6,
+  "items": 13,
+  "hasOffer": false,
+  "canon": true,
+  "title": 33,
+  "imgs": 8,
+  "noalt": 0
+ },
+ "sepahanfelez (فعلی)": {
+  "types": [
+   "Organization",
+   "CollectionPage",
+   "BreadcrumbList"
+  ],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 44,
+  "imgs": 33,
+  "noalt": 2
+ },
+ "فولاد توفیقی": {
+  "types": [
+   "CreativeWorkSeries"
+  ],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 49,
+  "imgs": 17,
+  "noalt": 0
+ },
+ "آهن تخفیف": {
+  "types": [],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 52,
+  "imgs": 14,
+  "noalt": 0
+ },
+ "مفتول کالا": {
+  "types": [],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 55,
+  "imgs": 4,
+  "noalt": 0
+ },
+ "حصار آنلاین": {
+  "types": [
+   "Organization",
+   "WebSite",
+   "ImageObject",
+   "WebPage",
+   "Person",
+   "Article"
+  ],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 23,
+  "imgs": 28,
+  "noalt": 0
+ },
+ "آهن آنلاین": {
+  "types": [
+   "Organization"
+  ],
+  "faqs": 0,
+  "items": 0,
+  "hasOffer": false,
+  "canon": true,
+  "title": 67,
+  "imgs": 43,
+  "noalt": 0
+ }
+}

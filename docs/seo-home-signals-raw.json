@@ -16,7 +16,7 @@
    "چه نوع فنسی بهت..."
   ],
   "h2_count": 2,
-  "words": 833,
+  "words": 832,
   "schema": [
    "ContactPoint",
    "ImageObject",
@@ -27,14 +27,14 @@
   "hreflang": false,
   "viewport": true,
   "noindex": false,
-  "bytes": 76097
+  "bytes": 76095
  },
  "دمو (پروتوتایپ)": {
   "url": "https://sepahanfelez.lenzit.ir/",
   "status": 200,
   "final": "https://sepahanfelez.lenzit.ir/",
-  "title": "سپاهان فلز — فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان | قیمت روز توری، مفتول و سیم خاردار",
-  "title_len": 90,
+  "title": "سپاهان فلز — قیمت روز صنایع مفتولی طلوع سپاهان",
+  "title_len": 46,
   "desc": "قیمت روز توری حصاری، پرسی، مش جوشی، مرغی، گابیون و سیم خاردار مستقیم از کارخانه. ۷۰ نوع کالا، بروزرسانی هر روز ساعت ۱۲:۳۰.",
   "desc_len": 122,
   "h1": [
@@ -46,18 +46,25 @@
    "چرا خرید از طلوع سپاهان فرق دارد",
    "کارخانه‌ی صنایع مفتولی طلوع سپاهان",
    "مجله سپاهان فلز",
-   "چه نوع فنسی بهتر است",
+   "میلگرد چیست؟چه نکاتی باید در مورد میلگرد بدانید؟",
    "قیمت قطعی خود را از کارشناسان ما بگیرید"
   ],
   "h2_count": 6,
-  "words": 1089,
-  "schema": [],
-  "canonical": false,
+  "words": 1094,
+  "schema": [
+   "ContactPoint",
+   "ImageObject",
+   "Organization",
+   "PostalAddress",
+   "WebPage",
+   "WebSite"
+  ],
+  "canonical": true,
   "og": true,
   "hreflang": false,
   "viewport": true,
   "noindex": true,
-  "bytes": 33471
+  "bytes": 34945
  },
  "فولاد توفیقی": {
   "url": "https://fouladtofighi.com/",
@@ -186,14 +193,14 @@
    "فروش ورق گالوانیزه رنگی"
   ],
   "h2_count": 15,
-  "words": 476,
+  "words": 477,
   "schema": [],
   "canonical": false,
   "og": true,
   "hreflang": false,
   "viewport": true,
   "noindex": false,
-  "bytes": 65166
+  "bytes": 65078
  },
  "آهن ارزان": {
   "url": "https://ahanarzan.com/",
@@ -269,6 +276,6 @@
   "hreflang": false,
   "viewport": true,
   "noindex": false,
-  "bytes": 244325
+  "bytes": 244326
  }
 }

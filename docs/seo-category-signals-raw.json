@@ -4,17 +4,24 @@
    "site": "ما (دمو)",
    "url": "https://sepahanfelez.lenzit.ir/category/توری-مرغی/",
    "status": 200,
-   "title": "قیمت روز توری مرغی — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "title": "قیمت روز توری مرغی — طلوع سپاهان",
    "desc_len": 132,
    "h1": [
     "قیمت روز توری مرغی گالوانیزه گرم — چهار محصول رولی"
    ],
    "h2n": 11,
-   "words": 2261,
+   "words": 2368,
    "tables": 2,
    "rows": 10,
-   "faq": false,
-   "schema": []
+   "faq": true,
+   "schema": [
+    "Answer",
+    "Brand",
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "FAQPage"
+   ]
   },
   {
    "site": "ما (فعلی)",
@@ -70,17 +77,24 @@
    "site": "ما (دمو)",
    "url": "https://sepahanfelez.lenzit.ir/category/توری-حصاری/",
    "status": 200,
-   "title": "قیمت روز توری حصاری — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "title": "قیمت روز توری حصاری — طلوع سپاهان",
    "desc_len": 153,
    "h1": [
     "قیمت روز توری حصاری (فنس) — مستقیم از خط تولید"
    ],
    "h2n": 12,
-   "words": 3061,
+   "words": 3056,
    "tables": 2,
    "rows": 28,
-   "faq": false,
-   "schema": []
+   "faq": true,
+   "schema": [
+    "Answer",
+    "Brand",
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "FAQPage"
+   ]
   },
   {
    "site": "ما (فعلی)",
@@ -128,7 +142,7 @@
   {
    "site": "مفتول کالا",
    "url": "https://maftoolkala.com/product-category/توری-حصاری/",
-   "error": "TimeoutError: The read operation timed out"
+   "error": "HTTPError: HTTP Error 404: Not Found"
   },
   {
    "site": "حصار آنلاین",
@@ -157,17 +171,24 @@
    "site": "ما (دمو)",
    "url": "https://sepahanfelez.lenzit.ir/category/توری-پرسی/",
    "status": 200,
-   "title": "قیمت روز توری پرسی — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "title": "قیمت روز توری پرسی — طلوع سپاهان",
    "desc_len": 114,
    "h1": [
     "قیمت روز توری پرسی — سیزده محصول از تولید کارخانه"
    ],
    "h2n": 12,
-   "words": 2731,
+   "words": 2728,
    "tables": 2,
    "rows": 28,
-   "faq": false,
-   "schema": []
+   "faq": true,
+   "schema": [
+    "Answer",
+    "Brand",
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "FAQPage"
+   ]
   },
   {
    "site": "ما (فعلی)",
@@ -218,17 +239,24 @@
    "site": "ما (دمو)",
    "url": "https://sepahanfelez.lenzit.ir/category/توری-گابیون/",
    "status": 200,
-   "title": "قیمت روز توری گابیون — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "title": "قیمت روز توری گابیون — طلوع سپاهان",
    "desc_len": 124,
    "h1": [
     "قیمت روز توری گابیون — نُه محصول در دو ضخامت مفتول"
    ],
    "h2n": 11,
-   "words": 2535,
+   "words": 2536,
    "tables": 2,
    "rows": 20,
-   "faq": false,
-   "schema": []
+   "faq": true,
+   "schema": [
+    "Answer",
+    "Brand",
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "FAQPage"
+   ]
   },
   {
    "site": "ما (فعلی)",
@@ -264,17 +292,24 @@
    "site": "ما (دمو)",
    "url": "https://sepahanfelez.lenzit.ir/category/سیم-خاردار/",
    "status": 200,
-   "title": "قیمت روز سیم خاردار — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "title": "قیمت روز سیم خاردار — طلوع سپاهان",
    "desc_len": 119,
    "h1": [
     "قیمت روز سیم خاردار خطی و سوزنی (کنسرتینا)"
    ],
    "h2n": 11,
-   "words": 2091,
+   "words": 2227,
    "tables": 2,
    "rows": 8,
-   "faq": false,
-   "schema": []
+   "faq": true,
+   "schema": [
+    "Answer",
+    "Brand",
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "FAQPage"
+   ]
   },
   {
    "site": "ما (فعلی)",
