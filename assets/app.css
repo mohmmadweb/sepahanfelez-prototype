@@ -1991,3 +1991,12 @@ table.pt.ch .pt-act{width:1%}
 @media (min-width:1101px){.cat-side{position:sticky; top:84px}}
 /* ورودی امتیاز: چپ‌به‌راست تا ستاره‌ی اول سمت چپ پر شود */
 .star-input{direction:ltr; justify-content:flex-start; flex-direction:row-reverse}
+
+/* ---- راهنمای فنی دسته (نسخه ۲۲) ---- */
+.deepgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:var(--s5)}
+.deepgrid > *{min-width:0}
+.deep{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s5)}
+.deep h2{font-size:var(--t-lg); margin:0 0 var(--s3); color:var(--steel-ink)}
+.deep p{font-size:var(--t-sm); line-height:1.95; color:var(--ink); margin-bottom:var(--s3)}
+.deep p:last-child{margin-bottom:0}
+.deep b{color:var(--steel-ink); font-weight:800}

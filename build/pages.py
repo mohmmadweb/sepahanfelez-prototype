@@ -293,6 +293,24 @@ def build_category(key):
         f'<a class="ph" href="{esc(cat_photo(key, i))}" target="_blank" rel="noopener"><img src="{esc(cat_photo(key, i, thumb=True))}" alt="{esc(c["title"])} — تصویر {fa(i+1)}" loading="lazy"></a>'
         for i in range(3) if cat_photo(key, i))
     photos_html = f'<div class="board-photos">{photos}</div>' if photos else ""
+
+    # بخش‌های عمیق: نصب، پوشش، محاسبه‌ی هزینه — موضوع‌هایی که رقبا دارند
+    # و تا نسخه‌ی ۲۱ نداشتیم. هر بند روی عدد واقعی همین کاتالوگ نوشته شده.
+    deep = C.DEEP.get(key, [])
+    deep_sections = ""
+    if deep:
+        blocks = "".join(
+            f'<div class="deep"><h2>{esc(t)}</h2>' + "".join(f"<p>{x}</p>" for x in ps) + "</div>"
+            for t, ps in deep)
+        deep_sections = f"""
+  <section class="section" id="guide">
+    <div class="container">
+      <div class="section-head"><div><h2>راهنمای فنی {esc(c['title'])}</h2>
+        <div class="sub">نصب، انتخاب پوشش و محاسبه‌ی هزینه — بر پایه‌ی مشخصات همین کاتالوگ</div></div></div>
+      <div class="deepgrid">{blocks}</div>
+    </div>
+  </section>"""
+
     body = f"""
   <section class="board board-cat">
     <div class="container">
@@ -358,6 +376,8 @@ def build_category(key):
       </div>
     </div>
   </section>
+
+  {deep_sections}
 
   <section class="section">
     <div class="container">
