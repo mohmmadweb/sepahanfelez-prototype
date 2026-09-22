@@ -64,7 +64,12 @@ def jalali_str(d, with_day=False, bidi=False):
     """
     jy, jm, jd = jalali(d.year, d.month, d.day)
     if bidi:
-        s = f"<bdi>{jd}</bdi> {JMONTHS[jm-1]} <bdi>{jy}</bdi>"
+        # چیدمان با flex تعیین می‌شود، نه با direction. هر بخش یک span
+        # مستقل است، پس الگوریتم bidi نمی‌تواند روز و سال را جابه‌جا یا
+        # به هم بچسباند — همان دو اشکالی که با direction پیش آمد.
+        s = (f'<span class="d-d">{jd}</span>'
+             f'<span class="d-m">{JMONTHS[jm-1]}</span>'
+             f'<span class="d-y">{jy}</span>')
     else:
         s = f"{jd} {JMONTHS[jm-1]} {jy}"
     return f"{JDAYS[d.weekday()]} {s}" if with_day else s

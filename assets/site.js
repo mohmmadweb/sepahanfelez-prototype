@@ -22,20 +22,28 @@
       var iso = now.toISOString().slice(0, 10);
       for (var i = 0; i < els.length; i++) {
         var el = els[i];
-        var txt = el.hasAttribute('data-live-short') ? shortF.format(now) : longF.format(now);
-        // «۳۱ شهریور ۱۴۰۵» در متن RTL کنار آیکن و متن فارسی، با bidi
-        // جابه‌جا می‌شد و روز و سال به هم می‌چسبیدند («شهریور ۳۱۱۴۰۵»).
-        // هر عدد را جداگانه isolate می‌کنیم تا سرِ جای خودش بماند.
-        el.innerHTML = '';
-        txt.split(/(\s+)/).forEach(function (part) {
-          if (/[۰-۹0-9]/.test(part)) {
-            var b = document.createElement('bdi');
-            b.textContent = part;
-            el.appendChild(b);
+        if (el.hasAttribute('data-live-short')) {
+          el.textContent = shortF.format(now);
+        } else {
+          // همان ساختار سه‌تکه‌ای که در زمان ساخت نوشته می‌شود، وگرنه
+          // چیدمان flex چیزی برای مرتب‌کردن ندارد و متن ساده دوباره
+          // دست الگوریتم bidi می‌افتد.
+          var parts = { day: '', month: '', year: '' };
+          longF.formatToParts(now).forEach(function (p) {
+            if (parts.hasOwnProperty(p.type)) parts[p.type] = p.value;
+          });
+          if (parts.day && parts.month && parts.year) {
+            el.innerHTML = '';
+            [['d-d', parts.day], ['d-m', parts.month], ['d-y', parts.year]].forEach(function (pair) {
+              var sp = document.createElement('span');
+              sp.className = pair[0];
+              sp.textContent = pair[1];
+              el.appendChild(sp);
+            });
           } else {
-            el.appendChild(document.createTextNode(part));
+            el.textContent = longF.format(now);
           }
-        });
+        }
         el.setAttribute('datetime', iso);
       }
     } catch (e) { /* مرورگر قدیمی: تاریخِ زمان ساخت می‌ماند */ }
