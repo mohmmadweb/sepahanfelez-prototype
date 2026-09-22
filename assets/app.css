@@ -2057,3 +2057,22 @@ table.pt.ch .pt-act{width:1%}
 .pt-name > a{display:block; min-height:44px; padding-block:6px; align-content:center}
 .hero-dots > a,.hero-dots > button{min-width:44px; min-height:44px;
   display:inline-flex; align-items:center; justify-content:center}
+
+/* جدول دسته حالا تمام‌عرض است و باکس کارشناس کنار نمودار نشسته.
+   تقسیم ۵۰/۵۰ برای این جفت مناسب نیست: نمودار عرض می‌خواهد و کارت
+   کارشناس حدود ۳۰۰px کافی است. */
+.chart-with-rep{display:grid; grid-template-columns:minmax(0,1fr) 300px;
+  gap:var(--s6); align-items:start}
+.chart-with-rep .experts{position:sticky; top:84px}
+@media (max-width:1024px){
+  .chart-with-rep{grid-template-columns:1fr}
+  .chart-with-rep .experts{position:static}
+}
+
+/* در ستون ۳۰۰px، ستون متنِ کارت کارشناس از کادر بیرون می‌زد: min-width:0
+   داشت ولی flex-shrink نداشت، پس عرض ذاتیِ دکمه‌ها را نگه می‌داشت. */
+.expert-t{flex:1 1 auto; min-width:0}
+.expert-t > *{min-width:0}
+.expert-tel,.expert-wa{max-width:100%}
+.chart-with-rep{grid-template-columns:minmax(0,1fr) 320px}
+@media (max-width:1024px){.chart-with-rep{grid-template-columns:1fr}}

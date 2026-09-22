@@ -345,17 +345,17 @@ def build_category(key):
         <div><h2>جدول قیمت روز {esc(c['title'])}</h2>
           <div class="sub">{fa(s['n'])} نوع کالا با مشخصات فنی — قیمت به ریال، بروزرسانی هر روز ساعت {UPDATE_TIME}</div></div>
       </div>
-      <div class="cat-layout">
-        <div class="cat-main">{price_table(key, search=True, title=False, guide_link=False)}</div>
-        <div class="cat-side">{F.experts_box(key)}</div>
-      </div>
+      {price_table(key, search=True, title=False, guide_link=False)}
     </div>
   </section>
 
   <section class="section alt">
     <div class="container">
       <div class="section-head"><div><h2>روند قیمت {esc(c['title'])}</h2><div class="sub">میانگین قیمت دسته؛ نمودار هر کالا با آیکون نمودار در جدول باز می‌شود</div></div></div>
-      {F.category_chart(key)}
+      <div class="chart-with-rep">
+        <div>{F.category_chart(key)}</div>
+        <div>{F.experts_box(key)}</div>
+      </div>
     </div>
   </section>
 {F.calculator(key)}
