@@ -241,14 +241,26 @@ def cat_photo(key, i=0, thumb=False):
 # ---------------------------------------------------------------------------
 # قطعات مشترک صفحه
 # ---------------------------------------------------------------------------
-def head(title, desc, css="/assets/app.css", extra=""):
+# ایندکس‌شدن: پروتوتایپ نباید ایندکس شود، ولی روز انتقال به دامنه‌ی
+# اصلی باید شود. با متغیر محیطی SEPAHAN_LIVE=1 بیلد «زنده» ساخته می‌شود:
+# noindex برداشته می‌شود، canonical به دامنه‌ی اصلی می‌خورد و robots.txt
+# و نقشه‌ی سایت درست تولید می‌شوند. یک سوییچ، نه ویرایش دستی ۱۲۲ صفحه.
+LIVE = os.environ.get("SEPAHAN_LIVE") == "1"
+SITE = "https://sepahanfelez.ir"
+
+_ROBOTS = ("" if LIVE else
+           '\n<meta name="robots" content="noindex, nofollow">'
+           '\n<meta name="googlebot" content="noindex, nofollow">')
+
+
+def head(title, desc, css="/assets/app.css", extra="", canonical=None, jsonld=""):
+    canon = (f'\n<link rel="canonical" href="{SITE}{canonical}">'
+             if canonical else "")
     return f"""<!doctype html>
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<meta name="googlebot" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">{_ROBOTS}{canon}
 <meta name="theme-color" content="#B42332">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
@@ -262,7 +274,7 @@ def head(title, desc, css="/assets/app.css", extra=""):
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="{css}">{extra}
+<link rel="stylesheet" href="{css}">{extra}{jsonld}
 </head>
 <body>
 {ICONS}
@@ -486,9 +498,15 @@ def delta_badge(d, price):
     return f'<span class="delta flat">{icon("i-flat")}<span class="num">۰</span></span>'
 
 
-def page_shell(title, desc, nav_key, body, crumbs=None, show_addr=True):
-    """اسکلت کامل صفحه: head + نوارها + main + footer + dock."""
-    return (head(title, desc) + UTILBAR + masthead() + mainnav(nav_key)
+def page_shell(title, desc, nav_key, body, crumbs=None, show_addr=True,
+               canonical=None, jsonld=""):
+    """اسکلت کامل صفحه: head + نوارها + main + footer + dock.
+
+    canonical و jsonld از همین‌جا به head می‌روند تا هر صفحه‌ای که ساخته
+    می‌شود خودبه‌خود نشانی متعارف و داده‌ی ساختاریافته داشته باشد.
+    """
+    return (head(title, desc, canonical=canonical, jsonld=jsonld)
+            + UTILBAR + masthead() + mainnav(nav_key)
             + (crumb(crumbs) if crumbs else "")
             + f'\n<main id="main" tabindex="-1">{body}\n</main>'
             + footer(show_addr) + dock())

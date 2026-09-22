@@ -80,7 +80,21 @@ def main():
         write(out_path(u_article(a["cat_slug"], a["slug"])), B.build_article(a)); n += 1
     import searchindex as SI
     m = SI.write(os.path.join(ROOT, "assets", "search-index.json"))
-    print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد")
+
+    # نقشه‌ی سایت و robots
+    import sitemap as SM
+    from common import LIVE, cat_photo
+    xml, count = SM.build(C, CAT, cat_photo, u_cat, u_prod, u_article, u_blogcat,
+                          B.ARTS, B.BLOG_CATS)
+    sm_path = os.path.join(ROOT, "sitemap.xml")
+    if LIVE:
+        open(sm_path, "w", encoding="utf-8").write(xml)
+    elif os.path.exists(sm_path):
+        os.remove(sm_path)          # در حالت پروتوتایپ نباید وجود داشته باشد
+    open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8").write(SM.robots(LIVE))
+    mode = "زنده" if LIVE else "پروتوتایپ"
+    print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد · "
+          f"نقشه‌ی سایت: {count} نشانی ({mode})")
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import content as C
 import analysis as A
 import blog as B
 import features as F
+import schema as SC
 from common import (CAT, PH, PHS, WA, WAS, TOTAL_SKUS, N_CATS, UPDATE_TIME, TODAY, TODAY_ISO,
                     esc, fa, fmt, icon, clean_name, clean_val, price_of, delta_of, unit_of,
                     slugify, delta_badge, cat_stats, cat_photo, stamp, page_shell, callband,
@@ -182,10 +183,16 @@ def build_index():
 
 {B.home_section()}
 {callband()}"""
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "WebPage", "@id": SC.SITE + "/#page", "url": SC.SITE + "/",
+         "name": "سپاهان فلز — قیمت روز صنایع مفتولی طلوع سپاهان",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID},
+         "about": {"@id": SC.ORG_ID}})
     return page_shell(
-        "سپاهان فلز — فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان | قیمت روز توری، مفتول و سیم خاردار",
+        "سپاهان فلز — قیمت روز صنایع مفتولی طلوع سپاهان",
         f"قیمت روز توری حصاری، پرسی، مش جوشی، مرغی، گابیون و سیم خاردار مستقیم از کارخانه. {fa(TOTAL_SKUS)} نوع کالا، بروزرسانی هر روز ساعت {UPDATE_TIME}.",
-        None, body)
+        None, body, canonical="/", jsonld=ld)
 
 
 # ---------------------------------------------------------------------------
@@ -226,9 +233,17 @@ def build_price():
   </section>
 {F.sales_unit_section()}
 {callband()}"""
-    return page_shell(f"قیمت لحظه‌ای صنایع مفتولی — {fa(TOTAL_SKUS)} نوع کالا | سپاهان فلز",
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "CollectionPage", "@id": SC.SITE + "/price#page",
+         "url": SC.SITE + "/price", "name": f"قیمت لحظه‌ای {fa(TOTAL_SKUS)} نوع کالای مفتولی",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID},
+         "about": {"@id": SC.ORG_ID}},
+        SC.breadcrumb([("خانه", "/"), ("قیمت لحظه‌ای", None)]))
+    return page_shell(f"قیمت لحظه‌ای صنایع مفتولی — {fa(TOTAL_SKUS)} نوع کالا",
                       f"جدول قیمت لحظه‌ای {fa(TOTAL_SKUS)} نوع کالای مفتولی طلوع سپاهان در {fa(N_CATS)} دسته با مشخصات فنی و آخرین تغییرات قیمت. قیمت به ریال، بروزرسانی هر روز ساعت {UPDATE_TIME}.",
-                      "price", body, crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", "#")])
+                      "price", body, crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", "#")],
+                      canonical="/price", jsonld=ld)
 
 
 # ---------------------------------------------------------------------------
@@ -271,9 +286,21 @@ def build_catlist():
     </div>
   </section>
 {callband()}"""
-    return page_shell("همه‌ی دسته‌های محصول | سپاهان فلز",
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "CollectionPage", "@id": SC.SITE + "/category#page",
+         "url": SC.SITE + "/category", "name": "همه‌ی دسته‌های محصول",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID}},
+        {"@type": "ItemList", "name": "دسته‌های صنایع مفتولی طلوع سپاهان",
+         "numberOfItems": len(C.ORDER),
+         "itemListElement": [
+            {"@type": "ListItem", "position": i+1, "name": C.CATS[k]["title"],
+             "url": SC.SITE + u_cat(k)} for i, k in enumerate(C.ORDER)]},
+        SC.breadcrumb([("خانه", "/"), ("دسته‌های محصول", None)]))
+    return page_shell("همه‌ی دسته‌های محصول",
                       "فهرست کامل دسته‌های صنایع مفتولی طلوع سپاهان با بازه‌ی قیمت روز، واحد فروش و راهنمای انتخاب دسته بر پایه‌ی کاربرد، وزن و چشمه.",
-                      None, body, crumbs=[("خانه", u_home()), ("دسته‌های محصول", "#")])
+                      None, body, crumbs=[("خانه", u_home()), ("دسته‌های محصول", "#")],
+                      canonical="/category", jsonld=ld)
 
 
 # ---------------------------------------------------------------------------
@@ -395,9 +422,36 @@ def build_category(key):
 {F.reviews_block(key)}
 {B.related_section(key)}
 {callband()}"""
-    return page_shell(f"قیمت روز {c['title']} — صنایع مفتولی طلوع سپاهان | سپاهان فلز", c["meta"],
+    # ── داده‌ی ساختاریافته ─────────────────────────────────────────────
+    # CollectionPage + ItemList از کالاهای همین دسته + پرسش‌های متداولی که
+    # روی خود صفحه دیده می‌شوند + مسیر راهنما.
+    prods = []
+    for r in rows[:30]:
+        nm = clean_name(r["نام محصول"])
+        prods.append(SC.product(
+            name=nm, url=u_prod(key, r["نام محصول"]),
+            desc=f"{nm} — تولید صنایع مفتولی طلوع سپاهان، قیمت روز درب کارخانه‌ی اصفهان.",
+            price=price_of(r), unit_name=unit_of(r),
+            image=cat_photo(key, 0) or None,
+            props=[(k2, clean_val(r.get(k2))) for k2 in CAT[key].get("specs", [])][:6]))
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "CollectionPage",
+         "@id": SC.SITE + u_cat(key) + "#page",
+         "url": SC.SITE + u_cat(key),
+         "name": f"قیمت روز {c['title']}",
+         "description": c["meta"],
+         "inLanguage": "fa-IR",
+         "isPartOf": {"@id": SC.SITE_ID},
+         "about": {"@id": SC.ORG_ID},
+         "primaryImageOfPage": (SC.SITE + cat_photo(key, 0)) if cat_photo(key, 0) else None},
+        SC.item_list(prods, f"کالاهای {c['title']}"),
+        SC.faq(c["faq"]),
+        SC.breadcrumb([("خانه", "/"), ("قیمت لحظه‌ای", "/price"), (c["title"], None)]))
+    return page_shell(f"قیمت روز {c['title']} — طلوع سپاهان", c["meta"],
                       c["slug"], body,
-                      crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", u_price()), (c["title"], "#")])
+                      crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", u_price()), (c["title"], "#")],
+                      canonical=u_cat(key), jsonld=ld)
 
 
 # ---------------------------------------------------------------------------
@@ -516,10 +570,28 @@ def build_product(key, row, idx):
 {F.reviews_block(key, subject=dname)}
 {B.related_section(key, title=f"مقالات مرتبط با {c['title']}")}
 {callband()}"""
-    return page_shell(f"قیمت {dname} | سپاهان فلز",
+    # ── داده‌ی ساختاریافته‌ی محصول ─────────────────────────────────────
+    # مهم‌ترین بلوک کل سایت: همین است که قیمت را زیر نتیجه‌ی گوگل می‌آورد.
+    specs = [(k2, clean_val(row.get(k2))) for k2 in CAT[key].get("specs", [])]
+    prod_url = u_prod(key, row["نام محصول"])
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        SC.product(
+            name=dname, url=prod_url,
+            desc=(f"{dname} از تولیدات صنایع مفتولی طلوع سپاهان. "
+                  f"قیمت روز {fmt(p)} ریال بر {unit}، درب کارخانه‌ی اصفهان، "
+                  f"بروزرسانی هر روز ساعت {UPDATE_TIME}."),
+            price=p, unit_name=unit,
+            image=cat_photo(key, 0) or None,
+            props=specs),
+        SC.faq(c["faq"][:3]),
+        SC.breadcrumb([("خانه", "/"), ("قیمت لحظه‌ای", "/price"),
+                       (c["title"], u_cat(key)), (dname, None)]))
+    return page_shell(f"قیمت {dname}",
                       f"قیمت روز {dname}: {fmt(p)} ریال / {unit} — تولید طلوع سپاهان، با مشخصات فنی و بروزرسانی روزانه.",
                       c["slug"], body,
-                      crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", u_price()), (c["title"], u_cat(key)), (dname, "#")])
+                      crumbs=[("خانه", u_home()), ("قیمت لحظه‌ای", u_price()), (c["title"], u_cat(key)), (dname, "#")],
+                      canonical=prod_url, jsonld=ld)
 
 
 # ---------------------------------------------------------------------------
@@ -556,9 +628,17 @@ def build_about():
   </section>
 {F.sales_unit_section()}
 {callband()}"""
-    return page_shell("درباره کارخانه‌ی صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "AboutPage", "@id": SC.SITE + "/about#page",
+         "url": SC.SITE + "/about", "name": "درباره کارخانه‌ی طلوع سپاهان",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID},
+         "mainEntity": {"@id": SC.ORG_ID}},
+        SC.breadcrumb([("خانه", "/"), ("درباره کارخانه", None)]))
+    return page_shell("درباره کارخانه‌ی طلوع سپاهان",
                       f"صنایع مفتولی طلوع سپاهان، {SABAD}: تولیدکننده‌ی توری و محصولات مفتولی در شهرک صنعتی منتظریه‌ی اصفهان با دفتر فروش در بازار آهن تهران.",
-                      "about", body, crumbs=[("خانه", u_home()), ("درباره کارخانه", "#")])
+                      "about", body, crumbs=[("خانه", u_home()), ("درباره کارخانه", "#")],
+                      canonical="/about", jsonld=ld)
 
 
 def build_contact():
@@ -618,6 +698,14 @@ def build_contact():
     </div>
   </section>
 {callband()}"""
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "ContactPage", "@id": SC.SITE + "/contact#page",
+         "url": SC.SITE + "/contact", "name": "تماس با سپاهان فلز",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID},
+         "mainEntity": {"@id": SC.ORG_ID}},
+        SC.breadcrumb([("خانه", "/"), ("تماس با ما", None)]))
     return page_shell("تماس با سپاهان فلز — دفتر فروش کارخانه",
                       f"تماس با دفتر فروش صنایع مفتولی طلوع سپاهان: {C.PHONE_SHOW} با {C.PHONE_LINES}. نشانی دو واحد کارخانه در شهرک صنعتی منتظریه‌ی اصفهان و دفتر تهران در بازار آهن شادآباد.",
-                      "contact", body, crumbs=[("خانه", u_home()), ("تماس با ما", "#")], show_addr=False)
+                      "contact", body, crumbs=[("خانه", u_home()), ("تماس با ما", "#")], show_addr=False,
+                      canonical="/contact", jsonld=ld)

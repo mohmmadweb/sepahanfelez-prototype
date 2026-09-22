@@ -11,6 +11,7 @@ taggables (برچسب مشترک دسته و مقاله) انجام می‌ده�
 """
 import json, os, re, datetime
 import content as C
+import schema as SC
 from common import (ROOT, esc, fa, fmt, icon, jalali_str, cat_stats, cat_photo,
                     u_blog, u_blogcat, u_article, u_cat, u_price, PH, PHS, TODAY_ISO)
 
@@ -258,9 +259,16 @@ def build_blog_index():
     </div>
   </section>
 {callband()}"""
-    return page_shell("مجله سپاهان فلز — مقالات تخصصی توری، مفتول و سیم خاردار",
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "CollectionPage", "@id": SC.SITE + "/blog#page",
+         "url": SC.SITE + "/blog", "name": "مجله سپاهان فلز",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID}},
+        SC.breadcrumb([("خانه", "/"), ("مجله", None)]))
+    return page_shell("مجله سپاهان فلز — مقالات تخصصی توری و مفتول",
                       "راهنماها و مقالات فنی سپاهان فلز درباره‌ی انتخاب، کاربرد و قیمت انواع توری، مفتول و سیم خاردار.",
-                      "blog", body, crumbs=[("خانه", "/"), ("مجله", "#")])
+                      "blog", body, crumbs=[("خانه", "/"), ("مجله", "#")],
+                      canonical="/blog", jsonld=ld)
 
 
 def build_blog_category(slug):
@@ -294,9 +302,16 @@ def build_blog_category(slug):
   </section>
 {more}
 {callband()}"""
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "CollectionPage", "@id": SC.SITE + u_blogcat(slug) + "#page",
+         "url": SC.SITE + u_blogcat(slug), "name": f"مقالات {cat_title(slug)}",
+         "inLanguage": "fa-IR", "isPartOf": {"@id": SC.SITE_ID}},
+        SC.breadcrumb([("خانه", "/"), ("مجله", "/blog"), (cat_title(slug), None)]))
     return page_shell(f"مقالات {cat_title(slug)} | مجله سپاهان فلز",
                       (C.BLOG_CAT_INTRO.get(slug) or f"همه‌ی مقالات دسته‌ی {cat_title(slug)} در مجله‌ی سپاهان فلز.")[:158],
-                      "blog", body, crumbs=[("خانه", "/"), ("مجله", u_blog()), (cat_title(slug), "#")])
+                      "blog", body, crumbs=[("خانه", "/"), ("مجله", u_blog()), (cat_title(slug), "#")],
+                      canonical=u_blogcat(slug), jsonld=ld)
 
 
 def meta_desc(a, limit=158):
@@ -361,6 +376,22 @@ def build_article(a):
     </div>
   </section>
 {callband()}"""
+    art_url = u_article(a["cat_slug"], a["slug"])
+    ld = SC.graph(
+        SC.organization(C), SC.website(),
+        {"@type": "Article", "@id": SC.SITE + art_url + "#article",
+         "headline": a["title"][:110], "description": meta_desc(a),
+         "url": SC.SITE + art_url, "inLanguage": "fa-IR",
+         "datePublished": a.get("published") or None,
+         "dateModified": a.get("modified") or a.get("published") or None,
+         "author": {"@id": SC.ORG_ID}, "publisher": {"@id": SC.ORG_ID},
+         "image": (SC.SITE + a["image"]) if (a.get("image") or "").startswith("/") else None,
+         "mainEntityOfPage": {"@type": "WebPage", "@id": SC.SITE + art_url},
+         "wordCount": a.get("words") or None,
+         "articleSection": cat_title(a["cat_slug"])},
+        SC.breadcrumb([("خانه", "/"), ("مجله", "/blog"),
+                       (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], None)]))
     return page_shell(f"{a['title']} | مجله سپاهان فلز", meta_desc(a), "blog", body,
                       crumbs=[("خانه", "/"), ("مجله", u_blog()),
-                              (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], "#")])
+                              (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], "#")],
+                      canonical=art_url, jsonld=ld)
