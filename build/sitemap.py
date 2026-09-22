@@ -67,3 +67,26 @@ def robots(live):
             "Disallow: /assets/search-index.json\n"
             "\n"
             f"Sitemap: {SITE}/sitemap.xml\n")
+
+
+# ───────────────────────── ریدایرکت‌های انتقال ─────────────────────────
+# نشانی‌هایی که در سایت فعلی ایندکس‌اند ولی در ساختار جدید معادل مستقیم
+# ندارند. بدون اینها روز انتقال ۴۰۴ می‌شوند و اعتبار لینک‌شان می‌سوزد.
+# روی میزبان ایستا با صفحه‌ی meta-refresh + canonical انجام می‌شود؛ روی
+# لاراول باید به ریدایرکت ۳۰۱ واقعی تبدیل شود (در laravel/README آمده).
+REDIRECTS = {
+    "category/توری-کششی(expanded-metal)": "/category/",
+}
+
+
+def redirect_html(target, note=""):
+    return (
+        '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">'
+        f'<link rel="canonical" href="{SITE}{target}">'
+        f'<meta http-equiv="refresh" content="0; url={target}">'
+        '<meta name="robots" content="noindex, follow">'
+        '<title>انتقال به صفحه‌ی جدید</title></head><body>'
+        f'<p>این صفحه منتقل شده است. اگر به‌صورت خودکار منتقل نشدید، '
+        f'<a href="{target}">اینجا کلیک کنید</a>.</p>'
+        f'{note}</body></html>'
+    )

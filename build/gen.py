@@ -92,6 +92,13 @@ def main():
     elif os.path.exists(sm_path):
         os.remove(sm_path)          # در حالت پروتوتایپ نباید وجود داشته باشد
     open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8").write(SM.robots(LIVE))
+
+    # ریدایرکت نشانی‌های ایندکس‌شده‌ای که معادل مستقیم ندارند
+    for src, dst in SM.REDIRECTS.items():
+        rp = os.path.join(ROOT, src)
+        os.makedirs(rp, exist_ok=True)
+        open(os.path.join(rp, "index.html"), "w", encoding="utf-8").write(
+            SM.redirect_html(dst))
     mode = "زنده" if LIVE else "پروتوتایپ"
     print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد · "
           f"نقشه‌ی سایت: {count} نشانی ({mode})")
