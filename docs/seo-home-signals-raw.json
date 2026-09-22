@@ -1,0 +1,274 @@
+{
+ "sepahanfelez (فعلی)": {
+  "url": "https://sepahanfelez.ir/",
+  "status": 200,
+  "final": "https://sepahanfelez.ir/",
+  "title": "سپاهان فلز | تولید کننده انواع مفتول‌های صنعتی و ساختمانی",
+  "title_len": 57,
+  "desc": "شرکت رادمان جاده ابریشم تنها نماینده رسمی شرکت صنایع مفتولی طلوع سپاهان با نام تجاری سپاهان فلز| تولید و عرضه کلیه محصولات صنایع مفتولی",
+  "desc_len": 135,
+  "h1": [
+   "شرکت صنایع مفتولی طلوع سپاهان | سایت سپاهان فلز"
+  ],
+  "h1_count": 1,
+  "h2": [
+   "قیمت لحظه ای",
+   "چه نوع فنسی بهت..."
+  ],
+  "h2_count": 2,
+  "words": 833,
+  "schema": [
+   "ContactPoint",
+   "ImageObject",
+   "Organization"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 76097
+ },
+ "دمو (پروتوتایپ)": {
+  "url": "https://sepahanfelez.lenzit.ir/",
+  "status": 200,
+  "final": "https://sepahanfelez.lenzit.ir/",
+  "title": "سپاهان فلز — فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان | قیمت روز توری، مفتول و سیم خاردار",
+  "title_len": 90,
+  "desc": "قیمت روز توری حصاری، پرسی، مش جوشی، مرغی، گابیون و سیم خاردار مستقیم از کارخانه. ۷۰ نوع کالا، بروزرسانی هر روز ساعت ۱۲:۳۰.",
+  "desc_len": 122,
+  "h1": [
+   "سالن کشش مفتول"
+  ],
+  "h1_count": 1,
+  "h2": [
+   "قیمت روز صنایع مفتولی طلوع سپاهان",
+   "چرا خرید از طلوع سپاهان فرق دارد",
+   "کارخانه‌ی صنایع مفتولی طلوع سپاهان",
+   "مجله سپاهان فلز",
+   "چه نوع فنسی بهتر است",
+   "قیمت قطعی خود را از کارشناسان ما بگیرید"
+  ],
+  "h2_count": 6,
+  "words": 1089,
+  "schema": [],
+  "canonical": false,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": true,
+  "bytes": 33471
+ },
+ "فولاد توفیقی": {
+  "url": "https://fouladtofighi.com/",
+  "status": 200,
+  "final": "https://fouladtofighi.com/",
+  "title": "قیمت روز آهن آلات | قیمت توری فلزی | فولاد توفیقی",
+  "title_len": 49,
+  "desc": "فولاد توفیقی ارائه دهنده قیمت آهن آنلاین ، بهترین قیمت آهن ، آهن آلات و قیمت توری فلزی را از ما بخواهید قیمت انواع توری : میلگرد - ورق آهن - تیرآهن - مفتول - (توری مش - توری پرسی - توری حصاری - توری گابیون - توری مرغی) پروفیل - نبشی و ناودانی - رابیت",
+  "desc_len": 265,
+  "h1": [
+   "قیمت روز آهن"
+  ],
+  "h1_count": 1,
+  "h2": [
+   "صنایع فولاد توفیقی؛ مرجع قیمت تیرآهن،توری، محصولات مفتولی و سایر مقاطع فلزی",
+   "معرفی شرکت صنایع فولاد توفیقی",
+   "خدمات و محصولات صنایع فولاد توفیقی",
+   "قیمت روز آهن آلات در صنایع فولاد توفیقی",
+   "مزیت های خرید آهن از فولاد توفیقی"
+  ],
+  "h2_count": 5,
+  "words": 1965,
+  "schema": [
+   "AggregateRating",
+   "CreativeWorkSeries",
+   "Organization"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 231131
+ },
+ "شهر مفتول": {
+  "url": "https://shahrmaftool.com/",
+  "error": "TimeoutError: The read operation timed out"
+ },
+ "آهن تخفیف": {
+  "url": "https://ahantakhfif.com/",
+  "status": 200,
+  "final": "https://ahantakhfif.com/",
+  "title": "قیمت روز آهن آلات - فروش و خرید آهن الات | آهن تخفیف",
+  "title_len": 52,
+  "desc": "قیمت آهن آلات، خرید و فروش آهن آلات را در سایت آهن تخفیف تولید و عرضه کننده انواع سیم خاردار، فنس، وال پست، رابیتس، تسمه قالب و غیره مشاهده نمایید",
+  "desc_len": 146,
+  "h1": [
+   "فروش و خرید آهن آلات در آهـن تخفیف"
+  ],
+  "h1_count": 1,
+  "h2": [
+   "صفحه نخست"
+  ],
+  "h2_count": 1,
+  "words": 831,
+  "schema": [
+   "ContactPoint",
+   "ImageObject",
+   "Organization",
+   "SearchAction",
+   "SiteNavigationElement",
+   "WebSite"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": true,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 233799
+ },
+ "مفتول کالا": {
+  "url": "https://maftoolkala.com/",
+  "status": 200,
+  "final": "https://maftoolkala.com/",
+  "title": "مفتول کالا تولید کننده توری حصاری، پرسی، لوزی، ورق پانچ",
+  "title_len": 55,
+  "desc": "صنایع مفتول کالا تولید کننده ورق پانچ، توری حصاری,پایه فنس, فنس باغی, توری سرندی, توری مش, سیم خاردار, توری گابیون, اکسپندد متال, مفتول گالوانیزه, توری مرغی",
+  "desc_len": 156,
+  "h1": [],
+  "h1_count": 0,
+  "h2": [
+   "مشاوره رایگان قبل از خرید",
+   "خدمات نصب در محل",
+   "خرید بدون واسطه"
+  ],
+  "h2_count": 3,
+  "words": 629,
+  "schema": [
+   "AboutPage",
+   "Consortium",
+   "ContactPoint",
+   "ImageObject",
+   "Organization",
+   "WebPage"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 237724
+ },
+ "نوین عایق": {
+  "url": "https://novinayegh.com/",
+  "status": 200,
+  "final": "https://novinayegh.com/",
+  "title": "نمایندگی فروش پشم شیشه و پشم سنگ و کارتن پلاست - نوین عایق",
+  "title_len": 58,
+  "desc": "نوین عایق | نمایندگی فروش شرکت پشم شیشه ایران و نماینده فروش پشم سنگ، کارتن پلاست، ورق های رنگی و گالوانیزه و ایزوگام با بهترین قیمت",
+  "desc_len": 132,
+  "h1": [
+   "نمایندگی فروش پشم شیشه و پشم سنگ و کارتن پلاست",
+   "پشم شیشهپشم سنگکارتن پلاستورق گالوانیزهقیمت پشم شیشهقیمت پشم سنگقیمت کارتن پلاستقیمت ورق گالوانیزهورق گالوانیزه رنگیقیمت ورق گالوانیزه رنگیانواع ورق گالوانیزه"
+  ],
+  "h1_count": 2,
+  "h2": [
+   "خرید پشم شیشه",
+   "خرید پشم سنگ",
+   "خرید کارتن پلاست",
+   "خرید ورق گالوانیزه",
+   "خرید ورق گالوانیزه رنگی",
+   "فروش پشم شیشه",
+   "خرید پشم سنگ",
+   "فروش کارتن پلاست",
+   "فروش ورق گالوانیزه",
+   "فروش ورق گالوانیزه رنگی"
+  ],
+  "h2_count": 15,
+  "words": 476,
+  "schema": [],
+  "canonical": false,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 65166
+ },
+ "آهن ارزان": {
+  "url": "https://ahanarzan.com/",
+  "error": "URLError: <urlopen error [Errno -2] Name or service not known>"
+ },
+ "حصار آنلاین": {
+  "url": "https://hesaronline.com/",
+  "status": 200,
+  "final": "https://hesaronline.com/",
+  "title": "صفحه اصلی - حصار آنلاین",
+  "title_len": 23,
+  "desc": "محصولات جدیدترین مقالات سایت مشاهده مقالات بیشتر ...",
+  "desc_len": 52,
+  "h1": [],
+  "h1_count": 0,
+  "h2": [
+   "واتراستاپ (6)",
+   "مفتول گالوانیزه (9)",
+   "مفتول سیاه (8)",
+   "سیم خاردار (6)",
+   "رابیتس (21)",
+   "توری مش (جوشی) (20)",
+   "توری مرغی (3)",
+   "توری گابیون (4)",
+   "توری فرنگی (3)",
+   "توری سرندی (36)"
+  ],
+  "h2_count": 15,
+  "words": 291,
+  "schema": [
+   "Article",
+   "ImageObject",
+   "Organization",
+   "Person",
+   "SearchAction",
+   "WebPage",
+   "WebSite"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 140828
+ },
+ "آهن آنلاین": {
+  "url": "https://ahanonline.com/",
+  "status": 200,
+  "final": "https://ahanonline.com/",
+  "title": "قیمت آهن امروز | اطلاع از قیمت روز آهن آلات در کارخانه | آهن آنلاین",
+  "title_len": 67,
+  "desc": "قیمت آهن؛ به صورت لحظه‌ای در سایت آهن آنلاین به روز می‌شود و شما امکان خرید و مشاهده قیمت اهن آلات صنعتی و ساختمانی کیلویی و تنی را در درب کارخانه و بازار دارید.",
+  "desc_len": 161,
+  "h1": [
+   "آهن آنلاین، مرجع به روز قیمت آهن آلات"
+  ],
+  "h1_count": 1,
+  "h2": [
+   "قیمت روز آهن آلات",
+   "قیمت آهن کیلویی",
+   "خرید آهن آلات"
+  ],
+  "h2_count": 3,
+  "words": 2369,
+  "schema": [
+   "ContactPoint",
+   "GeoCoordinates",
+   "Organization",
+   "PostalAddress"
+  ],
+  "canonical": true,
+  "og": true,
+  "hreflang": false,
+  "viewport": true,
+  "noindex": false,
+  "bytes": 244325
+ }
+}

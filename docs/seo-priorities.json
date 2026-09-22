@@ -1,0 +1,181 @@
+[
+ {
+  "prio": 1,
+  "name": "توری مرغی",
+  "key": "توری-مرغی",
+  "slug": "toori-morghi",
+  "has": true,
+  "products": 4,
+  "words": 2261,
+  "competitors": [
+   "نوین عایق",
+   "فولاد توفیقی",
+   "شهر مفتول",
+   "آهن تخفیف",
+   "اندیشه عایق",
+   "مفتول کالا"
+  ]
+ },
+ {
+  "prio": 2,
+  "name": "توری جوشی ریزبافت گالوانیزه",
+  "key": "توری-جوشی--گالوانیزه-رول",
+  "slug": "toori-jooshi-rizbaft",
+  "has": true,
+  "products": 10,
+  "words": 2899,
+  "competitors": [
+   "کوری سد",
+   "فولاد توفیقی",
+   "مفتول کالا"
+  ]
+ },
+ {
+  "prio": 3,
+  "name": "توری پرسی",
+  "key": "توری-پرسی",
+  "slug": "toori-parsi",
+  "has": true,
+  "products": 12,
+  "words": 2731,
+  "competitors": [
+   "فولاد توفیقی",
+   "شهر مفتول",
+   "حصار ارزان",
+   "مفتول کالا"
+  ]
+ },
+ {
+  "prio": 4,
+  "name": "مش جوشی",
+  "key": "مش-جوشی-یا-مش-آهنی",
+  "slug": "mesh-jooshi",
+  "has": true,
+  "products": 5,
+  "words": 2329,
+  "competitors": [
+   "فولاد توفیقی",
+   "آهن تخفیف",
+   "شهر مفتول"
+  ]
+ },
+ {
+  "prio": 5,
+  "name": "توری حصاری / فنس",
+  "key": "توری-حصاری",
+  "slug": "toori-hesari",
+  "has": true,
+  "products": 13,
+  "words": 3061,
+  "competitors": [
+   "آهن تخفیف",
+   "مفتول کالا",
+   "فولاد توفیقی"
+  ]
+ },
+ {
+  "prio": 6,
+  "name": "توری گابیون",
+  "key": "توری-گابیون",
+  "slug": "toori-gabion",
+  "has": true,
+  "products": 9,
+  "words": 2535,
+  "competitors": [
+   "فولاد توفیقی",
+   "آهن تخفیف",
+   "آهن ارزان"
+  ]
+ },
+ {
+  "prio": 7,
+  "name": "مفتول گالوانیزه",
+  "key": null,
+  "slug": null,
+  "has": false,
+  "products": 0,
+  "words": 0,
+  "competitors": [
+   "فولاد توفیقی",
+   "شهر مفتول",
+   "آهن تخفیف"
+  ]
+ },
+ {
+  "prio": 8,
+  "name": "سیم خاردار رشته‌ای",
+  "key": "سیم-خاردار",
+  "slug": "sim-khardar",
+  "has": true,
+  "products": 3,
+  "words": 2091,
+  "competitors": [
+   "فولاد توفیقی",
+   "مفتول کالا",
+   "آهن تخفیف"
+  ]
+ },
+ {
+  "prio": 9,
+  "name": "سیم خاردار حلقوی (کنسرتینا)",
+  "key": "سیم-خاردار",
+  "slug": "sim-khardar",
+  "has": true,
+  "products": 3,
+  "words": 2091,
+  "competitors": [
+   "فولاد توفیقی",
+   "مفتول کالا",
+   "آهن تخفیف"
+  ]
+ },
+ {
+  "prio": 10,
+  "name": "مفتول گالوانیزه — سیم رابیتس‌بندی",
+  "key": null,
+  "slug": null,
+  "has": false,
+  "products": 0,
+  "words": 0,
+  "competitors": []
+ },
+ {
+  "prio": 11,
+  "name": "مفتول گالوانیزه — سیم آلومینیوم‌کشی",
+  "key": null,
+  "slug": null,
+  "has": false,
+  "products": 0,
+  "words": 0,
+  "competitors": []
+ },
+ {
+  "prio": 12,
+  "name": "توری فرنگی",
+  "key": "توری-فرنگی",
+  "slug": "toori-farangi",
+  "has": true,
+  "products": 3,
+  "words": 1935,
+  "competitors": [
+   "فولاد توفیقی",
+   "شهر مفتول",
+   "نوین عایق",
+   "آهن تخفیف"
+  ]
+ },
+ {
+  "prio": 13,
+  "name": "مفتول آرماتوربندی",
+  "key": "سیم-سیاه-و-آرماتور-بندی",
+  "slug": "maftool-armatorbandi",
+  "has": true,
+  "products": 5,
+  "words": 2373,
+  "competitors": [
+   "فولاد توفیقی",
+   "آهن تخفیف",
+   "شهر مفتول"
+  ]
+ }
+]

@@ -1,0 +1,324 @@
+{
+ "توری مرغی": [
+  {
+   "site": "ما (دمو)",
+   "url": "https://sepahanfelez.lenzit.ir/category/توری-مرغی/",
+   "status": 200,
+   "title": "قیمت روز توری مرغی — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "desc_len": 132,
+   "h1": [
+    "قیمت روز توری مرغی گالوانیزه گرم — چهار محصول رولی"
+   ],
+   "h2n": 11,
+   "words": 2261,
+   "tables": 2,
+   "rows": 10,
+   "faq": false,
+   "schema": []
+  },
+  {
+   "site": "ما (فعلی)",
+   "url": "https://sepahanfelez.ir/category/توری-مرغی",
+   "status": 200,
+   "title": "توری مرغی برای حصارکشی | قیمت مناسب از تولید کننده بخرید",
+   "desc_len": 217,
+   "h1": [
+    "توری مرغی"
+   ],
+   "h2n": 8,
+   "words": 2297,
+   "tables": 2,
+   "rows": 7,
+   "faq": false,
+   "schema": [
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "ImageObject",
+    "ListItem",
+    "Organization"
+   ]
+  },
+  {
+   "site": "فولاد توفیقی",
+   "url": "https://fouladtofighi.com/product-category/توری-مرغی/",
+   "status": 200,
+   "title": "قیمت روز آهن آلات | قیمت توری فلزی | فولاد توفیقی",
+   "desc_len": 265,
+   "h1": [
+    "قیمت روز آهن"
+   ],
+   "h2n": 5,
+   "words": 1965,
+   "tables": 7,
+   "rows": 99,
+   "faq": false,
+   "schema": [
+    "AggregateRating",
+    "CreativeWorkSeries",
+    "Organization"
+   ]
+  },
+  {
+   "site": "مفتول کالا",
+   "url": "https://maftoolkala.com/product-category/توری-مرغی/",
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  }
+ ],
+ "توری حصاری / فنس": [
+  {
+   "site": "ما (دمو)",
+   "url": "https://sepahanfelez.lenzit.ir/category/توری-حصاری/",
+   "status": 200,
+   "title": "قیمت روز توری حصاری — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "desc_len": 153,
+   "h1": [
+    "قیمت روز توری حصاری (فنس) — مستقیم از خط تولید"
+   ],
+   "h2n": 12,
+   "words": 3061,
+   "tables": 2,
+   "rows": 28,
+   "faq": false,
+   "schema": []
+  },
+  {
+   "site": "ما (فعلی)",
+   "url": "https://sepahanfelez.ir/category/توری-حصاری",
+   "status": 200,
+   "title": "توری حصاری | فروش عمده و جزئی فنس، خرید فوری",
+   "desc_len": 176,
+   "h1": [
+    "توری حصاری"
+   ],
+   "h2n": 3,
+   "words": 2025,
+   "tables": 2,
+   "rows": 16,
+   "faq": false,
+   "schema": [
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "ImageObject",
+    "ListItem",
+    "Organization"
+   ]
+  },
+  {
+   "site": "فولاد توفیقی",
+   "url": "https://fouladtofighi.com/product-category/توری-حصاری/",
+   "status": 200,
+   "title": "قیمت روز آهن آلات | قیمت توری فلزی | فولاد توفیقی",
+   "desc_len": 265,
+   "h1": [
+    "قیمت روز آهن"
+   ],
+   "h2n": 5,
+   "words": 1965,
+   "tables": 7,
+   "rows": 99,
+   "faq": false,
+   "schema": [
+    "AggregateRating",
+    "CreativeWorkSeries",
+    "Organization"
+   ]
+  },
+  {
+   "site": "مفتول کالا",
+   "url": "https://maftoolkala.com/product-category/توری-حصاری/",
+   "error": "TimeoutError: The read operation timed out"
+  },
+  {
+   "site": "حصار آنلاین",
+   "url": "https://hesaronline.com/",
+   "status": 200,
+   "title": "صفحه اصلی - حصار آنلاین",
+   "desc_len": 52,
+   "h1": [],
+   "h2n": 15,
+   "words": 291,
+   "tables": 0,
+   "rows": 0,
+   "faq": false,
+   "schema": [
+    "Article",
+    "ImageObject",
+    "Organization",
+    "Person",
+    "SearchAction",
+    "WebPage"
+   ]
+  }
+ ],
+ "توری پرسی": [
+  {
+   "site": "ما (دمو)",
+   "url": "https://sepahanfelez.lenzit.ir/category/توری-پرسی/",
+   "status": 200,
+   "title": "قیمت روز توری پرسی — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "desc_len": 114,
+   "h1": [
+    "قیمت روز توری پرسی — سیزده محصول از تولید کارخانه"
+   ],
+   "h2n": 12,
+   "words": 2731,
+   "tables": 2,
+   "rows": 28,
+   "faq": false,
+   "schema": []
+  },
+  {
+   "site": "ما (فعلی)",
+   "url": "https://sepahanfelez.ir/category/توری-پرسی",
+   "status": 200,
+   "title": "قیمت توری پرسی | انواع فنس مشبک با بهترین قیمت برای حفاظت",
+   "desc_len": 152,
+   "h1": [
+    "توری پرسی"
+   ],
+   "h2n": 7,
+   "words": 1904,
+   "tables": 2,
+   "rows": 16,
+   "faq": false,
+   "schema": [
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "ImageObject",
+    "ListItem",
+    "Organization"
+   ]
+  },
+  {
+   "site": "فولاد توفیقی",
+   "url": "https://fouladtofighi.com/product-category/توری-پرسی/",
+   "status": 200,
+   "title": "قیمت روز آهن آلات | قیمت توری فلزی | فولاد توفیقی",
+   "desc_len": 265,
+   "h1": [
+    "قیمت روز آهن"
+   ],
+   "h2n": 5,
+   "words": 1965,
+   "tables": 7,
+   "rows": 99,
+   "faq": false,
+   "schema": [
+    "AggregateRating",
+    "CreativeWorkSeries",
+    "Organization"
+   ]
+  }
+ ],
+ "توری گابیون": [
+  {
+   "site": "ما (دمو)",
+   "url": "https://sepahanfelez.lenzit.ir/category/توری-گابیون/",
+   "status": 200,
+   "title": "قیمت روز توری گابیون — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "desc_len": 124,
+   "h1": [
+    "قیمت روز توری گابیون — نُه محصول در دو ضخامت مفتول"
+   ],
+   "h2n": 11,
+   "words": 2535,
+   "tables": 2,
+   "rows": 20,
+   "faq": false,
+   "schema": []
+  },
+  {
+   "site": "ما (فعلی)",
+   "url": "https://sepahanfelez.ir/category/توری-گابیون",
+   "status": 200,
+   "title": "قیمت توری گابیون | فروش انواع توری گابیون سنگ چین با عمر طولانی",
+   "desc_len": 113,
+   "h1": [
+    "توری گابیون"
+   ],
+   "h2n": 9,
+   "words": 2318,
+   "tables": 2,
+   "rows": 12,
+   "faq": false,
+   "schema": [
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "ImageObject",
+    "ListItem",
+    "Organization"
+   ]
+  },
+  {
+   "site": "فولاد توفیقی",
+   "url": "https://fouladtofighi.com/product-category/گابیون/",
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  }
+ ],
+ "سیم خاردار": [
+  {
+   "site": "ما (دمو)",
+   "url": "https://sepahanfelez.lenzit.ir/category/سیم-خاردار/",
+   "status": 200,
+   "title": "قیمت روز سیم خاردار — صنایع مفتولی طلوع سپاهان | سپاهان فلز",
+   "desc_len": 119,
+   "h1": [
+    "قیمت روز سیم خاردار خطی و سوزنی (کنسرتینا)"
+   ],
+   "h2n": 11,
+   "words": 2091,
+   "tables": 2,
+   "rows": 8,
+   "faq": false,
+   "schema": []
+  },
+  {
+   "site": "ما (فعلی)",
+   "url": "https://sepahanfelez.ir/category/سیم-خاردار",
+   "status": 200,
+   "title": "تولید و فروش سیم خاردار برای حصارکشی | خرید به قیمت کارخانه",
+   "desc_len": 214,
+   "h1": [
+    "سیم خاردار"
+   ],
+   "h2n": 5,
+   "words": 1818,
+   "tables": 2,
+   "rows": 6,
+   "faq": false,
+   "schema": [
+    "BreadcrumbList",
+    "CollectionPage",
+    "ContactPoint",
+    "ImageObject",
+    "ItemList",
+    "ListItem"
+   ]
+  },
+  {
+   "site": "فولاد توفیقی",
+   "url": "https://fouladtofighi.com/product-category/سیم-خاردار/",
+   "status": 200,
+   "title": "سیم خاردار چیست و نحوه نصب",
+   "desc_len": 150,
+   "h1": [
+    "سیم خاردار چیست + کاربرد و نحوه نصب"
+   ],
+   "h2n": 5,
+   "words": 2534,
+   "tables": 0,
+   "rows": 0,
+   "faq": false,
+   "schema": [
+    "AggregateRating",
+    "BreadcrumbList",
+    "CreativeWorkSeries",
+    "ListItem"
+   ]
+  }
+ ]
+}
