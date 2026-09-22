@@ -54,12 +54,12 @@ def _row(key, row, specs):
         f'<td class="pt-spec{" pt-lo" if i >= 2 else ""}" data-label="{esc(SHORT_HEAD.get(s, s))}">'
         f'{esc(clean_val(row.get(s)))}</td>' for i, s in enumerate(specs))
     data = " ".join(f'data-s{n}="{esc(str(row.get(sp, "")))}"' for n, sp in enumerate(specs))
-    return f"""<tr data-name="{esc(name)}" data-price="{p}" {data}>
+    return f"""<tr data-name="{esc(clean_name(name))}" data-price="{p}" data-prev="{d or p}" {data}>
 <td class="pt-name"><a href="{href}">{esc(clean_name(name))}</a>{flag}</td>
 {tds}
 <td class="pt-price" data-label="قیمت"><b class="num">{fmt(p)}</b><span class="pt-u">ریال / {esc(unit_of(row))}</span></td>
 <td class="pt-delta" data-label="نوسان">{delta_badge(d, p)}</td>
-<td class="pt-act"><a class="pt-call" href="tel:{PH}" data-track="call-row" title="استعلام تلفنی">{icon('i-phone')}<span class="vh">استعلام تلفنی {esc(clean_name(name))}</span></a></td>
+<td class="pt-act"><button type="button" class="pt-chart" data-chart-row title="نمودار قیمت">{icon('i-chart')}<span class="vh">نمودار قیمت {esc(clean_name(name))}</span></button><a class="pt-call" href="tel:{PH}" data-track="call-row" title="استعلام تلفنی">{icon('i-phone')}<span class="vh">استعلام تلفنی {esc(clean_name(name))}</span></a></td>
 </tr>"""
 
 
@@ -146,12 +146,13 @@ def changes_table(n=10):
         name = r["نام محصول"]
         up = p >= d
         cls = "up" if up else "down"
-        trs.append(f"""<tr>
+        trs.append(f"""<tr data-name="{esc(clean_name(name))}" data-price="{p}" data-prev="{d}">
 <td class="ch-dir {cls}">{icon('i-up' if up else 'i-down')}</td>
 <td class="ch-name"><a href="{u_prod(key, name)}">{esc(clean_name(name))}</a><span class="ch-cat">{esc(C.CATS[key]['title'])} · {esc(unit_of(r))}</span></td>
 <td class="ch-price" data-label="قیمت لحظه‌ای"><b class="num">{fmt(p)}</b> <span class="riyal">ریال</span></td>
 <td class="ch-pct" data-label="نوسان">{delta_badge(d, p)}</td>
 <td class="ch-diff" data-label="تغییر نسبت به آخرین ثبت"><span class="num">{fmt(abs(p - d))}</span> ریال <span class="{cls}">{'افزایش' if up else 'کاهش'}</span></td>
+<td class="pt-act"><button type="button" class="pt-chart" data-chart-row title="نمودار قیمت">{icon('i-chart')}<span class="vh">نمودار</span></button></td>
 </tr>""")
     return f"""<section class="pt-card ch-card" id="changes">
   <header class="pt-head">
@@ -161,7 +162,7 @@ def changes_table(n=10):
   <div class="pt-wrap">
   <table class="pt ch">
     <caption class="vh">آخرین تغییرات قیمت محصولات</caption>
-    <thead><tr><th scope="col"><span class="vh">جهت</span></th><th scope="col">نام کالا</th><th scope="col">قیمت لحظه‌ای</th><th scope="col">نوسان</th><th scope="col">مقدار تغییر نسبت به آخرین ثبت</th></tr></thead>
+    <thead><tr><th scope="col"><span class="vh">جهت</span></th><th scope="col">نام کالا</th><th scope="col">قیمت لحظه‌ای</th><th scope="col">نوسان</th><th scope="col">مقدار تغییر نسبت به آخرین ثبت</th><th scope="col"><span class="vh">نمودار</span></th></tr></thead>
     <tbody>{''.join(trs)}</tbody>
   </table>
   </div>

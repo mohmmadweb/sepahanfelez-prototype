@@ -388,6 +388,25 @@ def footer(show_addr=True):
 </footer>"""
 
 
+# چت آنلاین گفتینو — شناسه‌ی ویجت کارفرما. اسکریپت async است و رندر را
+# عقب نمی‌اندازد. در محیط noindex هم بار می‌شود تا رفتار واقعی دیده شود.
+GOFTINO = """<script type="text/javascript">
+  !function(){var i="fugB8i",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}();
+</script>"""
+
+CHART_DIALOG = """<dialog id="chart-dialog" class="chart-dialog" aria-label="نمودار قیمت">
+  <div class="chart-dialog-in">
+    <button type="button" class="chart-close" data-close aria-label="بستن">×</button>
+    <div class="chart" data-price="0" data-prev="0" data-key="" data-days="30">
+      <div class="chart-head"><div class="chart-title"></div>
+        <div class="chart-ranges" role="group" aria-label="بازه"><button type="button" data-range="7">هفتگی</button><button type="button" data-range="30" class="is-on">ماهانه</button><button type="button" data-range="90">سه‌ماهه</button></div></div>
+      <div class="chart-svg"></div><div class="chart-stats"></div>
+      <p class="chart-note">دو نقطه‌ی واقعی (آخرین ثبت و قیمت روز)؛ سری روزانه نمایشی است و با اتصال به بک‌اند از تاریخچه‌ی واقعی خوانده می‌شود.</p>
+    </div>
+  </div>
+</dialog>"""
+
+
 def dock():
     return f"""
 <nav class="dock" aria-label="تماس سریع">
@@ -398,9 +417,13 @@ def dock():
   <a href="https://wa.me/{WA}">{icon('i-whatsapp')}واتساپ</a>
   <a href="{u_price()}">{icon('i-chart')}قیمت‌ها</a>
 </nav>
+{CHART_DIALOG}
 <script src="/assets/table.js" defer></script>
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
+<script src="/assets/chart.js" defer></script>
+<script src="/assets/tools.js" defer></script>
+{GOFTINO}
 </body>
 </html>"""
 

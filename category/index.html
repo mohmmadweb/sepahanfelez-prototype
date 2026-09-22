@@ -7,7 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="theme-color" content="#B42332">
 <title>همه‌ی دسته‌های محصول | سپاهان فلز</title>
-<meta name="description" content="فهرست کامل دسته‌های صنایع مفتولی طلوع سپاهان با بازه‌ی قیمت روز و واحد فروش هر دسته.">
+<meta name="description" content="فهرست کامل دسته‌های صنایع مفتولی طلوع سپاهان با بازه‌ی قیمت روز، واحد فروش و راهنمای انتخاب دسته بر پایه‌ی کاربرد، وزن و چشمه.">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Regular.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Estedad-Black.woff2" crossorigin>
 <link rel="stylesheet" href="/assets/app.css">
@@ -157,6 +157,18 @@
     </div>
   </section>
 
+  <section class="section alt">
+    <div class="container">
+      <div class="prose wide cols-2">
+        <h2>کدام دسته برای کار شما درست است</h2>
+        <p>نُه دسته‌ی زیر همه‌ی چیزی است که در کارخانه‌ی صنایع مفتولی طلوع سپاهان بافته می‌شود. تفاوتشان فقط در ظاهر بافت نیست؛ در واحد فروش، در روش قیمت‌گذاری و در نوع کاری است که از توری انتظار دارید. همین سه چیز است که انتخاب را تعیین می‌کند.</p><p>اگر می‌خواهید محوطه، باغ یا زمینی را محصور کنید و بودجه‌ی هر متر برایتان مهم است، سراغ <b>توری حصاری</b> بروید؛ کیلویی فروخته می‌شود و وزن هر مترمربع در جدول نوشته شده تا هزینه‌ی هر متر حصار را پیش از تماس حساب کنید. اگر توری باید مثل یک صفحه‌ی صاف رفتار کند — نرده، حفاظ پنجره، سرند — <b>توری پرسی</b> درست است. برای بتن و کفسازی، <b>مش جوشی</b> جایگزین آرماتوربندی دستی است و برگی ۶×۲ متر تحویل می‌شود.</p>
+      </div>
+      <div class="guides">
+        <details class="guide"><summary>واحد فروش را اول ببینید</summary><div class="prose"><p>چهار دسته کیلویی قیمت می‌خورند (حصاری، پرسی، مش جوشی، مفتول آرماتوربندی)، سه دسته رولی (مرغی، فرنگی، توری جوشی ریزبافت)، گابیون مترمربعی و سیم خاردار بسته به نوع، کیلویی یا کلافی. مقایسه‌ی دو عدد با دو واحد متفاوت، مقایسه نیست.</p></div></details><details class="guide"><summary>وزن، پنهان‌ترین متغیر قیمت است</summary><div class="prose"><p>در دسته‌های کیلویی، قیمت هر کیلوگرم بین فروشنده‌ها نزدیک است؛ آنچه فرق می‌کند وزن هر مترمربع یا هر برگ است. ستون وزن در همه‌ی جدول‌های ما نوشته شده و همان چیزی است که هزینه‌ی واقعی کار شما را می‌سازد.</p></div></details><details class="guide"><summary>چشمه و ضخامت مفتول را از کاربرد بگیرید، نه از قیمت</summary><div class="prose"><p>چشمه‌ی ریزتر و مفتول ضخیم‌تر یعنی فولاد بیشتر در هر مترمربع و قیمت بالاتر. اگر مانع دیداری کافی است، چشمه‌ی بازتر همان کار را ارزان‌تر انجام می‌دهد؛ اگر سازه باربر است، صرفه‌جویی روی ضخامت صرفه‌جویی نیست.</p></div></details><details class="guide"><summary>عرض و طول رول را پیش از سفارش تعیین کنید</summary><div class="prose"><p>عرض توری حصاری سفارشی تولید می‌شود و باید با ارتفاع حصار شما بخواند. در توری مرغی و فرنگی، عرض بزرگ‌تر معمولاً هزینه‌ی هر مترمربع را پایین می‌آورد، چون بخشی از هزینه‌ی تولید به ازای هر رول ثابت است.</p></div></details>
+      </div>
+    </div>
+  </section>
+
 <section class="callband" aria-labelledby="cb-h">
   <div class="container">
     <div>
@@ -212,8 +224,24 @@
   <a href="https://wa.me/989133006030"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>واتساپ</a>
   <a href="/price"><svg aria-hidden="true"><use href="#i-chart"/></svg>قیمت‌ها</a>
 </nav>
+<dialog id="chart-dialog" class="chart-dialog" aria-label="نمودار قیمت">
+  <div class="chart-dialog-in">
+    <button type="button" class="chart-close" data-close aria-label="بستن">×</button>
+    <div class="chart" data-price="0" data-prev="0" data-key="" data-days="30">
+      <div class="chart-head"><div class="chart-title"></div>
+        <div class="chart-ranges" role="group" aria-label="بازه"><button type="button" data-range="7">هفتگی</button><button type="button" data-range="30" class="is-on">ماهانه</button><button type="button" data-range="90">سه‌ماهه</button></div></div>
+      <div class="chart-svg"></div><div class="chart-stats"></div>
+      <p class="chart-note">دو نقطه‌ی واقعی (آخرین ثبت و قیمت روز)؛ سری روزانه نمایشی است و با اتصال به بک‌اند از تاریخچه‌ی واقعی خوانده می‌شود.</p>
+    </div>
+  </div>
+</dialog>
 <script src="/assets/table.js" defer></script>
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
+<script src="/assets/chart.js" defer></script>
+<script src="/assets/tools.js" defer></script>
+<script type="text/javascript">
+  !function(){var i="fugB8i",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}();
+</script>
 </body>
 </html>

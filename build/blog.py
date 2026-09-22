@@ -265,7 +265,7 @@ def build_blog_category(slug):
     <div class="container">
       <div class="mag-head">
         <div><h1>مقالات {esc(cat_title(slug))}</h1>
-          <p class="lede">{fa(len(arts))} مقاله در این دسته از مجله‌ی سپاهان فلز.</p></div>
+          <p class="lede">{esc(C.BLOG_CAT_INTRO.get(slug, ''))} ({fa(len(arts))} مقاله)</p></div>
         {chips(slug)}
       </div>
       <div class="mag-grid">{grid}</div>
@@ -273,7 +273,7 @@ def build_blog_category(slug):
   </section>
 {callband()}"""
     return page_shell(f"مقالات {cat_title(slug)} | مجله سپاهان فلز",
-                      f"همه‌ی مقالات دسته‌ی {cat_title(slug)} در مجله‌ی سپاهان فلز.",
+                      (C.BLOG_CAT_INTRO.get(slug) or f"همه‌ی مقالات دسته‌ی {cat_title(slug)} در مجله‌ی سپاهان فلز.")[:158],
                       "blog", body, crumbs=[("خانه", "/"), ("مجله", u_blog()), (cat_title(slug), "#")])
 
 

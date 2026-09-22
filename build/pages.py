@@ -3,6 +3,7 @@
 import content as C
 import analysis as A
 import blog as B
+import features as F
 from common import (CAT, PH, PHS, WA, WAS, TOTAL_SKUS, N_CATS, UPDATE_TIME, TODAY, TODAY_ISO,
                     esc, fa, fmt, icon, clean_name, clean_val, price_of, delta_of, unit_of,
                     slugify, delta_badge, cat_stats, cat_photo, stamp, page_shell, callband,
@@ -148,6 +149,14 @@ def build_index():
     </div>
   </section>
 
+  <section class="section">
+    <div class="container">
+      <div class="prose wide cols-2">
+        {''.join(f'<p>{x}</p>' for x in C.HOME_INTRO)}
+      </div>
+    </div>
+  </section>
+
   <section class="section alt" aria-labelledby="tr-h">
     <div class="container">
       <div class="section-head">
@@ -212,9 +221,10 @@ def build_price():
     <div class="container price-full">
         {changes_table(10)}
         {tables}
-        <p class="tnote">ستون «نوسان» تغییر نسبت به آخرین قیمت ثبت‌شده است. قیمت قطعی سفارش به تناژ و مقصد بار بستگی دارد و در تماس اعلام می‌شود.</p>
+        <p class="tnote">ستون «نوسان» تغییر نسبت به آخرین قیمت ثبت‌شده است. آیکون نمودار در هر ردیف، روند قیمت همان کالا را باز می‌کند. قیمت قطعی سفارش به تناژ و مقصد بار بستگی دارد و در تماس اعلام می‌شود.</p>
     </div>
   </section>
+{F.experts_grid("کارشناسان فروش — با داخلی مستقیم")}
 {callband()}"""
     return page_shell(f"قیمت لحظه‌ای صنایع مفتولی — {fa(TOTAL_SKUS)} نوع کالا | سپاهان فلز",
                       f"جدول قیمت لحظه‌ای {fa(TOTAL_SKUS)} نوع کالای مفتولی طلوع سپاهان در {fa(N_CATS)} دسته با مشخصات فنی و آخرین تغییرات قیمت. قیمت به ریال، بروزرسانی هر روز ساعت {UPDATE_TIME}.",
@@ -248,9 +258,21 @@ def build_catlist():
       <div class="homecats">{''.join(cards)}</div>
     </div>
   </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="prose wide cols-2">
+        <h2>کدام دسته برای کار شما درست است</h2>
+        {''.join(f'<p>{x}</p>' for x in C.CATLIST_INTRO)}
+      </div>
+      <div class="guides">
+        {''.join(f'<details class="guide"><summary>{esc(t)}</summary><div class="prose"><p>{d}</p></div></details>' for t, d in C.CATLIST_HELP)}
+      </div>
+    </div>
+  </section>
 {callband()}"""
     return page_shell("همه‌ی دسته‌های محصول | سپاهان فلز",
-                      "فهرست کامل دسته‌های صنایع مفتولی طلوع سپاهان با بازه‌ی قیمت روز و واحد فروش هر دسته.",
+                      "فهرست کامل دسته‌های صنایع مفتولی طلوع سپاهان با بازه‌ی قیمت روز، واحد فروش و راهنمای انتخاب دسته بر پایه‌ی کاربرد، وزن و چشمه.",
                       None, body, crumbs=[("خانه", u_home()), ("دسته‌های محصول", "#")])
 
 
@@ -305,9 +327,20 @@ def build_category(key):
         <div><h2>جدول قیمت روز {esc(c['title'])}</h2>
           <div class="sub">{fa(s['n'])} نوع کالا با مشخصات فنی — قیمت به ریال، بروزرسانی هر روز ساعت {UPDATE_TIME}</div></div>
       </div>
-      {price_table(key, search=True, title=False, guide_link=False)}
+      <div class="cat-layout">
+        <div class="cat-main">{price_table(key, search=True, title=False, guide_link=False)}</div>
+        <div class="cat-side">{F.experts_box(key)}</div>
+      </div>
     </div>
   </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><div><h2>روند قیمت {esc(c['title'])}</h2><div class="sub">میانگین قیمت دسته؛ نمودار هر کالا با آیکون نمودار در جدول باز می‌شود</div></div></div>
+      {F.category_chart(key)}
+    </div>
+  </section>
+{F.calculator(key)}
 
   <section class="section alt">
     <div class="container">
@@ -339,6 +372,7 @@ def build_category(key):
       <div class="faq">{faq}</div>
     </div>
   </section>
+{F.reviews_block(key)}
 {B.related_section(key)}
 {callband()}"""
     return page_shell(f"قیمت روز {c['title']} — صنایع مفتولی طلوع سپاهان | سپاهان فلز", c["meta"],
@@ -417,9 +451,26 @@ def build_product(key, row, idx):
 
   <section class="section alt">
     <div class="container">
+      <div class="prose wide cols-2">
+        <h2>درباره‌ی {esc(dname)}</h2>
+        {F.product_intro(key, row, rows)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div>{F.product_chart(key, row)}</div>
+      <div>{F.experts_box(key, title="کارشناس فروش این محصول")}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
       {A.price_block(key, row, rows, ctx)}
     </div>
   </section>
+{F.calculator(key, row)}
 
   <section class="section">
     <div class="container two-col">
@@ -442,6 +493,7 @@ def build_product(key, row, idx):
       <div class="faq">{faq}</div>
     </div>
   </section>
+{F.reviews_block(key, subject=dname)}
 {B.related_section(key, title=f"مقالات مرتبط با {c['title']}")}
 {callband()}"""
     return page_shell(f"قیمت {dname} | سپاهان فلز",
@@ -475,12 +527,14 @@ def build_about():
       <div class="prose wide">
         <h2>چه چیزی تولید می‌شود</h2>
         <p>{fa(TOTAL_SKUS)} نوع کالای فعال در {fa(N_CATS)} دسته. قیمت روز همه‌شان در <a href="{u_price()}">قیمت لحظه‌ای</a> هست و هر روز ساعت {UPDATE_TIME} بروزرسانی می‌شود.</p>
-        <ul class="bul cols-3">{''.join(f'<li><a href="{u_cat(k)}">{esc(C.CATS[k]["title"])}</a></li>' for k in C.ORDER)}</ul>
-        <h2>تحویل بار</h2>
-        <p>بارگیری از کارخانه‌ی اصفهان انجام می‌شود و امکان خرید مستقیم از کارخانه و انبار تهران وجود دارد. نشانی دقیق در <a href="{u_contact()}">صفحه‌ی تماس</a> آمده است.</p>
+        <ul class="bul cols-3">{''.join(f'<li><a href="{u_cat(k)}">{esc(C.CATS[k]["title"])}</a> — {fa(cat_stats(k)["n"])} نوع کالا، {esc(cat_stats(k)["unit"])}</li>' for k in C.ORDER)}</ul>
+      </div>
+      <div class="prose wide cols-2">
+        {''.join(f'<h2>{esc(t)}</h2>' + ''.join(f'<p>{x}</p>' for x in ps) for t, ps in C.ABOUT_SECTIONS)}
       </div>
     </div>
   </section>
+{F.experts_grid("کارشناسان فروش کارخانه")}
 {callband()}"""
     return page_shell("درباره کارخانه‌ی صنایع مفتولی طلوع سپاهان | سپاهان فلز",
                       f"صنایع مفتولی طلوع سپاهان، {SABAD}: تولیدکننده‌ی توری و محصولات مفتولی در شهرک صنعتی منتظریه‌ی اصفهان با دفتر فروش در بازار آهن تهران.",
@@ -518,6 +572,12 @@ def build_contact():
             <img src="/assets/factory/tehran-office.jpg" alt="نمای هوایی دفتر تهران در بازار آهن شادآباد" loading="lazy">
             <span>{icon('i-map')} دفتر تهران روی نقشه‌ی گوگل {icon('i-external')}</span></a>
         </div>
+      </div>
+      <div class="section-head"><div><h2>کارشناسان فروش</h2><div class="sub">شماره‌ی دفتر را بگیرید و داخلی کارشناس دسته‌ی خود را وارد کنید</div></div></div>
+      <div class="experts-grid">{''.join(F.expert_card(e) for e in C.EXPERTS)}</div>
+      <div class="prose wide cols-2">
+        <h2>راهنمای تماس</h2>
+        {''.join(f'<h3>{esc(t)}</h3><p>{esc(d)}</p>' for t, d in C.CONTACT_HELP)}
       </div>
       <div class="prose">
         <h2>پیام بفرستید</h2>

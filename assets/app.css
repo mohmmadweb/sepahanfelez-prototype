@@ -1877,3 +1877,117 @@ table.pt th{padding:9px 12px}
 
 /* قرمز فقط برای تماس: تیتر جدول تغییرات سرمه‌ای */
 .ch-card .pt-title h2{color:var(--ink)}
+
+/* ===========================================================================
+   نسخه ۲۱ — نمودار قیمت، کارشناسان فروش، دیدگاه و امتیاز، ماشین‌حساب
+   =========================================================================== */
+
+/* ---- نمودار ---- */
+.chart{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4) var(--s5)}
+.chart-head{display:flex; align-items:center; justify-content:space-between; gap:var(--s3); flex-wrap:wrap; margin-bottom:var(--s3)}
+.chart-head h3,.chart-title{font-size:var(--t-lg); font-weight:800; color:var(--ink); margin:0}
+.chart-head .dim{display:block; font-size:var(--t-xs)}
+.chart-ranges{display:flex; gap:4px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:3px}
+.chart-ranges button{min-height:36px; padding:0 14px; border:0; border-radius:999px; background:transparent;
+  font:inherit; font-size:13px; font-weight:700; color:var(--ink-2)}
+.chart-ranges button.is-on{background:var(--steel-ink); color:#fff}
+.chart-svg svg{width:100%; height:auto; display:block}
+.chart-stats{display:flex; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s3); padding-top:var(--s3); border-top:1px solid var(--line)}
+.chart-stats span{display:flex; flex-direction:column; gap:2px}
+.chart-stats i{font-style:normal; font-size:var(--t-xs); color:var(--ink-2)}
+.chart-stats b{font-size:var(--t-base); font-weight:900; color:var(--ink)}
+.chart-stats b.up{color:var(--up)} .chart-stats b.down{color:var(--down)}
+.chart-note{font-size:13px; color:var(--ink-2); line-height:1.7; margin-top:var(--s3)}
+.chart-dialog{border:0; border-radius:var(--radius-lg); padding:0; width:min(760px,94vw); box-shadow:var(--sh-2)}
+.chart-dialog::backdrop{background:rgba(11,18,32,.55)}
+.chart-dialog-in{position:relative}
+.chart-dialog .chart{border:0}
+.chart-close{position:absolute; top:10px; inset-inline-start:10px; width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--line); background:#fff; font-size:22px; line-height:1; color:var(--ink-2); z-index:2}
+.chart-close:hover{background:var(--surface)}
+.pt-chart{display:inline-grid; place-items:center; width:40px; height:40px; border-radius:var(--radius);
+  border:1.5px solid var(--line-2); background:#fff; color:var(--steel-ink); margin-inline-end:6px; padding:0}
+.pt-chart:hover{background:var(--surface); border-color:var(--steel-ink)}
+.pt-chart svg{width:18px; height:18px}
+table.pt.ch .pt-act{width:1%}
+
+/* ---- کارشناسان ---- */
+.experts{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.experts h3{display:flex; align-items:center; gap:8px; font-size:var(--t-base); margin-bottom:var(--s3)}
+.experts h3 svg{width:18px; height:18px; color:var(--steel-ink)}
+.experts .dim{font-size:13px; line-height:1.7; display:block; margin-top:var(--s2)}
+.expert{display:flex; gap:var(--s3); align-items:flex-start; padding:var(--s3) 0; border-top:1px solid var(--line)}
+.experts .expert:first-of-type{border-top:0; padding-top:0}
+.expert img{width:64px; height:64px; border-radius:var(--radius); flex:none; background:var(--surface-2)}
+.expert-t{min-width:0; display:grid; gap:2px}
+.expert-t b{font-size:var(--t-sm); font-weight:800; color:var(--ink)}
+.expert-t > span{font-size:13px; color:var(--ink-2)}
+.expert-links{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+.expert-tel{display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 12px; border-radius:var(--radius);
+  background:var(--brand-soft); border:1.5px solid var(--brand); color:var(--brand-dark); font-weight:800; font-size:var(--t-sm)}
+.expert-tel em{font-style:normal; font-weight:600; font-size:12px; color:var(--brand-dark)}
+.expert-tel:hover{background:#fff}
+.expert-wa{display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 12px; border-radius:var(--radius);
+  border:1.5px solid var(--line-2); font-size:13px; font-weight:700; color:var(--steel-ink)}
+.expert-wa svg{width:17px; height:17px; color:#0A6E44}
+.expert-wa:hover{background:var(--surface)}
+.experts-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s3)}
+.experts-grid .expert{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4); border-top:1px solid var(--line)}
+@media (max-width:1100px){.experts-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.experts-grid{grid-template-columns:1fr}}
+.cat-layout{display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:var(--s5); align-items:start}
+.cat-side{position:sticky; top:72px}
+@media (max-width:1100px){.cat-layout{grid-template-columns:1fr}.cat-side{position:static}}
+
+/* ---- دیدگاه و امتیاز ---- */
+.stars{display:inline-flex; gap:2px; direction:ltr; color:#E8CD94; font-size:15px; line-height:1; vertical-align:middle}
+.stars i{font-style:normal; color:#D9E0E8}
+.stars i.on{color:#E0A526}
+.stars.sm{font-size:13px} .stars.lg{font-size:22px}
+.reviews-grid{display:grid; grid-template-columns:260px minmax(0,1fr) 320px; gap:var(--s5); align-items:start}
+@media (max-width:1200px){.reviews-grid{grid-template-columns:1fr 1fr}.rform{grid-column:1/-1}}
+@media (max-width:760px){.reviews-grid{grid-template-columns:1fr}}
+.rsummary{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.ravg{display:grid; gap:4px; justify-items:center; padding-bottom:var(--s3); margin-bottom:var(--s3); border-bottom:1px solid var(--line)}
+.ravg b{font-size:40px; font-weight:900; color:var(--ink); line-height:1}
+.ravg > span{font-size:var(--t-xs); color:var(--ink-2)}
+.rdist{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-2); margin-bottom:4px}
+.rbar{flex:1; height:8px; border-radius:4px; background:var(--surface-2); overflow:hidden}
+.rbar i{display:block; height:100%; background:#E0A526}
+.rsummary .dim{font-size:12px; line-height:1.7; margin-top:var(--s3)}
+.rlist{display:grid; gap:var(--s3)}
+.review{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.review header{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px}
+.review header b{font-size:var(--t-sm); color:var(--ink)}
+.review p{font-size:var(--t-sm); color:var(--ink-2); line-height:1.85; margin:0}
+.badge-sample{font-size:11px; font-weight:700; color:#6B4708; background:var(--fresh-soft);
+  border:1px solid #E8CD94; border-radius:999px; padding:1px 8px}
+.rform{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4)}
+.rform h3{font-size:var(--t-base); margin-bottom:var(--s3)}
+.rform .cform-grid{grid-template-columns:1fr; gap:var(--s3)}
+.rform .dim{font-size:12px; margin-top:var(--s2); line-height:1.7}
+.star-input{display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:2px; margin-bottom:var(--s3)}
+.star-input input{position:absolute; opacity:0; width:1px; height:1px}
+.star-input label{font-size:28px; line-height:1; color:#D9E0E8; cursor:pointer; padding:2px 4px; min-height:44px; display:inline-flex; align-items:center}
+.star-input label.is-on{color:#E0A526}
+.star-input input:focus-visible + label{outline:3px solid var(--steel-ink); outline-offset:2px; border-radius:4px}
+
+/* ---- ماشین‌حساب ---- */
+.calc[hidden]{display:none}
+.calc{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--s4) var(--s5)}
+.calc-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:var(--s3)}
+.calc-basis{font-size:13px; color:var(--ink-2); margin-top:var(--s3)}
+.calc-out{margin-top:var(--s3); border-top:1px solid var(--line); padding-top:var(--s3); display:grid; gap:6px}
+.calc-out[hidden]{display:none}
+.calc-row{display:flex; align-items:baseline; justify-content:space-between; gap:var(--s4); font-size:var(--t-sm); color:var(--ink-2)}
+.calc-row b{color:var(--ink); font-weight:800}
+.calc-row.total{border-top:1px dashed var(--line-2); margin-top:4px; padding-top:8px; font-size:var(--t-base)}
+.calc-row.total b{font-size:var(--t-lg); font-weight:900}
+.calc .dim{font-size:12px; line-height:1.75; margin-top:var(--s3); display:block}
+
+/* ---- اصلاحات پس از بازبینی تصویری نسخه ۲۱ ---- */
+/* جعبه‌ی کارشناسان چسبان نباید روی جدول بیفتد */
+.cat-side{align-self:start; z-index:1}
+@media (min-width:1101px){.cat-side{position:sticky; top:84px}}
+/* ورودی امتیاز: چپ‌به‌راست تا ستاره‌ی اول سمت چپ پر شود */
+.star-input{direction:ltr; justify-content:flex-start; flex-direction:row-reverse}

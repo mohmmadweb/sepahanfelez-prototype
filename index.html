@@ -154,6 +154,14 @@
     </div>
   </section>
 
+  <section class="section">
+    <div class="container">
+      <div class="prose wide cols-2">
+        <p>سپاهان فلز فروشگاه اینترنتی <strong>صنایع مفتولی طلوع سپاهان</strong> است: کارخانه‌ای که از سال ۱۳۸۰ در شهرک صنعتی منتظریه‌ی اصفهان مفتول می‌کشد، گالوانیزه می‌کند و می‌بافد. آنچه در این سایت می‌بینید، قیمت مبنای روز همان خط تولید است، نه قیمت واسطه.</p><p>هفتاد نوع کالا در نُه دسته، هر کدام با مشخصات فنی کامل، وزن هر واحد و قیمت به ریال. جدول‌ها هر روز کاری ساعت ۱۲:۳۰ بروزرسانی می‌شوند و ستون نوسان، تغییر نسبت به آخرین قیمت ثبت‌شده را نشان می‌دهد.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section alt" aria-labelledby="tr-h">
     <div class="container">
       <div class="section-head">
@@ -293,8 +301,24 @@
   <a href="https://wa.me/989133006030"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>واتساپ</a>
   <a href="/price"><svg aria-hidden="true"><use href="#i-chart"/></svg>قیمت‌ها</a>
 </nav>
+<dialog id="chart-dialog" class="chart-dialog" aria-label="نمودار قیمت">
+  <div class="chart-dialog-in">
+    <button type="button" class="chart-close" data-close aria-label="بستن">×</button>
+    <div class="chart" data-price="0" data-prev="0" data-key="" data-days="30">
+      <div class="chart-head"><div class="chart-title"></div>
+        <div class="chart-ranges" role="group" aria-label="بازه"><button type="button" data-range="7">هفتگی</button><button type="button" data-range="30" class="is-on">ماهانه</button><button type="button" data-range="90">سه‌ماهه</button></div></div>
+      <div class="chart-svg"></div><div class="chart-stats"></div>
+      <p class="chart-note">دو نقطه‌ی واقعی (آخرین ثبت و قیمت روز)؛ سری روزانه نمایشی است و با اتصال به بک‌اند از تاریخچه‌ی واقعی خوانده می‌شود.</p>
+    </div>
+  </div>
+</dialog>
 <script src="/assets/table.js" defer></script>
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
+<script src="/assets/chart.js" defer></script>
+<script src="/assets/tools.js" defer></script>
+<script type="text/javascript">
+  !function(){var i="fugB8i",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}();
+</script>
 </body>
 </html>
