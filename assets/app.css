@@ -1175,7 +1175,7 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
    با flex چیده می‌شود نه با direction. دو تلاش قبلی شکست خورد:
    direction:ltr ترتیب کلمه‌ها را برعکس می‌کرد و روز و سال را به هم
    می‌چسباند، و <bdi> ایزوله‌ی تودرتو می‌ساخت. flex به bidi کاری ندارد. */
-.pt-upd time,.stamp time{display:inline-flex; flex-direction:row; gap:.34em;
+.pt-upd time,.stamp time{display:inline-flex; flex-direction:row-reverse; gap:.34em;
   align-items:baseline; white-space:nowrap}
 .pt-upd time .d-d,.stamp time .d-d{order:1}
 .pt-upd time .d-m,.stamp time .d-m{order:2}
