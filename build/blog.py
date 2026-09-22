@@ -22,6 +22,13 @@ CAT_TITLES = {
 }
 
 
+_DESC_COUNT = {}
+for _a in ARTS:
+    _d = (_a.get("description") or "").strip()
+    if _d:
+        _DESC_COUNT[_d] = _DESC_COUNT.get(_d, 0) + 1
+
+
 def cat_title(slug):
     return CAT_TITLES.get(slug, slug)
 
@@ -260,6 +267,20 @@ def build_blog_category(slug):
     from common import page_shell, callband
     arts = [a for a in ARTS_SORTED if a["cat_slug"] == slug]
     grid = "".join(card(a) for a in arts)
+    # دسته‌های کم‌مقاله (یک مقاله) صفحه‌ی لاغری می‌ساختند. مقالات مرتبط از
+    # دسته‌های دیگر، هم صفحه را کامل می‌کند هم مسیر خواندن را ادامه می‌دهد.
+    more = ""
+    if len(arts) < 4:
+        pool = [a for a in ARTS_SORTED if a["cat_slug"] != slug][:6]
+        more = f"""
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><div><h2>مطالب دیگر مجله</h2>
+        <div class="sub">از دسته‌های دیگر مجله‌ی سپاهان فلز</div></div>
+        <a href="{u_blog()}">همه‌ی مقالات {icon('i-chev')}</a></div>
+      <div class="mag-grid mag-grid-3">{''.join(card(a) for a in pool)}</div>
+    </div>
+  </section>"""
     body = f"""
   <section class="section">
     <div class="container">
@@ -271,10 +292,26 @@ def build_blog_category(slug):
       <div class="mag-grid">{grid}</div>
     </div>
   </section>
+{more}
 {callband()}"""
     return page_shell(f"مقالات {cat_title(slug)} | مجله سپاهان فلز",
                       (C.BLOG_CAT_INTRO.get(slug) or f"همه‌ی مقالات دسته‌ی {cat_title(slug)} در مجله‌ی سپاهان فلز.")[:158],
                       "blog", body, crumbs=[("خانه", "/"), ("مجله", u_blog()), (cat_title(slug), "#")])
+
+
+def meta_desc(a, limit=158):
+    """توضیح متا: کوتاه‌شده در مرز کلمه، و یکتا (عنوان را جلو می‌آورد اگر
+    توضیح با مقاله‌ی دیگری یکی باشد)."""
+    d = (a.get("description") or "").strip()
+    if not d:
+        d = f"{a['title']} — راهنمای فنی مجله‌ی سپاهان فلز."
+    if _DESC_COUNT.get(d, 0) > 1:
+        d = f"{a['title']}: {d}"
+    if len(d) <= limit:
+        return d
+    cut = d[:limit]
+    sp = cut.rfind(" ")
+    return (cut[:sp] if sp > limit * 0.6 else cut).rstrip("،.  ") + "…"
 
 
 def build_article(a):
@@ -324,6 +361,6 @@ def build_article(a):
     </div>
   </section>
 {callband()}"""
-    return page_shell(f"{a['title']} | مجله سپاهان فلز", a["description"] or a["title"], "blog", body,
+    return page_shell(f"{a['title']} | مجله سپاهان فلز", meta_desc(a), "blog", body,
                       crumbs=[("خانه", "/"), ("مجله", u_blog()),
                               (cat_title(a["cat_slug"]), u_blogcat(a["cat_slug"])), (a["title"], "#")])
