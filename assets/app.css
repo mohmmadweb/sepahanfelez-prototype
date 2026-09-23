@@ -2366,25 +2366,39 @@ html.lb-open{overflow:hidden}
 @keyframes lb-in{from{opacity:0}to{opacity:1}}
 .lb-stage{margin:0; display:flex; flex-direction:column; align-items:center;
   justify-content:center; max-width:100%; max-height:100%; min-height:0}
+/* عکس نباید تا زیر فلش‌ها برود: فلش‌ها ۵۶px عرض دارند و با فاصله‌ی
+   کناری، ۱۵۰px از هر طرف کنار گذاشته می‌شود تا کنترل‌ها همیشه روی
+   زمینه‌ی مشکی بنشینند، نه روی خود عکس. */
 .lb-img{max-width:min(100%,1200px); max-height:calc(100vh - 190px);
   width:auto; height:auto; object-fit:contain; border-radius:10px;
   background:#0B1220; box-shadow:0 24px 60px rgba(0,0,0,.5)}
+@media (min-width:641px){
+  .lb{padding-inline:150px}
+}
 .lb-cap{margin-top:10px; color:#E6EBF2; font-size:var(--t-sm); font-weight:700;
   text-align:center; max-width:760px; line-height:1.7}
 .lb-count{color:#9AA7B6; font-size:var(--t-xs); font-weight:700; margin-top:6px;
   font-variant-numeric:tabular-nums}
 
-/* دکمه‌ی بستن: گوشه‌ی بالا، همیشه در دسترس */
-.lb-x{position:absolute; top:12px; inset-inline-end:14px; width:46px; height:46px;
-  border-radius:50%; border:0; background:rgba(255,255,255,.12); color:#fff;
-  font-size:30px; line-height:1; cursor:pointer; display:grid; place-items:center}
-.lb-x:hover{background:rgba(255,255,255,.22)}
+/* دکمه‌ی بستن: گوشه‌ی بالا، همیشه در دسترس.
+   پس‌زمینه‌ی ۱۲٪ سفید روی مشکی تقریباً نامرئی بود و کاربر گزارش داد
+   دکمه‌ها را نمی‌بیند. حالا پس‌زمینه‌ی پُرتر + قاب روشن + سایه دارد. */
+.lb-x{position:absolute; top:14px; inset-inline-end:16px; width:48px; height:48px;
+  border-radius:50%; border:1.5px solid rgba(255,255,255,.55);
+  background:rgba(22,28,40,.92); color:#fff;
+  font-size:28px; line-height:1; cursor:pointer; display:grid; place-items:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.5); transition:background .15s, transform .15s}
+.lb-x:hover{background:#B42332; border-color:#fff; transform:scale(1.06)}
+.lb-x:focus-visible{outline:3px solid #fff; outline-offset:3px}
 
-/* فلش‌های چرخش */
-.lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:52px; height:52px;
-  border-radius:50%; border:0; background:rgba(255,255,255,.12); color:#fff;
-  cursor:pointer; display:grid; place-items:center}
-.lb-nav:hover{background:rgba(255,255,255,.22)}
+/* فلش‌های چرخش — با همان منطق دکمه‌ی بستن، دیده‌شدنی */
+.lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:56px; height:56px;
+  border-radius:50%; border:1.5px solid rgba(255,255,255,.55);
+  background:rgba(22,28,40,.92); color:#fff;
+  cursor:pointer; display:grid; place-items:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.5); transition:background .15s, transform .15s}
+.lb-nav:hover{background:#B42332; border-color:#fff}
+.lb-nav:focus-visible{outline:3px solid #fff; outline-offset:3px}
 .lb-nav svg{width:26px; height:26px}
 .lb-nav[hidden]{display:none}
 /* در RTL، «قبلی» سمت راست است */
