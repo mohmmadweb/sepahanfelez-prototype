@@ -5,6 +5,7 @@ import analysis as A
 import blog as B
 import features as F
 import schema as SC
+from common import PHOTOS as C_PHOTOS
 from common import (CAT, PH, PHS, WA, WAS, TOTAL_SKUS, N_CATS, UPDATE_TIME, TODAY, TODAY_ISO,
                     esc, fa, fmt, icon, clean_name, clean_val, price_of, delta_of, unit_of,
                     slugify, delta_badge, cat_stats, cat_photo, stamp, page_shell, callband,
@@ -316,10 +317,25 @@ def build_category(key):
     mistakes = "".join(f"<li>{m}</li>" for m in c["mistakes"])
     faq = "".join(f"<details><summary>{esc(q)}</summary><div class=\"a\">{esc(a)}</div></details>"
                   for q, a in c["faq"])
-    photos = "".join(
-        f'<a class="ph" href="{esc(cat_photo(key, i))}" target="_blank" rel="noopener"><img src="{esc(cat_photo(key, i, thumb=True))}" alt="{esc(c["title"])} — تصویر {fa(i+1)}" loading="lazy"></a>'
-        for i in range(3) if cat_photo(key, i))
-    photos_html = f'<div class="board-photos">{photos}</div>' if photos else ""
+    # گالری دسته: شش کادر نشان داده می‌شود و بقیه پشت شمارنده‌ی «+N»
+    # می‌مانند. کلیک روی هرکدام لایت‌باکس را با همه‌ی عکس‌ها باز می‌کند،
+    # نه فقط با همان شش‌تا.
+    all_ph = C_PHOTOS.get(key) or []
+    SHOWN = 6
+    cells = []
+    for i, src in enumerate(all_ph):
+        hidden = i >= SHOWN
+        more = ""
+        if i == SHOWN - 1 and len(all_ph) > SHOWN:
+            more = f'<span class="more">+{fa(len(all_ph) - SHOWN + 1)}</span>'
+        style = ' style="display:none"' if hidden else ""
+        cells.append(
+            f'<a class="ph" data-lb-item data-full="{esc(src)}" href="{esc(src)}"{style}>'
+            f'<img src="{esc(src.replace("/photo-", "/thumb-"))}" '
+            f'alt="{esc(c["title"])} — تصویر {fa(i+1)}" loading="lazy" '
+            f'width="420" height="315">{more}</a>')
+    photos_html = (f'<div class="board-photos" data-lb>{"".join(cells)}</div>'
+                   if cells else "")
 
     # بخش‌های عمیق: نصب، پوشش، محاسبه‌ی هزینه — موضوع‌هایی که رقبا دارند
     # و تا نسخه‌ی ۲۱ نداشتیم. هر بند روی عدد واقعی همین کاتالوگ نوشته شده.
@@ -476,12 +492,26 @@ def build_product(key, row, idx):
             if name in C.SUSPECT else "")
 
     # عکس‌های دسته — تا زمانی که عکس اختصاصی هر کالا ثبت شود
-    main = cat_photo(key, 0)
+    ph_list = C_PHOTOS.get(key) or []
+    main = ph_list[0] if ph_list else ""
+    # بندانگشتی‌ها تصویر اصلی را عوض می‌کنند (site.js)، و کلیک روی تصویر
+    # اصلی لایت‌باکس را باز می‌کند. تا هشت عکس در نوار بندانگشتی.
     thumbs = "".join(
-        f'<button type="button" class="thumb{" is-on" if i == 0 else ""}" data-src="{esc(cat_photo(key, i))}" aria-label="تصویر {fa(i+1)}"><img src="{esc(cat_photo(key, i, thumb=True))}" alt="" loading="lazy"></button>'
-        for i in range(3) if cat_photo(key, i))
-    gallery = (f'<div class="gallery"><div class="gallery-main"><img id="gmain" src="{esc(main)}" alt="{esc(c["title"])} — {esc(dname)}"></div>'
-               f'<div class="gallery-thumbs">{thumbs}</div><p class="gallery-note">تصاویر نمونه‌ی محصولات این دسته از خط تولید طلوع سپاهان</p></div>'
+        f'<button type="button" class="thumb{" is-on" if i == 0 else ""}" '
+        f'data-src="{esc(src)}" aria-label="تصویر {fa(i+1)}">'
+        f'<img src="{esc(src.replace("/photo-", "/thumb-"))}" alt="" loading="lazy" '
+        f'width="420" height="315"></button>'
+        for i, src in enumerate(ph_list[:8]))
+    lb_items = "".join(
+        f'<a class="lb-src" data-lb-item data-full="{esc(src)}" href="{esc(src)}" '
+        f'aria-label="{esc(dname)} — تصویر {fa(i+1)}"><img src="{esc(src.replace("/photo-","/thumb-"))}" alt=""></a>'
+        for i, src in enumerate(ph_list))
+    gallery = (f'<div class="gallery" data-lb>'
+               f'<div class="gallery-main">'
+               f'<img id="gmain" src="{esc(main)}" alt="{esc(c["title"])} — {esc(dname)}">'
+               f'<span class="gzoom" aria-hidden="true">{icon("i-search")}</span></div>'
+               f'<div class="gallery-thumbs">{thumbs}</div>{lb_items}'
+               f'<p class="gallery-note">تصاویر نمونه‌ی محصولات این دسته از خط تولید طلوع سپاهان</p></div>'
                if main else "")
 
     notes = A.buying_notes(key, row, ctx)[:3]

@@ -174,6 +174,23 @@
         b.classList.add('is-on');
       });
     });
+    // کلیک روی تصویر اصلی: لایت‌باکس را از همان عکسی باز کن که الان
+    // دیده می‌شود، نه همیشه از اول.
+    var wrap = main.closest('.gallery-main');
+    if (wrap) wrap.addEventListener('click', function () {
+      var srcs = [].map.call(document.querySelectorAll('.gallery .lb-src'),
+        function (a) { return a.getAttribute('data-full'); });
+      var cur = main.getAttribute('src');
+      var at = srcs.indexOf(cur);
+      if (window.__lightbox) {
+        var items = [].map.call(document.querySelectorAll('.gallery .lb-src'), function (a) {
+          return { full: a.getAttribute('data-full'),
+                   thumb: (a.querySelector('img') || {}).src,
+                   alt: a.getAttribute('aria-label') || '' };
+        });
+        if (items.length) window.__lightbox.open(items, at < 0 ? 0 : at);
+      }
+    });
   }
 
   function init() {

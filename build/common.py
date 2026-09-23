@@ -489,6 +489,7 @@ def dock():
 <script src="/assets/hero.js" defer></script>
 <script src="/assets/site.js" defer></script>
 <script src="/assets/search.js" defer></script>
+<script src="/assets/lightbox.js" defer></script>
 <script src="/assets/chart.js" defer></script>
 <script src="/assets/tools.js" defer></script>
 {GOFTINO}
