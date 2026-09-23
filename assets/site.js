@@ -49,6 +49,53 @@
     } catch (e) { /* مرورگر قدیمی: تاریخِ زمان ساخت می‌ماند */ }
   }
 
+  /* ---- ۱ب. ساعت زنده و تاریخ با روز هفته ----
+   * تراشه‌ی ساعت هر ثانیه بروز می‌شود و تراشه‌ی تاریخ نام روز هفته را
+   * هم دارد. هر دو با ساختار span ساخته می‌شوند، نه متن ساده، چون
+   * چیدمان با flex است و الگوریتم دوجهته نباید دخالت کند. */
+  function liveClock() {
+    var clocks = document.querySelectorAll('[data-live-clock] b');
+    var days = document.querySelectorAll('[data-live-day]');
+    if (!clocks.length && !days.length) return;
+    if (!window.Intl || !Intl.DateTimeFormat) return;
+
+    var timeF, dayF;
+    try {
+      timeF = new Intl.DateTimeFormat('fa-IR', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      dayF = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) { return; }
+
+    function put(el, cls, val) {
+      var sp = el.querySelector('.' + cls);
+      if (!sp) { sp = document.createElement('span'); sp.className = cls; el.appendChild(sp); }
+      sp.textContent = val;
+    }
+
+    function tick() {
+      var now = new Date();
+      for (var i = 0; i < clocks.length; i++) {
+        // ارقام فارسی از خود Intl می‌آید؛ جداکننده را هم فارسی نگه می‌داریم
+        clocks[i].textContent = timeF.format(now).replace(/[\u200e\u200f]/g, '');
+      }
+      for (var j = 0; j < days.length; j++) {
+        var el = days[j], parts = {};
+        dayF.formatToParts(now).forEach(function (p) { parts[p.type] = p.value; });
+        if (parts.weekday && parts.day && parts.month && parts.year) {
+          el.innerHTML = '';
+          put(el, 'd-w', parts.weekday);
+          put(el, 'd-d', parts.day);
+          put(el, 'd-m', parts.month);
+          put(el, 'd-y', parts.year);
+          el.setAttribute('datetime', now.toISOString().slice(0, 10));
+        }
+      }
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
   /* ---- ۲. جست‌وجوی سراسری ---- */
   function normalise(s) {
     s = String(s == null ? '' : s);
@@ -129,6 +176,8 @@
     });
   }
 
-  function init() { liveDate(); globalSearch(); gallery(); headerSearch(); }
+  function init() {
+    liveDate(); liveClock(); globalSearch(); gallery(); headerSearch();
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

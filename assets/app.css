@@ -1171,15 +1171,18 @@ footer.site h3{font-size:var(--t-lg); font-weight:800; margin-bottom:var(--s4)}
 .pt-upd{display:inline-flex; align-items:center; gap:6px; font-size:var(--t-xs); color:var(--ink-2)}
 .pt-upd svg{width:16px;height:16px}
 .pt-upd b{color:var(--up); font-weight:800}
-/* تاریخ: روز سمت چپ، بعد ماه، بعد سال — «۳۱ شهریور ۱۴۰۵».
-   با flex چیده می‌شود نه با direction. دو تلاش قبلی شکست خورد:
-   direction:ltr ترتیب کلمه‌ها را برعکس می‌کرد و روز و سال را به هم
-   می‌چسباند، و <bdi> ایزوله‌ی تودرتو می‌ساخت. flex به bidi کاری ندارد. */
-.pt-upd time,.stamp time{display:inline-flex; flex-direction:row-reverse; gap:.34em;
-  align-items:baseline; white-space:nowrap}
-.pt-upd time .d-d,.stamp time .d-d{order:1}
-.pt-upd time .d-m,.stamp time .d-m{order:2}
-.pt-upd time .d-y,.stamp time .d-y{order:3}
+/* تاریخ همه‌جای سایت یک قاعده دارد: «چهارشنبه ۱ مهر ۱۴۰۵».
+   با flex چیده می‌شود نه با direction، چون direction:ltr ترتیب کلمه‌ها را
+   برعکس می‌کرد و <bdi> ایزوله‌ی تودرتو می‌ساخت. flex به bidi کاری ندارد.
+   در ظرف RTL، flex-direction:row یعنی اولین آیتم سمت راست — همان ترتیب
+   خواندن فارسی. (row-reverse قبلی برای کپسولی با آیکن جلو تنظیم شده بود
+   و بدون آیکن ترتیب را برعکس می‌کرد.) */
+.pt-upd time,.stamp time,.chipx time{display:inline-flex; flex-direction:row;
+  gap:.34em; align-items:baseline; white-space:nowrap}
+.pt-upd time .d-w,.stamp time .d-w,.chipx time .d-w{order:0}
+.pt-upd time .d-d,.stamp time .d-d,.chipx time .d-d{order:1}
+.pt-upd time .d-m,.stamp time .d-m,.chipx time .d-m{order:2}
+.pt-upd time .d-y,.stamp time .d-y,.chipx time .d-y{order:3}
 .pt-wrap{overflow-x:auto; overscroll-behavior-x:contain}
 table.pt{width:100%; border-collapse:collapse; font-size:var(--t-sm); min-width:760px}
 table.pt th{background:var(--surface); color:var(--ink-2); font-weight:700; font-size:var(--t-xs);
@@ -2327,4 +2330,22 @@ table.pt.ch .pt-act{width:1%}
   .pcard-cta .btn-call .num{flex-basis:100%; margin-inline-start:0;
     font-size:var(--t-lg)}
   .pcard,.pcard-cta,.pcard-cta > *{min-width:0}
+}
+
+/* ── تراشه‌های ساعت و تاریخ ───────────────────────────────────────────
+   دو کپسول کنار هم: ساعت زنده و تاریخ کامل با نام روز هفته.
+   جهت هر کدام مستقل است تا با bidi درگیر نشوند. */
+.stampchips{display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap}
+.chipx{display:inline-flex; align-items:center; gap:6px; min-height:36px;
+  padding:0 14px; border:1px solid var(--line); border-radius:999px;
+  background:#fff; font-size:var(--t-sm); font-weight:700; color:var(--ink-2);
+  white-space:nowrap}
+.chipx svg{width:16px; height:16px; color:var(--ink-3)}
+.chipx b{font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+/* ساعت همیشه چپ‌به‌راست؛ ۱۳:۲۹:۲۲ نباید برعکس شود. */
+.chipx [data-live-clock] b,.chipx b.num{direction:ltr; unicode-bidi:isolate}
+/* تاریخ: نام روز، بعد روز، ماه و سال — با flex چیده می‌شود نه با bidi. */
+.chipx time{color:var(--ink)}
+@media (max-width:640px){
+  .chipx{padding:0 11px; font-size:13px}
 }

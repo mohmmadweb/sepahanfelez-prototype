@@ -72,7 +72,12 @@ def jalali_str(d, with_day=False, bidi=False):
              f'<span class="d-y">{jy}</span>')
     else:
         s = f"{jd} {JMONTHS[jm-1]} {jy}"
-    return f"{JDAYS[d.weekday()]} {s}" if with_day else s
+    if not with_day:
+        return s
+    # نام روز هم باید span باشد، وگرنه گره‌ی متنی خام است و flex
+    # نمی‌تواند ترتیبش را تعیین کند.
+    day = f'<span class="d-w">{JDAYS[d.weekday()]}</span>' if bidi else JDAYS[d.weekday()]
+    return f"{day}{'' if bidi else ' '}{s}"
 
 
 def jalali_short(d):
@@ -82,9 +87,25 @@ def jalali_short(d):
 
 _today = datetime.date.today()
 TODAY = jalali_str(_today)              # «۱۸ شهریور ۱۴۰۵»
-TODAY_BIDI = jalali_str(_today, bidi=True)   # همان، با <bdi> دور اعداد
+TODAY_BIDI = jalali_str(_today, bidi=True)   # همان، با span دور هر بخش
+TODAY_DAY = jalali_str(_today, with_day=True, bidi=True)   # با نام روز هفته
 TODAY_ISO = _today.isoformat()
 TODAY_SHORT = jalali_short(_today)      # «۱۴۰۵/۰۶/۱۸»
+
+
+def stampchips():
+    """دو تراشه‌ی کنار هم: ساعت زنده و تاریخ کامل با نام روز هفته.
+
+    ساعت در مرورگر بازدیدکننده زنده می‌شود (site.js هر ثانیه بروزش
+    می‌کند)؛ در زمان ساخت ساعت بروزرسانی نوشته می‌شود تا بدون
+    جاوااسکریپت هم عدد بی‌معنی نبینیم.
+    """
+    return (f'<div class="stampchips">'
+            f'<span class="chipx" data-live-clock>{icon("i-clock")}'
+            f'<b class="num">{UPDATE_TIME}</b></span>'
+            f'<span class="chipx"><time data-live-day datetime="{TODAY_ISO}">'
+            f'{TODAY_DAY}</time></span>'
+            f'</div>')
 
 # ---------------------------------------------------------------------------
 # کمکی‌ها

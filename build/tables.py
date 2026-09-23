@@ -9,7 +9,8 @@
 import content as C
 from common import (CAT, PH, PHS, esc, fa, fmt, icon, clean_name, clean_val,
                     price_of, delta_of, unit_of, num_key, pct, u_cat, u_prod,
-                    slugify, delta_badge, cat_stats, TODAY_SHORT, TODAY_ISO, TODAY_BIDI)
+                    slugify, delta_badge, cat_stats, TODAY_SHORT, TODAY_ISO, TODAY_BIDI,
+                    stampchips)
 
 # ستون‌های کلیدی هر دسته — آنچه خریدار برای انتخاب لازم دارد، نه همه‌ی ستون‌ها.
 KEY_SPECS = {
@@ -157,7 +158,7 @@ def changes_table(n=10):
     return f"""<section class="pt-card ch-card" id="changes">
   <header class="pt-head">
     <div class="pt-title"><h2>آخرین تغییرات قیمت</h2><span class="pt-meta">{fa(len(trs))} کالا با بیشترین تغییر نسبت به آخرین قیمت ثبت‌شده</span></div>
-    <div class="pt-upd">{icon("i-clock")} <time data-live-date datetime="{TODAY_ISO}">{TODAY_BIDI}</time></div>
+    {stampchips()}
   </header>
   <div class="pt-wrap">
   <table class="pt ch">
