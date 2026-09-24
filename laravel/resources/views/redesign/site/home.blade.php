@@ -17,7 +17,7 @@
     @php $n = $i + 1; $href = $R::category($sl['cat']) ? Rd::path(Rd::uCat($sl['cat'])) : '/price'; @endphp
     <article class="slide{{ $sl['title'] ? ' has-title' : '' }}" id="s{{ $n }}" @if($sl['style']) style="{!! $sl['style'] !!}" @endif aria-roledescription="اسلاید" aria-label="{{ $sl['title'] ?: ($sl['alt'] ?: 'اسلاید ' . $n) }}">
       @if($sl['title'])
-        <div class="container"><div class="slide-in">@if($n === 1)<h1>{{ $sl['title'] }}</h1>@else<p class="stitle">{{ $sl['title'] }}</p>@endif</div></div>
+        <div class="container"><div class="slide-in"><p class="stitle">{{ $sl['title'] }}</p></div></div>
       @else
         <a class="slide-link" href="{{ $href }}" aria-label="{{ $sl['alt'] ?: 'مشاهده قیمت‌ها' }}"></a>
       @endif
@@ -32,7 +32,7 @@
   <section class="section home-cats" aria-labelledby="hc-h">
     <div class="container">
       <div class="section-head">
-        <div><h2 id="hc-h">قیمت روز صنایع مفتولی طلوع سپاهان</h2>
+        <div><h1 id="hc-h">قیمت روز صنایع مفتولی طلوع سپاهان</h1>
           <div class="sub">{{ $claim }} — {{ Rd::fa($total) }} نوع کالا در {{ Rd::fa($ncats) }} دسته · بروزرسانی هر روز ساعت {{ Rd::updateTime() }}</div></div>
         <a class="btn btn-call btn-cta" href="/price">{{ Rd::icon('i-chart') }} مشاهده قیمت لحظه‌ای</a>
       </div>
@@ -77,7 +77,6 @@
         <a href="/about">درباره کارخانه {{ Rd::icon('i-chev') }}</a>
       </div>
       @include('rd.plants')
-      @include('rd.factory-text')
     </div>
   </section>
 

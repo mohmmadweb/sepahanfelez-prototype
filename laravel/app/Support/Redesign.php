@@ -475,7 +475,7 @@ class Redesign
                     'id'          => (int) $a->id,
                     'title'       => (string) $a->title,
                     'slug'        => (string) $a->slug,
-                    'description' => trim((string) $a->description),
+                    'description' => Rd::plainDesc($a->description),
                     'image'       => $a->image && $a->image !== 'no-picture.jpg' ? $a->original_image() : null,
                     'cat_slug'    => (string) $c->slug,
                     'cat_title'   => (string) $c->title,

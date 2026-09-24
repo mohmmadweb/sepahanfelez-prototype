@@ -53,6 +53,13 @@ class RedesignServiceProvider extends ServiceProvider
 
         View::getFinder()->prependLocation(resource_path('views/redesign'));
         View::prependNamespace('errors', resource_path('views/redesign/errors'));
+        // The exception handler rebuilds the `errors` namespace from
+        // config('view.paths') at render time (replaceNamespace), which would
+        // drop the line above and show Laravel's stock 404. Listing the
+        // redesign directory first in view.paths makes it survive that.
+        config(['view.paths' => array_values(array_unique(array_merge(
+            [resource_path('views/redesign')], (array) config('view.paths', [])
+        )))]);
 
         if (config('redesign.fa_digits', true)) {
             $this->app->make(Router::class)->pushMiddlewareToGroup('web', RedesignFaDigits::class);

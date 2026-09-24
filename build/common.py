@@ -156,6 +156,8 @@ def clean_name(s):
     s = re.sub(r"([آ-ی])(\d)", r"\1 \2", s)
     s = s.replace("*", "×").replace("1.5", "1/5")
     s = re.sub(r"\s+", " ", s)
+    # «توری چشمه چشمه ۷/۵» — کلمه‌ی تکراری پشت‌سرهم در داده‌ی خام
+    s = re.sub(r"(?<!\S)(\S+)(?: \1)+(?!\S)", r"\1", s)
     return tidy_decimals(s)
 
 

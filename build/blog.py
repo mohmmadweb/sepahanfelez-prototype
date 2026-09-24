@@ -16,6 +16,10 @@ from common import (ROOT, esc, fa, fmt, icon, jalali_str, cat_stats, cat_photo,
                     u_blog, u_blogcat, u_article, u_cat, u_price, PH, PHS, TODAY_ISO)
 
 ARTS = json.load(open(os.path.join(ROOT, "build", "articles.json"), encoding="utf-8"))
+# خلاصه‌ی بعضی مقاله‌ها با رشته‌ی هشتگ کپی‌شده از شبکه‌های اجتماعی تمام
+# می‌شود («#تولید_توری_آهنی»). در لید و توضیح متا فقط نویز است.
+for _a in ARTS:
+    _a["description"] = re.sub(r"\s+", " ", re.sub(r"(^|\s)#[^\s#]+", " ", _a.get("description") or "")).strip()
 
 CAT_TITLES = {
     "Wires": "سیم و مفتول", "net": "توری", "barbed-wire": "سیم خاردار",

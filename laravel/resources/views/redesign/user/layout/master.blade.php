@@ -26,5 +26,4 @@
       </div>
     </div>
   </section>
-@include('rd.callband')
 @endsection

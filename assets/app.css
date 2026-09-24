@@ -2653,3 +2653,192 @@ html.lb-open .msearch{display:none !important}
 .chart-empty{display:grid; place-items:center; min-height:180px; text-align:center;
   color:var(--ink-2); font-size:var(--t-sm); background:var(--surface);
   border:1px dashed var(--line-2); border-radius:var(--radius); padding:var(--s5)}
+
+/* ===========================================================================
+   ممیزی واکنش‌گرایی و خوانایی (۲ مهر ۱۴۰۵)
+   ---------------------------------------------------------------------------
+   از روی اسکرین‌شات کامل ۴۹ صفحه در ۳۶۰ تا ۱۹۲۰ پیکسل. این بخش آخر فایل
+   است و عمداً قاطع می‌نویسد، چون قواعد قبلی چند لایه روی هم دارند.
+   =========================================================================== */
+
+/* ۱. هیچ متن معناداری زیر ۱۴ پیکسل نیست — مخاطب بالای ۴۰ سال است. */
+.dim,.mag-meta,.pt-u,.chart-note,.calc-basis,.kv .k,.pcard-note,.gallery-note,
+.ch-cat,.relprod-txt span,.relprod-pr b,.side-call .l,.side-note,.toc li a,.tag,
+.expert-t > span,.expert-tel em,.tfilter.slim .ffield > span,table.pt td::before,
+.mag-txt .chip,.badge,.jump a .num,.rform .dim,.chart-head .dim,.hc-n,
+.ix .k,.ix .range,.ix .u,.cr-cap,.fcall .label,.callbox .label{font-size:14px}
+table.pt td.pt-name .review{font-size:13px}
+.chart-empty{font-size:15px}
+
+/* ۲. عنوان اصلی هر صفحه روی موبایل یک اندازه دارد. */
+@media (max-width:640px){
+  main h1{font-size:26px; line-height:1.45}
+  .board-head h1 span,.board-price h1 span{font-size:18px}
+  .section-head h2,.prose h2{font-size:22px}
+}
+
+/* ۳. جست‌وجو فقط یک‌بار: کادر سرصفحه تا ۶۴۰، کادر موبایل زیر آن. */
+@media (min-width:641px){.msearch{display:none}}
+@media (max-width:640px){.masthead .search{display:none}}
+
+/* ۴. جدول قیمت روی موبایل: کارت کوتاه — نام و دکمه‌ها، مشخصات در یک خط،
+      قیمت و نوسان کنار هم. دکمه‌ها دیگر روی عددها نمی‌افتند. */
+@media (max-width:820px){
+  table.pt tr,table.pt.ch tr{display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px;
+    padding:var(--s3) var(--s4); position:static}
+  table.pt td{display:block; width:auto; padding:0; min-width:0}
+  table.pt td::before{display:none}
+  table.pt .pt-name,table.pt.ch .ch-name{order:1; flex:1 1 0; min-width:0; padding:0;
+    font-size:16px; line-height:1.6}
+  table.pt .pt-act{order:2; position:static; flex:0 0 auto; display:flex; gap:6px}
+  table.pt .pt-act .pt-chart,table.pt .pt-act .pt-call{width:44px; height:44px}
+  table.pt .pt-spec,table.pt .pt-lo{order:3; display:inline-flex; flex:0 0 auto; gap:4px;
+    font-size:14px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
+    border-radius:999px; padding:2px 10px; white-space:nowrap; overflow-wrap:normal}
+  table.pt .pt-spec::before{display:inline; content:attr(data-label) ":"; color:var(--ink-3);
+    font-weight:500; font-size:13px}
+  table.pt .pt-price,table.pt.ch .ch-price{order:4; flex:1 1 auto; display:flex; align-items:baseline;
+    gap:6px; border:0; margin:4px 0 0; padding:0}
+  table.pt .pt-price b,table.pt.ch .ch-price b{font-size:20px}
+  table.pt .pt-u{display:inline; font-size:14px}
+  table.pt .pt-delta,table.pt.ch .ch-pct{order:5; flex:0 0 auto; margin-top:4px}
+  table.pt .pt-delta::before{content:none}
+  table.pt.ch .ch-dir,table.pt.ch .ch-diff{display:none}
+  table.pt.pt-mini tr{display:flex}
+  table.pt.pt-mini td:not(.pt-name):not(.pt-price){order:3; font-size:14px; color:var(--ink-2)}
+  table.pt.pt-mini td:not(.pt-name):not(.pt-price)::before{display:inline; content:attr(data-label) ": "; color:var(--ink-3)}
+  table.pt.pt-mini .pt-name{flex-basis:100%}
+}
+
+/* ۵. کارت‌های عدد (آمار دسته، قیمت قابل‌مقایسه) روی موبایل دو ستونه‌اند. */
+@media (max-width:640px){
+  .ixgrid,.ixgrid.ix-4,.ixgrid.ix-3{grid-template-columns:1fr 1fr; gap:8px}
+  .ix{padding:var(--s3); min-height:0}
+  .ix .v{font-size:20px}
+  .ixgrid.ix-tight .ix{min-height:0}
+}
+
+/* ۶. کارت دسته‌ها روی موبایل دو ستونه و فشرده — نه ۹ کارت تمام‌قد پشت هم. */
+@media (max-width:640px){
+  .homecats{grid-template-columns:1fr 1fr; gap:10px}
+  .hc-img{aspect-ratio:4/3}
+  .hc-t{font-size:16px; padding:8px 10px 0}
+  .hc-n,.hc-pr{padding:2px 10px 0; font-size:14px}
+  .hc-go{padding:6px 10px 10px; font-size:14px}
+}
+
+/* ۷. نوار فیلتر جدول روی موبایل: جست‌وجو تمام‌عرض، بقیه دو ستونه. */
+@media (max-width:640px){
+  .tfilter-row{grid-template-columns:1fr 1fr; gap:10px}
+  .tfilter-row .fsearch{grid-column:1/-1}
+  .tfilter{padding:var(--s3)}
+}
+
+/* ۸. صفحه‌ی محصول از ۷۰۰ پیکسل دو ستونه است؛ تبلت عکس غول‌پیکر نمی‌بیند. */
+@media (min-width:700px) and (max-width:900px){
+  .pgrid{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:var(--s5)}
+}
+
+/* ۹. دکمه‌های بازه‌ی نمودار: یک ردیف، نه یک شبکه‌ی سنگین. */
+@media (max-width:820px){
+  .chart-head{flex-direction:column; align-items:stretch; gap:var(--s3)}
+  .chart-ranges{display:flex; flex-wrap:nowrap; overflow-x:auto; border-radius:999px;
+    gap:4px; padding:3px; scrollbar-width:none}
+  .chart-ranges::-webkit-scrollbar{display:none}
+  .chart-ranges button,.cr-toggle{flex:1 0 auto; min-height:40px; padding:0 12px; font-size:14px}
+}
+.chart-dialog .chart-head{padding-inline-end:48px}
+
+/* ۱۰. پاصفحه: برچسب بالای شماره، نه کنار آن. */
+.fcall .label{display:block; margin-bottom:2px}
+@media (max-width:640px){.fcall .number{font-size:24px}}
+
+/* ۱۱. کارت کارشناس: شماره و داخلی یک تکه. */
+.expert-links{flex-wrap:wrap}
+.expert-tel{white-space:nowrap}
+
+/* ۱۲. مقاله: تصویر شاخص قاب خالی نمی‌سازد؛ فهرست شماره‌دار فارسی. */
+.post-hero{aspect-ratio:auto}
+.article-body ol{list-style:persian}
+/* ۱۳. سلسله‌مراتب عنوان: صفحه‌های فهرستی و معرفی ۳۶، محصول/حساب ۲۹. */
+.section-head h1{font-size:var(--t-3xl); font-weight:900; color:var(--steel-ink)}
+.prose-lead h1{font-size:var(--t-3xl)}
+@media (max-width:640px){main h1,.section-head h1,.prose-lead h1,.mag-head h1,.post-head h1{font-size:26px; line-height:1.45}}
+/* ۱۴. اصلاح پس از دور دوم ممیزی */
+@media (max-width:820px){
+  table.pt td.pt-act{display:flex; flex-direction:row; width:auto; padding:0}
+  .chart-with-rep,.two-col{grid-template-columns:minmax(0,1fr)}
+  .chart,.chart-head,.chart-head > *{min-width:0; max-width:100%}
+  .chart-ranges{width:100%}
+}
+@media (max-width:420px){
+  .ixgrid.ix-tight{grid-template-columns:1fr}
+  .ix .v{font-size:18px}
+}
+.ix .v{overflow-wrap:anywhere}
+/* قاعده‌های قدیمی‌ترِ خاص‌تر این‌ها را ۱۳ نگه داشته بودند */
+main p.dim,main span.dim,.experts .dim,.calc .dim,.rsummary .dim,
+table.pt.ch .ch-cat,.expert-t .dim{font-size:14px}
+@media (max-width:820px){
+  table.pt td.pt-name,table.pt.ch td.ch-name{min-width:0; flex:1 1 0; width:auto}
+  table.pt td.pt-price,table.pt.ch td.ch-price{flex:1 1 0; min-width:0; flex-wrap:wrap}
+  table.pt td.pt-delta,table.pt.ch td.ch-pct{margin-inline-start:auto}
+}
+@media (max-width:820px){
+  /* نام و دکمه‌ها ردیف اول؛ بقیه ردیف‌های بعد */
+  table.pt td.pt-name,table.pt.ch td.ch-name{flex:1 1 calc(100% - 120px)}
+  table.pt .pt-price .pt-u,table.pt.ch .ch-price .riyal{flex-basis:auto}
+}
+/* ۱۵. کارت موبایل جدول قیمت — نسخه‌ی قطعی. «body main» فقط برای غلبه بر
+      قواعد قدیمی‌ترِ خاص‌تر (min-width:220px روی نام و table-cell روی دکمه‌ها). */
+@media (max-width:820px){
+  body main table.pt tbody tr{display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px;
+    padding:12px 14px; position:static; grid-template-columns:none}
+  body main table.pt tbody tr > td{display:block; width:auto; min-width:0; max-width:100%;
+    flex:0 0 auto; padding:0; margin:0; border:0; text-align:start; order:3; position:static}
+  body main table.pt tbody tr > td::before{display:none}
+  body main table.pt tbody td.pt-name,body main table.pt tbody td.ch-name{order:1; flex:1 1 0; font-size:16px}
+  body main table.pt tbody td.pt-act{order:2; display:flex; gap:6px}
+  body main table.pt tbody td.pt-spec{display:inline-flex; gap:4px; font-size:14px; background:var(--surface);
+    border:1px solid var(--line); border-radius:999px; padding:2px 10px; white-space:nowrap}
+  body main table.pt tbody td.pt-spec::before{display:inline; content:attr(data-label) ":";
+    color:var(--ink-3); font-size:13px; font-weight:500}
+  body main table.pt tbody td.pt-price,body main table.pt tbody td.ch-price{order:4; flex:1 1 auto;
+    display:flex; align-items:baseline; gap:6px; white-space:nowrap; margin-top:2px}
+  body main table.pt tbody td.pt-price b,body main table.pt tbody td.ch-price b{font-size:19px}
+  body main table.pt tbody .pt-u{display:inline; font-size:14px}
+  body main table.pt tbody td.pt-delta,body main table.pt tbody td.ch-pct{order:5; margin-inline-start:auto}
+  body main table.pt tbody td.ch-dir,body main table.pt tbody td.ch-diff{display:none}
+  body main table.pt.pt-mini tbody td:not(.pt-name):not(.pt-price){font-size:14px; color:var(--ink-2)}
+  body main table.pt.pt-mini tbody td:not(.pt-name):not(.pt-price)::before{display:inline; content:attr(data-label) ": "; color:var(--ink-3)}
+  body main table.pt.pt-mini tbody td.pt-name{flex-basis:100%}
+}
+@media (max-width:820px){
+  /* پایه‌ی بزرگ برای نام: فقط دکمه‌ها کنارش جا می‌شوند و مشخصات به خط بعد می‌روند */
+  body main table.pt tbody td.pt-name{flex:1 1 calc(100% - 112px)}
+  body main table.pt.ch tbody td.ch-name{flex:1 1 calc(100% - 60px)}
+  body main table.pt.pt-mini tbody td.pt-name{flex:1 1 100%}
+}
+@media (max-width:820px){
+  body main table.pt.ch tbody td.pt-act{width:auto}
+  body main table.pt.ch tbody td.ch-price,body main table.pt tbody td.pt-price{flex:1 1 auto; border:0; padding:0}
+}
+/* ۱۶. دور سوم ممیزی */
+/* مقاله در ۱۰۰۰ تا ۱۱۰۰: محتوای پهن بدنه (جدول، تصویر با عرض ثابت) ستون را باز
+   می‌کرد و ستون کناری از صفحه بیرون می‌زد. */
+.post-grid{grid-template-columns:minmax(0,1fr) 300px}
+@media (max-width:1024px){.post-grid{grid-template-columns:minmax(0,1fr)} .post-side{position:static}}
+.article-body{min-width:0; overflow-wrap:anywhere}
+.article-body img{max-width:100%; height:auto}
+.article-body table{display:block; max-width:100%; overflow-x:auto}
+/* لینک درون متن مقاله سرمه‌ای است، نه قرمز؛ قرمز فقط برای تماس */
+.article-body a,.article-body a strong{color:var(--steel-ink); text-decoration:underline; text-underline-offset:3px}
+.chart-ranges button,.cr-toggle,.expert-wa,.expert-tel{font-size:14px}
+/* کلاس .review هم نشان «بازبینی» جدول است و هم کارت دیدگاه؛ قاعده‌ی
+   inline-flex نشان، محتوای کارت دیدگاه را افقی می‌چید. */
+.rlist .review,.comments .review{display:block; font-size:inherit; font-weight:400; color:inherit;
+  background:#fff; border:1px solid var(--line); padding:var(--s4)}
+.rlist .review::before,.comments .review::before{content:none}
+/* فرم دیدگاه یک ستون است؛ span 2 کادر متن ستون دوم ضمنی می‌ساخت و نام را له می‌کرد. */
+.rform .cform-grid{grid-template-columns:minmax(0,1fr)}
+.rform .fsearch,.comments .fsearch{grid-column:1/-1}

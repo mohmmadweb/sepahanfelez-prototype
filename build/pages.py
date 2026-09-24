@@ -52,7 +52,9 @@ def hero():
         bg = slide_bg(sl.get("img"))
         title = sl.get("title")
         if title:
-            tag, endtag = ("h1", "h1") if i == 1 else ('p class="stitle"', "p")
+            # عنوان اسلاید برچسب عکس است، نه موضوع صفحه؛ h1 صفحه‌ی اصلی
+            # «قیمت روز صنایع مفتولی طلوع سپاهان» است (بخش دسته‌ها).
+            tag, endtag = ('p class="stitle"', "p")
             inner = (f'<div class="container"><div class="slide-in">'
                      f'<{tag}>{esc(title)}</{endtag}></div></div>')
         else:
@@ -143,7 +145,7 @@ def build_index():
   <section class="section home-cats" aria-labelledby="hc-h">
     <div class="container">
       <div class="section-head">
-        <div><h2 id="hc-h">قیمت روز صنایع مفتولی طلوع سپاهان</h2>
+        <div><h1 id="hc-h">قیمت روز صنایع مفتولی طلوع سپاهان</h1>
           <div class="sub">{SABAD} — {fa(TOTAL_SKUS)} نوع کالا در {fa(N_CATS)} دسته · بروزرسانی هر روز ساعت {UPDATE_TIME}</div></div>
         <a class="btn btn-call btn-cta" href="{u_price()}">{icon('i-chart')} مشاهده قیمت لحظه‌ای</a>
       </div>
@@ -178,7 +180,6 @@ def build_index():
         <a href="{u_about()}">درباره کارخانه {icon('i-chev')}</a>
       </div>
       {plants()}
-      {factory_text()}
     </div>
   </section>
 

@@ -96,7 +96,12 @@
     // R حاشیه‌ی راست است و برچسب محور قیمت از W-R+4 شروع می‌شود و به راست
     // می‌رود؛ عدد هفت‌رقمی فارسی حدود ۵۰px می‌خواهد، پس R باید ≥۵۶ باشد
     // وگرنه آخرین رقم بیرون از viewBox بریده می‌شود.
-    var W = 660, H = 240, L = 40, R = 58, T = 18, B = 34;
+    // عرض viewBox همان عرض واقعی ظرف است (بین ۳۰۰ و ۶۶۰) تا متن محورها
+    // اندازه‌ی واقعی بماند؛ با viewBox ثابت ۶۶۰، روی موبایل برچسب‌ها به
+    // حدود ۵ پیکسل کوچک می‌شدند و خوانده نمی‌شدند.
+    var box0 = el.querySelector('.chart-svg');
+    var W = Math.max(300, Math.min(660, Math.round((box0 && box0.clientWidth) || 660)));
+    var H = W < 480 ? 220 : 240, L = 12, R = 64, T = 18, B = 34;
     var vs = data.map(function (p) { return p.v; });
     var min = Math.min.apply(null, vs), max = Math.max.apply(null, vs);
     if (max === min) { max = min * 1.02; min = min * 0.98; }
@@ -112,13 +117,13 @@
     for (var g = 0; g < 4; g++) {
       var gv = min + (max - min) * g / 3, gy = y(gv);
       grid += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + gy.toFixed(1) + '" y2="' + gy.toFixed(1) + '" stroke="#DCE3EB" stroke-dasharray="3 4"/>' +
-              '<text x="' + (W - R + 4) + '" y="' + (gy - 4).toFixed(1) + '" text-anchor="start" font-size="11" fill="#59677A">' + fmt(gv) + '</text>';
+              '<text x="' + (W - R + 4) + '" y="' + (gy - 4).toFixed(1) + '" text-anchor="start" font-size="12" fill="#59677A">' + fmt(gv) + '</text>';
     }
     var ticks = '';
-    var n = Math.min(6, data.length);
+    var n = Math.min(W < 480 ? 3 : 6, data.length);
     for (var k = 0; k < n; k++) {
       var i = Math.round((data.length - 1) * k / (n - 1));
-      ticks += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="11" fill="#59677A">' + label(data[i].d) + '</text>';
+      ticks += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="' + (k === 0 ? 'start' : k === n - 1 ? 'end' : 'middle') + '" font-size="12" fill="#59677A">' + label(data[i].d) + '</text>';
     }
     var id = 'g' + hash(el.id || Math.random().toString()).toString(36);
     el.querySelector('.chart-svg').innerHTML =
@@ -450,8 +455,9 @@
         Array.prototype.forEach.call(cp.querySelectorAll('input'), function (i) { i.value = ''; });
         var ce = cp.querySelector('.cr-err'); if (ce) ce.hidden = true;
       }
-      setup(box);
+      // اول باز، بعد رسم: نمودار عرض ظرف را می‌خواند و دیالوگ بسته عرض ندارد.
       if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+      setup(box);
     });
     dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close ? dlg.close() : dlg.removeAttribute('open'); });
   }

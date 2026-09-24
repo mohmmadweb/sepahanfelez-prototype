@@ -111,6 +111,8 @@ class Rd
         $s = preg_replace('/([آ-ی])(\d)/u', '$1 $2', $s);
         $s = str_replace(['*', '1.5'], ['×', '1/5'], $s);
         $s = preg_replace('/\s+/u', ' ', $s);
+        // «توری چشمه چشمه ۷/۵» — a word repeated back to back in the raw data.
+        $s = preg_replace('/(?<!\S)(\S+)(?: \1)+(?!\S)/u', '$1', $s);
 
         return self::tidyDecimals($s);
     }
@@ -172,6 +174,18 @@ class Rd
         }
 
         return number_format($n, 0, '.', ',');
+    }
+
+    /**
+     * Article summaries in the database end in hashtag strings copied from
+     * social posts («#تولید_توری_آهنی»). They are noise in a lede and in a
+     * meta description, so they are dropped for display.
+     */
+    public static function plainDesc(?string $s): string
+    {
+        $s = preg_replace('/(^|\s)#[^\s#]+/u', ' ', (string) $s);
+
+        return trim(preg_replace('/\s+/u', ' ', $s));
     }
 
     /** Truncate on a word boundary, like the prototype's meta descriptions. */
