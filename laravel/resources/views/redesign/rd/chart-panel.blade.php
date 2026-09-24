@@ -1,0 +1,5 @@
+<div class="cr-panel" id="cr-{{ $id }}" hidden>
+@foreach([['from', 'از تاریخ'], ['to', 'تا تاریخ']] as $f)
+  <div class="cr-field"><span class="cr-lbl">{{ $f[1] }}</span><span class="cr-date" data-cr="{{ $f[0] }}"><span class="cr-one"><input type="text" class="cr-y" maxlength="4" placeholder="۱۴۰۵" data-min="1390" data-max="1420" aria-label="سال {{ $f[1] }}" inputmode="numeric" autocomplete="off"><span class="cr-cap">سال</span></span><span class="cr-one"><input type="text" class="cr-m" maxlength="4" placeholder="۰۱" data-min="1" data-max="12" aria-label="ماه {{ $f[1] }}" inputmode="numeric" autocomplete="off"><span class="cr-cap">ماه</span></span><span class="cr-one"><input type="text" class="cr-d" maxlength="4" placeholder="۰۱" data-min="1" data-max="31" aria-label="روز {{ $f[1] }}" inputmode="numeric" autocomplete="off"><span class="cr-cap">روز</span></span></span></div>
+@endforeach
+  <button type="button" class="btn btn-sm cr-apply" data-cr-apply>نمایش بازه</button><p class="cr-err" role="alert" hidden></p></div>

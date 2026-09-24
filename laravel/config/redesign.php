@@ -5,20 +5,17 @@
 | Redesign (سپاهان فلز ۱۴۰۵)
 |--------------------------------------------------------------------------
 |
-| The redesigned front end was built as a static prototype first
-| (sepahanfelez.lenzit.ir) so the layout could be agreed before any database
-| work. This file is the seam between the two.
+| The redesigned front end was agreed as a static prototype first
+| (sepahanfelez.lenzit.ir). This kit is the same design running on the real
+| database. Three places hold what it needs:
 |
-| RULE
-| ----
-| Every value a page shows comes from the database when the database has it.
-| This file only holds what the schema cannot express yet, and each of those
-| entries names the table that will replace it. Nothing here duplicates
-| something the admin panel already edits — that would create two sources of
-| truth and guarantee they drift.
+|   database                         every number: categories, products, prices,
+|                                    specs, articles, comments, users
+|   resources/redesign/content.php   every piece of editorial copy, GENERATED
+|                                    from the prototype by tools/build_kit.py
+|   this file                        switches only
 |
-| See docs/REDESIGN-BACKEND.md for the per-feature mapping and the SQL that
-| turns the remaining mock values into real columns.
+| Nothing here duplicates something the admin panel edits.
 |
 */
 
@@ -27,146 +24,61 @@ return [
     /*
     | Master switch.
     |
-    | true  → the redesigned views render (site.redesign.*)
-    | false → the previous views render, untouched
+    | true  → RedesignServiceProvider puts resources/views/redesign in front of
+    |         the view finder, so every public page, the login screens and the
+    |         user panel render the new templates.
+    | false → the provider does nothing at all; the previous templates render,
+    |         untouched. That is the rollback — one line in .env.
     |
-    | Both sets of templates stay in the repository. Flipping this back is the
-    | rollback, and it needs no other deploy.
+    | The admin panel (/admin) is never affected either way.
     */
-    'enabled' => env('REDESIGN_ENABLED', true),
+    'enabled' => env('REDESIGN_ENABLED', false),
+
+    // Absolute origin used for canonical URLs and structured data.
+    'site_url' => env('REDESIGN_SITE_URL', 'https://sepahanfelez.ir'),
 
     /*
-    | Price freshness.
+    | Persian digits in the rendered HTML.
     |
-    | The update *time* is a statement about the business, not about a row, so
-    | it lives here. The update *date* beside it is always read from
-    | MAX(prices.price_at) — see App\Support\Redesign::lastPriceUpdate().
+    | The prototype writes every digit in text as Persian. On the live site the
+    | database holds Latin digits (article bodies, spec values), so the same
+    | conversion is done on the way out by App\Http\Middleware\RedesignFaDigits.
+    | Scripts, styles, textareas and attribute values are never touched.
     */
-    'update_time' => '۱۲:۳۰',
-
-    // Positioning line, repeated in <title>, the home hero and /about.
-    'basket_claim' => 'کامل‌ترین سبد کالایی صنایع مفتولی کشور',
-
-    /*
-    | Sales experts.
-    |
-    | MOCK — there is no `sales_reps` table. The prototype shows a named expert
-    | with a direct extension beside every price table because the two
-    | strongest competitors do (شهر مفتول، آهن آنلاین) and it shortens the call.
-    |
-    | `categories` holds category SLUGS; a slug that does not exist is ignored,
-    | so this list cannot break a page.
-    |
-    | TO REPLACE: create `sales_reps` + `category_sales_rep` (SQL in
-    | database/sql/), then delete this key — Redesign::expertsFor() already
-    | prefers the table whenever it exists.
-    */
-    'experts' => [
-        [
-            'name' => 'مهندس محمدی', 'role' => 'سرپرست فروش', 'ext' => '101',
-            'photo' => '/assets/experts/expert-1.svg', 'hours' => 'شنبه تا چهارشنبه ۸ تا ۱۷',
-            'categories' => ['توری-حصاری', 'توری-پرسی', 'توری-گابیون'],
-        ],
-        [
-            'name' => 'خانم زارعی', 'role' => 'کارشناس فروش توری', 'ext' => '102',
-            'photo' => '/assets/experts/expert-2.svg', 'hours' => 'شنبه تا پنجشنبه ۸ تا ۱۳',
-            'categories' => ['توری-مرغی', 'توری-فرنگی', 'توری-جوشی--گالوانیزه-رول'],
-        ],
-        [
-            'name' => 'مهندس احمدی', 'role' => 'کارشناس فروش مفتول و مش', 'ext' => '103',
-            'photo' => '/assets/experts/expert-3.svg', 'hours' => 'شنبه تا چهارشنبه ۸ تا ۱۷',
-            'categories' => ['مش-جوشی-یا-مش-آهنی', 'سیم-سیاه-و-آرماتور-بندی'],
-        ],
-        [
-            'name' => 'آقای سلیمانی', 'role' => 'کارشناس فروش سیم خاردار و پروژه', 'ext' => '104',
-            'photo' => '/assets/experts/expert-4.svg', 'hours' => 'شنبه تا چهارشنبه ۸ تا ۱۷',
-            'categories' => ['سیم-خاردار'],
-        ],
-    ],
-
-    /*
-    | Freight estimate, rial per tonne.
-    |
-    | MOCK — nothing in the schema models shipping. The calculator states on
-    | the page that this is an estimate and that the binding number comes by
-    | phone, which is what the sales process actually does.
-    |
-    | TO REPLACE: `freight_rates` (destination, rate_per_ton, order).
-    | A rate of 0 means "collected from works/warehouse".
-    */
-    'freight' => [
-        ['name' => 'تحویل درب کارخانه (اصفهان)', 'rate' => 0],
-        ['name' => 'تحویل درب انبار تهران', 'rate' => 0],
-        ['name' => 'اصفهان و شهرستان‌های استان', 'rate' => 9000000],
-        ['name' => 'تهران و البرز', 'rate' => 16000000],
-        ['name' => 'استان‌های مرکزی (قم، اراک، یزد، چهارمحال)', 'rate' => 18000000],
-        ['name' => 'شمال و شمال غرب', 'rate' => 26000000],
-        ['name' => 'جنوب و جنوب شرق', 'rate' => 32000000],
-    ],
-    'freight_min_ton' => 1.0,
+    'fa_digits' => env('REDESIGN_FA_DIGITS', true),
 
     /*
     | Price-history chart.
     |
-    | NOT mock: `chart_price` and `daily_avg_price` are real tables and
-    | Site\PriceController already serves both. `sample_series` only decides
-    | what to draw when a product has fewer than two stored points — a new
-    | product on its first day, which is otherwise an empty box. The caption
-    | under the chart always says which of the two it is showing.
+    | Real data: the `prices` table that every Excel import writes to, so it
+    | needs no cron. `sample_series` only decides what to draw for a product
+    | with fewer than two recorded days — a clearly labelled demo series
+    | (true) or the sentence «not enough history yet» (false).
     */
     'chart' => [
-        'sample_series' => env('REDESIGN_CHART_SAMPLE', true),
-        'default_days'  => 30,
+        'sample_series' => env('REDESIGN_CHART_SAMPLE', false),
+        'max_days'      => 365,
     ],
 
     /*
     | Reviews.
     |
-    | `product_comments` is real (name, body, answer, is_approved) but it hangs
-    | off `category_id`, not `product_id`, and has no rating column. So: real
-    | comments render as soon as they exist; stars need one migration. Until
-    | then Redesign::ratingFor() returns null and the view drops the star block
-    | rather than inventing a score.
-    |
-    | Samples are labelled «نمونه» on the page and only appear when a category
-    | has no approved comment at all. Set false before launch.
+    | Approved rows of `product_comments` render as soon as they exist. The
+    | prototype's sample reviews are shown, badged «نمونه», only for a category
+    | with no approved comment and only while this is true. Keep false live.
     */
     'reviews' => [
-        'show_samples' => env('REDESIGN_SAMPLE_REVIEWS', true),
+        'show_samples' => env('REDESIGN_SAMPLE_REVIEWS', false),
     ],
 
     /*
-    | How many spec columns the compact price table shows. Ordering already
-    | comes from `category_spec.sort` (admin → ستون‌های جدول); this caps it.
-    | The full list appears in the «مشخصات فنی کامل» table lower down.
-    |
-    | TO REPLACE with `category_spec.in_price_table` (boolean).
+    | The cart is gone from the design: orders are placed by phone. With this
+    | on, GET /cart answers 301 → /price, so old links and bookmarks land
+    | somewhere useful. The cart POST routes are left alone (nothing links to
+    | them any more).
     */
-    'price_table_specs' => 4,
+    'redirect_cart' => true,
 
-    /*
-    | Sample reviews, keyed by category slug. Only used when a category has no
-    | approved comment. Delete this key once real comments exist.
-    */
-    'sample_reviews' => [
-        'توری-حصاری' => [
-            ['پیمانکار محوطه‌سازی', 5, 'برای حصار ۴۰۰ متری باغ، چشمه ۶/۵ مفتول ۲/۷ گرفتیم. وزن مترمربع دقیقاً همان بود که در جدول نوشته بود و با باسکول تحویل داد.'],
-            ['خریدار سازمانی', 4, 'قیمت کیلویی و وزن هر متر در جدول، کار مقایسه را راحت کرد. زمان تحویل تهران دو روز شد.'],
-        ],
-        'توری-پرسی' => [
-            ['کارگاه نرده‌سازی', 5, 'چشمه ۳×۳ مفتول ۴ برای حفاظ پنجره؛ برگ‌ها صاف و یکنواخت بودند.'],
-        ],
-        'مش-جوشی-یا-مش-آهنی' => [
-            ['مجری کف‌سازی', 5, 'چشمه ۱۵×۱۵ برای کف انبار. وزن برگ ۳۶ کیلو با باسکول یکی درآمد.'],
-        ],
-        'توری-مرغی' => [
-            ['مرغداری', 5, 'رول ۹ کیلویی عرض ۱۲۰ برای قفس؛ گالوانیزه‌ی گرم واقعی بود و بعد از یک زمستان زنگ نزد.'],
-        ],
-        'توری-گابیون' => [
-            ['مهندس ناظر پروژه', 5, 'برای دیوار حائل ۱/۵ متری، مفتول ۱/۷ سفارش دادیم. بافت دوتاب و وزن ۵۵۰ گرم مطابق جدول.'],
-        ],
-        'سیم-خاردار' => [
-            ['مدیر تأسیسات', 5, 'کلاف سوزنی قطر ۹۰ برای بالای دیوار؛ خارها تیز و گالوانیزه یکدست.'],
-        ],
-    ],
+    // How long computed data (catalogue, stats, movers, search index) is cached.
+    'cache_ttl' => 600,
 ];

@@ -1,0 +1,1 @@
+<div class="stampchips"><span class="chipx" data-live-clock>{{ Rd::icon('i-clock') }}<b class="num">{{ Rd::updateTime() }}</b></span><span class="chipx"><time data-live-day datetime="{{ now()->toDateString() }}">{!! Rd::jDate(now(), true, true) !!}</time></span></div>

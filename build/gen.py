@@ -78,6 +78,14 @@ def main():
         write(out_path(u_blogcat(slug)), B.build_blog_category(slug)); n += 1
     for a in B.ARTS:
         write(out_path(u_article(a["cat_slug"], a["slug"])), B.build_article(a)); n += 1
+    import account as AC
+    for url, fn in (("/login", AC.build_login), ("/register", AC.build_register),
+                    ("/verify-phone", AC.build_verify),
+                    ("/user/profile", AC.build_user_profile),
+                    ("/user/tickets", AC.build_user_tickets)):
+        write(out_path(url), fn()); n += 1
+    # GitHub Pages هر نشانیِ ناموجود را به 404.html می‌فرستد.
+    write("404.html", AC.build_404()); n += 1
     import searchindex as SI
     m = SI.write(os.path.join(ROOT, "assets", "search-index.json"))
 
@@ -100,6 +108,10 @@ def main():
         open(os.path.join(rp, "index.html"), "w", encoding="utf-8").write(
             SM.redirect_html(dst))
     mode = "زنده" if LIVE else "پروتوتایپ"
+    # کیت لاراول (laravel/) باید همیشه با همین پروتوتایپ یکی بماند.
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import build_kit
+    build_kit.main()
     print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد · "
           f"نقشه‌ی سایت: {count} نشانی ({mode})")
 

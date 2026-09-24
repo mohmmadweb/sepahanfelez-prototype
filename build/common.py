@@ -228,6 +228,8 @@ def u_blogcat(slug):         return f"/blog/{slug}"
 def u_article(cat, slug):    return f"/blog/{cat}/{slug}"
 def u_cat(key):              return f"/category/{key}"
 def u_prod(key, name):       return f"/category/{key}/{prod_slug(name)}"
+def u_login():               return "/login"
+def u_register():            return "/register"
 
 
 def out_path(url):
@@ -310,8 +312,7 @@ UTILBAR = f"""
       <li><a href="mailto:info@sepahanfelez.ir">{icon('i-mail')} info@sepahanfelez.ir</a></li>
     </ul>
     <ul>
-      <li><a href="#">{icon('i-cart')} لیست سفارش (۰)</a></li>
-      <li><a href="#">{icon('i-user')} ناحیه کاربری</a></li>
+      <li><a href="/login">{icon('i-user')} ورود / ثبت‌نام</a></li>
     </ul>
   </div>
 </div>"""
