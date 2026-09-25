@@ -5,10 +5,19 @@
 Only public URLs (https://sepahanfelez.ir/images/...), the same files any
 visitor's browser loads. For main/ images the thumbnail/ twin is fetched too.
 """
-import json, os, sys, time, urllib.parse, urllib.request
+import json, os, re, sys, time, urllib.parse, urllib.request
 
 data, root = json.load(open(sys.argv[1])), sys.argv[2]
 want = set(data["files"])
+# Images inside the rich text (category and article bodies, descriptions): /images/ckeditor/… and the like.
+for rows in data["tables"].values():
+    for r in rows:
+        for v in r.values():
+            if isinstance(v, str) and "/images/" in v:
+                for m in re.findall(r"""(?:https?://(?:www\.)?sepahanfelez\.ir)?(/images/[^"'\s)<>]+\.(?:jpe?g|png|gif|webp|svg))""", v, re.I):
+                    want.add(urllib.parse.unquote(m))
+# Files the admin theme loads that are on the host but not in the repository.
+want |= {"/assets/js/jalalidatepicker.min.js", "/assets/css/jalalidatepicker.css"}
 want |= {p.replace("/main/", "/thumbnail/") for p in want if "/main/" in p}
 ok = miss = 0
 for p in sorted(want):
