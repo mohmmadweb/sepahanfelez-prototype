@@ -5,13 +5,12 @@
 @php
     $R = \App\Support\Redesign::class;
     $cat = $R::category($slug);
-    $c = Rd::cat($slug);
     $st = $R::stats($slug);
     $specs = $R::keySpecs($slug);
     $rows = $cat['rows'];
     $tid = 't-' . $R::slugify($slug);
-    $anchor = $c['slug'] ?? $R::slugify($slug);
-    $ctitle = $c['title'] ?? $cat['title'];
+    $anchor = 'c' . $cat['id'];
+    $ctitle = $cat['title'];
     $at = $cat['last_update'];
     $today = $at ? Rd::isToday($at) : false;
 @endphp
@@ -57,7 +56,7 @@
     @foreach($rows as $r)
       @php $nm = Rd::cleanName($r['نام محصول']); @endphp
       <tr data-name="{{ $nm }}" data-price="{{ $r['_price'] }}" data-prev="{{ $r['_prev'] ?: $r['_price'] }}" data-src="/rd/chart/product/{{ $r['_id'] }}" @foreach($specs as $n => $sp) data-s{{ $n }}="{{ $r[$sp] ?? '' }}"@endforeach>
-        <td class="pt-name"><a href="{{ Rd::path(Rd::uProd($slug, $r['_slug'])) }}">{{ $nm }}</a>@if($r['_review'])<span class="review" title="{{ $r['_review'] }}">بازبینی</span>@endif</td>
+        <td class="pt-name">{{ Rd::link(Rd::prodUrl($slug, $r['_slug']), $nm) }}@if($r['_review'])<span class="review" title="{{ $r['_review'] }}">بازبینی</span>@endif</td>
         @foreach($specs as $i => $sp)<td class="pt-spec{{ $i >= 2 ? ' pt-lo' : '' }}" data-label="{{ $R::shortHead($sp) }}">{{ Rd::cleanVal($r[$sp] ?? '') }}</td>@endforeach
         <td class="pt-price" data-label="قیمت"><b class="num">{{ Rd::fmt($r['_price']) }}</b><span class="pt-u">ریال / {{ $r['واحد'] }}</span></td>
         <td class="pt-delta" data-label="نوسان">{{ Rd::delta($r['_prev'], $r['_price']) }}</td>
@@ -67,5 +66,5 @@
     </tbody>
   </table>
   </div>
-  <footer class="pt-foot">@if($note ?? true)<span>قیمت‌ها به ریال و مبنای روز درب کارخانه‌ی اصفهان است؛ قیمت قطعی با تناژ و مقصد بار تلفنی اعلام می‌شود.</span>@endif @if($guideLink ?? true)<a href="{{ Rd::path(Rd::uCat($slug)) }}">راهنمای خرید و مشخصات کامل {{ Rd::icon('i-chev') }}</a>@endif</footer>
+  <footer class="pt-foot">@if($note ?? true)<span>قیمت‌ها به ریال و مبنای روز است؛ قیمت قطعی با تناژ و مقصد بار تلفنی اعلام می‌شود.</span>@endif @if($guideLink ?? true)<a href="{{ Rd::path(Rd::uCat($slug)) }}">راهنمای خرید و مشخصات کامل {{ Rd::icon('i-chev') }}</a>@endif</footer>
 </section>

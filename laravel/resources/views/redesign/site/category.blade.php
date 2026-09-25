@@ -1,48 +1,68 @@
 {{--
-    Category page (pages.build_category).
-    Controller: Site\CategoryController@index → $category (model), $products, … .
-    Everything numeric is read from Redesign::category($category->slug); the
-    editorial copy from content.php. A category the prototype never wrote copy
-    for falls back to its own database fields (meta_description, intro, body).
+    Category page. Controller: Site\CategoryController@index → $category (with
+    features, usage, specs, tags), $products, $comments, $relatedArticles.
+
+    Where each block comes from (admin → دسته‌بندی → ویرایش, unless noted):
+      <title>, description,   meta_title, meta_description, meta_keywords,
+      canonical, robots       canonical, index_by_crawler
+      JSON-LD                 schema_tag when it holds a usable block, else generated
+      H1 / subtitle           title / meta_description (the form has no intro field)
+      numbers, table, chart   the category's products and prices
+      table columns           admin → ستون‌های جدول (category_spec.sort)
+      pictures                category image + product images (محصول → محتوا)
+      guide / FAQ             body — each <h2> becomes a section; an <h2> about
+                              «پرسش…» whose questions are <h3> becomes the FAQ
+      features / usages       admin → ویژگی‌ها / کاربردها
+      video                   video_embed or video
+      reviews                 admin → دیدگاه‌های دسته‌بندی
+      related articles        tags shared with articles (admin → برچسب‌ها)
 --}}
 @extends('rd.layout')
 @php
     $R = \App\Support\Redesign::class;
     $slug = $category->slug;
     $cat = $R::category($slug);
-    $c = Rd::cat($slug);
-    $t = $c['title'] ?? $category->title;
+    $t = $category->title;
     $st = $R::stats($slug);
     $photos = $R::photos($slug);
-    $meta = $c['meta'] ?? ($category->meta_description ?: ('قیمت روز ' . $t . ' — تولید صنایع مفتولی طلوع سپاهان، بروزرسانی هر روز.'));
-    $faq = $c['faq'] ?? [];
-    $crumbs = [['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, null]];
+    [$bodyLead, $sections] = Rd::sections($category->body);
+    $faq = [];
+    foreach ($sections as $sec) { if ($sec['faq']) { foreach ($sec['faq'] as $qa) { $faq[] = [$qa[0], trim(strip_tags($qa[1]))]; } } }
+    // The edit form has no «intro» field, so the subtitle is the meta
+    // description the admin writes (admin → دسته → توضیح متا).
+    $meta = trim((string) $category->meta_description);
+    $intro = $meta !== '' ? '<p>' . e($meta) . '</p>' : '';
+    $features = $category->features ?? collect();
+    $usages = $category->usage ?? collect();
 @endphp
-@section('title', ($category->meta_title && ! $c) ? $category->meta_title : 'قیمت روز ' . $t . ' — طلوع سپاهان')
+@section('title', $category->meta_title ?: ('قیمت روز ' . $t . ' | ' . \App\Support\Brand::name()))
 @section('description', $meta)
 @section('robots', \App\Support\Brand::robots($category->index_by_crawler, $slug))
-@section('canonical', Rd::uCat($slug))
+@section('canonical', \App\Support\Brand::canonical($category->canonical))
 @section('nav', $slug)
-@section('crumbs')@include('rd.crumb', ['items' => $crumbs])@endsection
+@section('crumbs')@include('rd.crumb', ['items' => [['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, null]]])@endsection
 @section('jsonld')
+@if($category->meta_keywords)<meta name="keywords" content="{{ $category->meta_keywords }}">@endif
+{!! \App\Support\Schema::storedIsUsable($category->schema_tag) ? $category->schema_tag : '' !!}
 @php
     $prods = [];
     foreach (array_slice($cat['rows'] ?? [], 0, 30) as $r) {
         $nm = Rd::cleanName($r['نام محصول']);
         $props = [];
         foreach (array_slice($cat['specs'], 0, 6) as $k2) { $props[] = [$k2, Rd::cleanVal($r[$k2] ?? '')]; }
-        $prods[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — تولید صنایع مفتولی طلوع سپاهان، قیمت روز درب کارخانه‌ی اصفهان.', $r['_price'], $r['واحد'], $photos[0] ?? null, $props);
+        if (! $r['_slug']) { continue; }
+        $prods[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — ' . $t . '، قیمت روز.', $r['_price'], $r['واحد'], $r['_image'] ?: ($photos[0] ?? null), $props);
     }
 @endphp
-{{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('CollectionPage', Rd::uCat($slug), 'قیمت روز ' . $t, ['description' => $meta, 'about' => ['@id' => Rd::orgId()], 'primaryImageOfPage' => $photos ? Rd::site($photos[0]) : null]), $prods ? Rd::itemList($prods, 'کالاهای ' . $t) : null, Rd::faq($faq), Rd::breadcrumb([['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, null]])) }}
+{{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('CollectionPage', Rd::uCat($slug), 'قیمت روز ' . $t, ['description' => $meta, 'about' => ['@id' => Rd::orgId()], 'primaryImageOfPage' => $photos ? Rd::site($photos[0]) : null]), $prods ? Rd::itemList($prods, 'کالاهای ' . $t) : null, \App\Support\Schema::storedIsUsable($category->schema_tag) ? null : Rd::faq($faq), Rd::breadcrumb([['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, null]])) }}
 @endsection
 @section('content')
   <section class="board board-cat">
     <div class="container">
       <div class="board-head">
         <div>
-          <h1>{{ $c['h1'] ?? ('قیمت روز ' . $t) }}</h1>
-          <p class="lede">{{ $c['lede'] ?? $meta }}</p>
+          <h1>قیمت روز {{ $t }}</h1>
+          @if($intro)<div class="lede">{!! $intro !!}</div>@endif
         </div>
         @include('rd.stamp', ['at' => $cat['last_update'] ?? null])
       </div>
@@ -52,7 +72,7 @@
           <div class="ix"><span class="k">نوع کالای فعال</span><span class="v"><span class="num">{{ $st['n'] }}</span></span><span class="range">در این دسته</span></div>
           <div class="ix"><span class="k">کمترین قیمت</span><span class="v"><span class="num">{{ Rd::fmt($st['min']) }}</span> <span class="u">ریال</span></span><span class="range">هر {{ $st['unit'] }}</span></div>
           <div class="ix"><span class="k">بیشترین قیمت</span><span class="v"><span class="num">{{ Rd::fmt($st['max']) }}</span> <span class="u">ریال</span></span><span class="range">هر {{ $st['unit'] }}</span></div>
-          <div class="ix"><span class="k">واحد فروش</span><span class="v">{{ $st['unit'] }}</span><span class="range">{{ $c['unit_note'] ?? ('قیمت بر پایه‌ی ' . $st['unit'] . ' است.') }}</span></div>
+          <div class="ix"><span class="k">واحد فروش</span><span class="v">{{ $st['unit'] }}</span><span class="range">قیمت هر {{ $st['unit'] }}</span></div>
         </div>
         @if($photos)
         <div class="board-photos" data-lb>
@@ -77,7 +97,7 @@
     <div class="container">
       <div class="section-head">
         <div><h2>جدول قیمت روز {{ $t }}</h2>
-          <div class="sub">{{ Rd::fa($st['n']) }} نوع کالا با مشخصات فنی — قیمت به ریال، بروزرسانی هر روز ساعت {{ Rd::updateTime() }}</div></div>
+          <div class="sub">{{ Rd::fa($st['n']) }} نوع کالا با مشخصات فنی — قیمت به ریال</div></div>
       </div>
       @include('rd.price-table', ['slug' => $slug, 'search' => true, 'title' => false, 'guideLink' => false])
     </div>
@@ -93,55 +113,76 @@
           $prevs = array_values(array_filter(array_column($good, '_prev')));
           $prev = $prevs ? intdiv(array_sum($prevs), count($prevs)) : $cur;
         @endphp
-        <div>@include('rd.chart', ['id' => 'chart-cat-' . ($c['slug'] ?? $cat['id']), 'src' => '/rd/chart/category/' . $cat['id'], 'price' => $cur, 'prev' => $prev, 'key' => $slug, 'title' => 'نمودار میانگین قیمت ' . $t, 'sub' => 'میانگین ' . Rd::fa(count($good)) . ' نوع کالا · ریال / ' . $st['unit']])</div>
-        <div>@include('rd.experts-box', ['slug' => $slug])</div>
+        <div>@include('rd.chart', ['id' => 'chart-cat-' . $cat['id'], 'src' => '/rd/chart/category/' . $cat['id'], 'price' => $cur, 'prev' => $prev, 'key' => $slug, 'title' => 'نمودار میانگین قیمت ' . $t, 'sub' => 'میانگین ' . Rd::fa(count($good)) . ' نوع کالا · ریال / ' . $st['unit']])</div>
+        <div>@include('rd.unit-box')</div>
       </div>
     </div>
   </section>
 @include('rd.calculator', ['slug' => $slug, 'row' => null])
 @endif
 
+@if($features->count())
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div><h2>ویژگی‌های {{ $t }}</h2></div></div>
+      <div class="cards-3">
+        @foreach($features as $f)
+          <div class="icard">@if($f->picture)<img src="{{ $f->picture() }}" alt="{{ $f->title }}" loading="lazy">@endif<div><h3>{{ $f->title }}</h3>@if($f->description)<p>{{ $f->description }}</p>@endif</div></div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+@endif
+
+@if($bodyLead || $sections)
   <section class="section alt">
     <div class="container">
-      @if($c)
+      @php $open = $sections && ! $sections[0]['faq'] ? array_shift($sections) : null; @endphp
+      @if($bodyLead || $open)
       <div class="prose">
-        <h2>{{ $t }} چیست و کجا به کار می‌آید</h2>
-        @if(!empty($c['intro']))<p>{!! $c['intro'][0] !!}</p>@endif
+        @if($open)<h2>{{ $open['title'] }}</h2>@endif
+        {!! $bodyLead !!}
+        @if($open){!! $open['html'] !!}@endif
       </div>
+      @endif
+      @php $guides = array_values(array_filter($sections, function ($s) { return ! $s['faq']; })); @endphp
+      @if($guides)
       <div class="guides">
-        <details class="guide" open><summary>{{ $t }} — ادامه‌ی معرفی</summary><div class="prose">@foreach(array_slice($c['intro'] ?? [], 1) as $x)<p>{!! $x !!}</p>@endforeach</div></details>
-        <details class="guide"><summary>{{ $c['pricing_title'] }}</summary><div class="prose">@foreach($c['pricing'] as $x)<p>{!! $x !!}</p>@endforeach
-            <div class="callout"><div class="t">قیمت‌ها به ریال است</div>
-              <p>همه‌ی قیمت‌های این جدول به ریال است. اگر با سایتی که تومانی کار می‌کند مقایسه می‌فرمایید، به واحد توجه بفرمایید؛ عدد ریالی ده برابر عدد تومانی است.</p></div></div></details>
-        <details class="guide"><summary>{{ $c['choose_title'] }}</summary><div class="prose">@foreach($c['choose'] as $ch)<h3>{{ $ch[0] }}</h3><p>{!! $ch[1] !!}</p>@endforeach</div></details>
-        <details class="guide"><summary>چهار اشتباه رایج در خرید {{ $t }}</summary><div class="prose"><ul class="bul">@foreach($c['mistakes'] as $m)<li>{!! $m !!}</li>@endforeach</ul></div></details>
-      </div>
-      @else
-      <div class="prose">
-        <h2>{{ $t }} چیست و کجا به کار می‌آید</h2>
-        {!! $category->intro !!}
-        {!! $category->body !!}
+        @foreach($guides as $g)<details class="guide"><summary>{{ $g['title'] }}</summary><div class="prose">{!! $g['html'] !!}</div></details>@endforeach
       </div>
       @endif
     </div>
   </section>
+@endif
 
-  @php $deep = Rd::c('deep.' . $slug, []); @endphp
-  @if($deep)
-  <section class="section" id="guide">
+@if($usages->count())
+  <section class="section">
     <div class="container">
-      <div class="section-head"><div><h2>راهنمای فنی {{ $t }}</h2>
-        <div class="sub">نصب، انتخاب پوشش و محاسبه‌ی هزینه — بر پایه‌ی مشخصات همین کاتالوگ</div></div></div>
-      <div class="deepgrid">@foreach($deep as $d)<div class="deep"><h2>{{ $d[0] }}</h2>@foreach($d[1] as $x)<p>{!! $x !!}</p>@endforeach</div>@endforeach</div>
+      <div class="section-head"><div><h2>کاربردهای {{ $t }}</h2></div></div>
+      <div class="cards-3">
+        @foreach($usages as $u)
+          <div class="icard">@if($u->picture)<img src="{{ $u->picture() }}" alt="{{ $u->title }}" loading="lazy">@endif<div><h3>{{ $u->title }}</h3>@if($u->description)<p>{{ $u->description }}</p>@endif</div></div>
+        @endforeach
+      </div>
     </div>
   </section>
-  @endif
+@endif
+
+@if($category->video_embed || $category->video)
+  <section class="section">
+    <div class="container narrow">
+      <div class="section-head"><div><h2>ویدئوی {{ $t }}</h2></div></div>
+      <div class="video-box">
+        @if($category->video_embed){!! $category->video_embed !!}@else<video controls preload="none" src="{{ $category->video }}"></video>@endif
+      </div>
+    </div>
+  </section>
+@endif
 
 @if($cat)
   <section class="section">
     <div class="container">
       @include('rd.spec-table', ['slug' => $slug])
-      <p class="tnote">این جدول مشخصات، داده‌ی خط تولید صنایع مفتولی طلوع سپاهان است. مقادیر وزن، مبنای محاسبه‌ی هزینه‌ی هر مترمربع یا هر برگ است و هنگام تحویل با باسکول قابل بررسی است.</p>
     </div>
   </section>
 @endif
@@ -150,7 +191,7 @@
   <section class="section alt">
     <div class="container">
       <div class="section-head"><div><h2>پرسش‌های پرتکرار درباره‌ی {{ $t }}</h2></div></div>
-      <div class="faq">@foreach($faq as $q)<details><summary>{{ $q[0] }}</summary><div class="a">{{ $q[1] }}</div></details>@endforeach</div>
+      <div class="faq">@foreach($sections as $sec)@if($sec['faq'])@foreach($sec['faq'] as $q)<details><summary>{{ $q[0] }}</summary><div class="a">{!! $q[1] !!}</div></details>@endforeach @endif @endforeach</div>
     </div>
   </section>
   @endif

@@ -14,7 +14,7 @@
       @php [$pct, $slug, $r] = $it; $p = $r['_price']; $d = $r['_prev']; $up = $p >= $d; $cls = $up ? 'up' : 'down'; $nm = Rd::cleanName($r['نام محصول']); @endphp
       <tr data-name="{{ $nm }}" data-price="{{ $p }}" data-prev="{{ $d }}" data-src="/rd/chart/product/{{ $r['_id'] }}">
         <td class="ch-dir {{ $cls }}">{{ Rd::icon($up ? 'i-up' : 'i-down') }}</td>
-        <td class="ch-name"><a href="{{ Rd::path(Rd::uProd($slug, $r['_slug'])) }}">{{ $nm }}</a><span class="ch-cat">{{ Rd::cat($slug)['title'] ?? \App\Support\Redesign::category($slug)['title'] }} · {{ $r['واحد'] }}</span></td>
+        <td class="ch-name">{{ Rd::link(Rd::prodUrl($slug, $r['_slug']), $nm) }}<span class="ch-cat">{{ \App\Support\Redesign::category($slug)['title'] }} · {{ $r['واحد'] }}</span></td>
         <td class="ch-price" data-label="قیمت لحظه‌ای"><b class="num">{{ Rd::fmt($p) }}</b> <span class="riyal">ریال</span></td>
         <td class="ch-pct" data-label="نوسان">{{ Rd::delta($d, $p) }}</td>
         <td class="ch-diff" data-label="تغییر نسبت به آخرین ثبت"><span class="num">{{ Rd::fmt(abs($p - $d)) }}</span> ریال <span class="{{ $cls }}">{{ $up ? 'افزایش' : 'کاهش' }}</span></td>

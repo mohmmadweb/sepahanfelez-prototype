@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+سازنده‌ی بسته‌ی محتوا و کیت لاراول (صفحه‌های نمایشی از tools/export_static.py می‌آیند).
+
+متن قدیمی زیر برای سابقه مانده است:
 سازنده‌ی صفحات سپاهان فلز.
 
 خروجی: صفحه‌ی اصلی · قیمت لحظه‌ای · فهرست دسته‌ها · ۹ دسته · ۷۰ محصول ·
@@ -63,57 +66,24 @@ def write(path, s):
 
 
 def main():
-    n = 0
-    write(out_path(u_home()), P.build_index()); n += 1
-    write(out_path(u_price()), P.build_price()); n += 1
-    write(out_path(u_catlist()), P.build_catlist()); n += 1
-    write(out_path(u_about()), P.build_about()); n += 1
-    write(out_path(u_contact()), P.build_contact()); n += 1
-    for key in C.ORDER:
-        write(out_path(u_cat(key)), P.build_category(key)); n += 1
-        for i, row in enumerate(CAT[key]["rows"]):
-            write(out_path(u_prod(key, row["نام محصول"])), P.build_product(key, row, i)); n += 1
-    write(out_path(u_blog()), B.build_blog_index()); n += 1
-    for slug in B.BLOG_CATS:
-        write(out_path(u_blogcat(slug)), B.build_blog_category(slug)); n += 1
-    for a in B.ARTS:
-        write(out_path(u_article(a["cat_slug"], a["slug"])), B.build_article(a)); n += 1
-    import account as AC
-    for url, fn in (("/login", AC.build_login), ("/register", AC.build_register),
-                    ("/verify-phone", AC.build_verify),
-                    ("/user/profile", AC.build_user_profile),
-                    ("/user/tickets", AC.build_user_tickets)):
-        write(out_path(url), fn()); n += 1
-    # GitHub Pages هر نشانیِ ناموجود را به 404.html می‌فرستد.
-    write("404.html", AC.build_404()); n += 1
-    import searchindex as SI
-    m = SI.write(os.path.join(ROOT, "assets", "search-index.json"))
+    """Content → admin pack, and theme → Laravel kit.
 
-    # نقشه‌ی سایت و robots
-    import sitemap as SM
-    from common import LIVE, cat_photo
-    xml, count = SM.build(C, CAT, cat_photo, u_cat, u_prod, u_article, u_blogcat,
-                          B.ARTS, B.BLOG_CATS)
-    sm_path = os.path.join(ROOT, "sitemap.xml")
-    if LIVE:
-        open(sm_path, "w", encoding="utf-8").write(xml)
-    elif os.path.exists(sm_path):
-        os.remove(sm_path)          # در حالت پروتوتایپ نباید وجود داشته باشد
-    open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8").write(SM.robots(LIVE))
+    The pages of the prototype are NOT written here any more. They are a
+    snapshot of the Laravel kit running on a database filled through the
+    admin panel (tools/export_static.py), so the demo can never differ from
+    what goes live. build/content.py stays the source of the approved copy:
+    tools/admin_pack.py turns it into admin-panel fields (migration/pack.json).
 
-    # ریدایرکت نشانی‌های ایندکس‌شده‌ای که معادل مستقیم ندارند
-    for src, dst in SM.REDIRECTS.items():
-        rp = os.path.join(ROOT, src)
-        os.makedirs(rp, exist_ok=True)
-        open(os.path.join(rp, "index.html"), "w", encoding="utf-8").write(
-            SM.redirect_html(dst))
-    mode = "زنده" if LIVE else "پروتوتایپ"
-    # کیت لاراول (laravel/) باید همیشه با همین پروتوتایپ یکی بماند.
+    Full rebuild of the demo:
+        python3 build/gen.py              # pack + kit
+        (lab: tools/lab/README.md)        # seed the lab from the pack
+        python3 tools/export_static.py    # crawl the lab into the repo
+    """
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     import build_kit
+    import admin_pack
     build_kit.main()
-    print(f"ساخته شد: {n} صفحه · فهرست جست‌وجو: {m} رکورد · "
-          f"نقشه‌ی سایت: {count} نشانی ({mode})")
+    admin_pack.main()
 
 
 if __name__ == "__main__":

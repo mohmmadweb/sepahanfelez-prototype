@@ -1,12 +1,20 @@
-{{-- /contact (pages.build_contact) with the live form. Controller: Site\ContactController@index / store. --}}
+{{--
+    /contact. Controller: Site\ContactController@index / store → $information, $socials.
+    admin → اطلاعات تماس  : phone, fax, email, work_time, addresses
+    admin → شبکه‌های اجتماعی: the list of channels
+    Messages land in admin → تماس با ما.
+--}}
 @extends('rd.layout')
-@php $showAddr = false; @endphp
-@section('title', 'تماس با سپاهان فلز — دفتر فروش کارخانه')
-@section('description', 'تماس با دفتر فروش صنایع مفتولی طلوع سپاهان: ' . Rd::phoneShow() . ' با ' . Rd::c('phone.lines') . '. نشانی دو واحد کارخانه در شهرک صنعتی منتظریه‌ی اصفهان و دفتر تهران در بازار آهن شادآباد.')
+@php
+    $S = \App\Support\Site::class; $showAddr = false;
+    $hours = $S::hours(); $email = $S::email(); $fax = $S::fax(); $addresses = $S::addresses(); $socials = $S::socials();
+@endphp
+@section('title', 'تماس با ما | ' . \App\Support\Brand::name())
+@section('description', 'تماس با دفتر فروش ' . $S::companyName() . ': ' . $S::phoneShow() . ($hours ? '، ' . $hours : '') . '.')
 @section('canonical', '/contact')
 @section('nav', 'contact')
 @section('crumbs')@include('rd.crumb', ['items' => [['خانه', '/'], ['تماس با ما', null]]])@endsection
-@section('jsonld'){{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('ContactPage', '/contact', 'تماس با سپاهان فلز', ['mainEntity' => ['@id' => Rd::orgId()]]), Rd::breadcrumb([['خانه', '/'], ['تماس با ما', null]])) }}@endsection
+@section('jsonld'){{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('ContactPage', '/contact', 'تماس با ما', ['mainEntity' => ['@id' => Rd::orgId()]]), Rd::breadcrumb([['خانه', '/'], ['تماس با ما', null]])) }}@endsection
 @section('content')
   <section class="section">
     <div class="container">
@@ -19,29 +27,23 @@
         <div class="contact-main">
           <a class="contact-tel" href="tel:{{ Rd::phone() }}" data-track="call-contact">
             {{ Rd::icon('i-phone') }}
-            <span><span class="l">دفتر فروش — {{ Rd::c('phone.lines') }}</span><span class="n num">{{ Rd::phoneShow() }}</span>
-              <span class="h">شنبه تا چهارشنبه ۸ تا ۱۷ · پنجشنبه ۸ تا ۱۳</span></span>
+            <span><span class="l">دفتر فروش</span><span class="n num">{{ Rd::phoneShow() }}</span>
+              @if($hours)<span class="h">{{ $hours }}</span>@endif</span>
           </a>
-          <div class="soc-list">@foreach(Rd::c('socials', []) as $s)<a class="soc-row" href="{{ $s[2] }}" rel="noopener" target="_blank">{{ Rd::icon($s[0]) }}<span>{{ $s[1] }}</span><b class="num">{{ Rd::c('phone.mobile_show') }}</b></a>@endforeach</div>
-          <a class="fmail" href="mailto:{{ Rd::c('email') }}">{{ Rd::icon('i-mail') }}{{ Rd::c('email') }}</a>
+          @if($socials)<div class="soc-list">@foreach($socials as $s)<a class="soc-row" href="{{ $s['url'] }}" rel="noopener" target="_blank">{{ Rd::icon($s['icon']) }}<span>{{ $s['title'] }}</span></a>@endforeach</div>@endif
+          @if($email)<a class="fmail" href="mailto:{{ $email }}">{{ Rd::icon('i-mail') }}{{ $email }}</a>@endif
+          @if($fax)<p class="dim">فکس: <span class="num">{{ $fax }}</span></p>@endif
         </div>
+        @if($addresses)
         <div class="contact-addr">
-          <h2>کارخانه و دفتر فروش</h2>
-          <ul class="faddr">@foreach(Rd::c('addresses', []) as $ad)<li><span class="a-t">{{ $ad[0] }}</span>{{ $ad[1] }}</li>@endforeach</ul>
-          <a class="maplink" href="{{ Rd::c('tehran_map') }}" target="_blank" rel="noopener">
-            <img src="/rd/factory/tehran-office.jpg" alt="نمای هوایی دفتر تهران در بازار آهن شادآباد" loading="lazy">
-            <span>{{ Rd::icon('i-map') }} دفتر تهران روی نقشه‌ی گوگل {{ Rd::icon('i-external') }}</span></a>
+          <h2>نشانی‌ها</h2>
+          <ul class="faddr">@foreach($addresses as $ad)<li>@if($ad[0])<span class="a-t">{{ $ad[0] }}</span>@endif{{ $ad[1] }}</li>@endforeach</ul>
         </div>
-      </div>
-      <div class="section-head"><div><h2>واحد فروش</h2><div class="sub">شماره‌ی دفتر را بگیرید و داخلی کارشناس مربوط به محصول خود را وارد کنید</div></div></div>
-      <div class="unit-rep unit-rep-wide">@include('rd.rep-card', ['e' => \App\Support\Redesign::rep(null)])</div>
-      <div class="prose wide cols-2">
-        <h2>راهنمای تماس</h2>
-        @foreach(Rd::c('contact_help', []) as $h)<h3>{{ $h[0] }}</h3><p>{{ $h[1] }}</p>@endforeach
+        @endif
       </div>
       <div class="prose" id="message">
         <h2>پیام بفرستید</h2>
-        <p>در صورت مراجعه خارج از ساعات اداری، مشخصات و تناژ موردنیاز خود را ثبت بفرمایید؛ در نخستین فرصت اداری با شما تماس گرفته خواهد شد.</p>
+        <p>مشخصات و مقدار موردنیاز خود را بنویسید؛ در نخستین فرصت اداری با شما تماس گرفته می‌شود.</p>
       </div>
       <form class="cform" method="post" action="{{ route('contact.store') }}#message">
         @csrf

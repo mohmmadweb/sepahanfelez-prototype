@@ -14,9 +14,9 @@
     $rel = $R::sameCatArticles($a);
     $hero = $a['image'] ?: (($prods && ($ph = $R::photos($prods[0]))) ? $ph[0] : null);
     $t = trim($a['title']);
-    $full = $t . ' | مجله سپاهان فلز';
+    $full = $t . ' | مجله ' . \App\Support\Brand::name();
     $pageTitle = $article->meta_title ?: (mb_strlen($full) <= 60 ? $full : (mb_strlen($t) <= 60 ? $t : Rd::cut($t, 57)));
-    $desc = $article->meta_description ?: Rd::cut($a['description'] ?: ($t . ' — راهنمای فنی مجله‌ی سپاهان فلز.'));
+    $desc = $article->meta_description ?: Rd::cut($a['description'] ?: ($t . ' — مجله‌ی ' . \App\Support\Brand::name() . '.'));
     $crumbs = [['خانه', '/'], ['مجله', '/blog'], [$a['cat_title'], Rd::uBlogCat($a['cat_slug'])], [$t, null]];
 @endphp
 @section('title', $pageTitle)
@@ -34,7 +34,7 @@
         <h1>{{ $t }}</h1>
         @if($a['description'])<p class="post-lede">{{ $a['description'] }}</p>@endif
         <div class="post-meta">
-          <span>{{ Rd::icon('i-user') }} کارشناسان سپاهان فلز</span>
+          <span>{{ Rd::icon('i-user') }} {{ optional($article->user)->full_name ?: 'کارشناسان ' . \App\Support\Brand::name() }}</span>
           @if($a['published'])<span>{{ Rd::icon('i-calendar') }}<time datetime="{{ $a['published'] }}">{{ Rd::jDate($a['published']) }}</time></span>@endif
           <span>{{ Rd::icon('i-clock') }} {{ Rd::fa($a['read_min']) }} دقیقه مطالعه</span>
         </div>
@@ -68,7 +68,7 @@
             <article class="review">
               <header><b>{{ $cm->name ?: optional($cm->user)->full_name ?: 'خواننده' }}</b><span class="dim">{{ Rd::jDate($cm->created_at) }}</span></header>
               <p>{{ $cm->body }}</p>
-              @if($cm->answer)<div class="answer"><b>پاسخ سپاهان فلز:</b> {{ $cm->answer }}</div>@endif
+              @if($cm->answer)<div class="answer"><b>پاسخ {{ \App\Support\Brand::name() }}:</b> {{ $cm->answer }}</div>@endif
             </article>
           @empty
             <p class="dim">هنوز دیدگاهی برای این مقاله ثبت نشده است.</p>

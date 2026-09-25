@@ -1,6 +1,6 @@
 {{-- GET /user/address — UserPanel\AddressController@index → $addresses. --}}
 @extends('user.layout.master', ['panel' => 'address'])
-@section('title', 'نشانی‌های تحویل | سپاهان فلز')
+@section('title', 'نشانی‌های تحویل | ' . \App\Support\Brand::name())
 @section('crumb', 'نشانی‌ها')
 @section('head')<div><h1>نشانی‌های تحویل</h1><div class="sub">کارگاه‌ها و انبارهایی که بار به آن‌ها ارسال می‌شود</div></div><a class="btn btn-lg" href="{{ route('address.create') }}">نشانی تازه</a>@endsection
 @section('panel')

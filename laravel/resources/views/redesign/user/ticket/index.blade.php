@@ -1,6 +1,6 @@
 {{-- GET /user/tickets — UserPanel\TicketController@index → $tickets. --}}
 @extends('user.layout.master', ['panel' => 'tickets'])
-@section('title', 'تیکت‌ها | سپاهان فلز')
+@section('title', 'تیکت‌ها | ' . \App\Support\Brand::name())
 @section('crumb', 'تیکت‌ها')
 @section('head')<div><h1>تیکت‌ها و درخواست‌ها</h1><div class="sub">درخواست کتبی پیش‌فاکتور، نقشه یا پیگیری بار</div></div><a class="btn btn-lg" href="{{ route('ticket.create') }}">تیکت تازه</a>@endsection
 @section('panel')

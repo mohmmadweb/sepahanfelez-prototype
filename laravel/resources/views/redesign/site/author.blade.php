@@ -1,6 +1,6 @@
 {{-- /authors/{author}. Controller: AdminPanel\AuthorController@show → $user. --}}
 @extends('rd.layout')
-@section('title', $user->full_name . ' | سپاهان فلز')
+@section('title', $user->full_name . ' | ' . \App\Support\Brand::name())
 @section('description', Rd::cut(strip_tags((string) $user->description)))
 @section('crumbs')@include('rd.crumb', ['items' => [['خانه', '/'], ['مجله', '/blog'], [$user->full_name, null]]])@endsection
 @section('content')

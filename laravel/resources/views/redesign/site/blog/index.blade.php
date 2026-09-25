@@ -5,18 +5,18 @@
     $arts = $R::articles();
     $cats = $R::blogCats();
 @endphp
-@section('title', 'مجله سپاهان فلز — مقالات تخصصی توری و مفتول')
-@section('description', 'راهنماها و مقالات فنی سپاهان فلز درباره‌ی انتخاب، کاربرد و قیمت انواع توری، مفتول و سیم خاردار.')
+@section('title', 'مجله ' . \App\Support\Brand::name())
+@section('description', 'مقالات و راهنماهای مجله‌ی ' . \App\Support\Brand::name() . '.')
 @section('canonical', '/blog')
 @section('nav', 'blog')
 @section('crumbs')@include('rd.crumb', ['items' => [['خانه', '/'], ['مجله', null]]])@endsection
-@section('jsonld'){{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('CollectionPage', '/blog', 'مجله سپاهان فلز'), Rd::breadcrumb([['خانه', '/'], ['مجله', null]])) }}@endsection
+@section('jsonld'){{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('CollectionPage', '/blog', 'مجله ' . \App\Support\Brand::name()), Rd::breadcrumb([['خانه', '/'], ['مجله', null]])) }}@endsection
 @section('content')
   <section class="section mag-top">
     <div class="container">
       <div class="mag-head">
-        <div><h1>مجله سپاهان فلز</h1>
-          <p class="lede">راهنمای خرید، مقایسه و نکات فنی توری، مفتول و سیم خاردار — نوشته‌ی کارشناسان کارخانه‌ی صنایع مفتولی طلوع سپاهان.</p></div>
+        <div><h1>مجله {{ \App\Support\Brand::name() }}</h1>
+          <p class="lede">{{ Rd::fa(count($arts)) }} مقاله در {{ Rd::fa(count($cats)) }} دسته</p></div>
         @include('site.blog.chips', ['current' => null, 'cats' => $cats])
       </div>
       @if($arts)

@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class Redesign
 {
-    public const CACHE_KEYS = ['redesign.catalog', 'redesign.articles', 'redesign.search'];
+    public const CACHE_KEYS = ['redesign.catalog', 'redesign.articles', 'redesign.search', Site::CACHE_KEY];
 
     public static function enabled(): bool
     {
@@ -72,7 +72,7 @@ class Redesign
 
     private static function buildCatalog(): array
     {
-        $cats = DB::table('categories')->select('id', 'parent_id', 'title', 'slug', 'order', 'status')->get();
+        $cats = DB::table('categories')->select('id', 'parent_id', 'title', 'slug', 'order', 'status', 'image', 'icon', 'intro')->get();
         $parents = [];
         foreach ($cats as $c) {
             if ($c->parent_id) {
@@ -128,7 +128,6 @@ class Redesign
             $valuesBy[$v->product_id][trim((string) $v->spec)] = trim((string) $v->value);
         }
 
-        $suspect = (array) Rd::c('suspect', []);
         $out = [];
         foreach ($leaves as $cat) {
             $rows = [];
@@ -147,15 +146,16 @@ class Redesign
                     $row[$k] = $v;
                 }
                 $row['_id'] = (int) $p->id;
-                $row['_slug'] = isset($p->slug) && $p->slug !== '' ? (string) $p->slug : self::slugify($p->title);
+                // Only the admin's slug; no slug means no product page (see Rd::prodUrl).
+                $row['_slug'] = isset($p->slug) && trim((string) $p->slug) !== '' ? (string) $p->slug : null;
                 $row['_price'] = $price;
                 $row['_prev'] = $prev === $price ? 0 : $prev;
                 $row['_at'] = $l ? (string) $l->price_at : null;
                 $row['_image'] = isset($p->image) && $p->image ? '/images/products/main/' . $p->image : null;
                 $row['_kg'] = isset($p->weight_per_unit) && $p->weight_per_unit ? (float) $p->weight_per_unit : null;
                 $row['_m2'] = isset($p->area_per_unit) && $p->area_per_unit ? (float) $p->area_per_unit : null;
-                $row['_review'] = (! empty($p->needs_review)) || isset($suspect[$p->title])
-                    ? ($suspect[$p->title] ?? 'قیمت این ردیف در حال بازبینی است.') : null;
+                // A price the database flags for review (optional column) — never a list in a file.
+                $row['_review'] = ! empty($p->needs_review) ? 'قیمت این ردیف در حال بازبینی است.' : null;
                 $rows[] = $row;
             }
             if (! $rows) {
@@ -183,18 +183,20 @@ class Redesign
                 'title'       => (string) $cat->title,
                 'order'       => $cat->order,
                 'unit'        => $rows[0]['واحد'],
+                'image'       => $cat->image ? '/images/category/main/' . $cat->image : null,
+                'icon'        => $cat->icon ? '/images/category/icon/' . $cat->icon : null,
+                'intro'       => (string) $cat->intro,
                 'specs'       => $specs,
                 'rows'        => $rows,
                 'last_update' => $ats ? max($ats) : null,
             ];
         }
 
-        // The prototype's order first, then anything the admin added since.
-        $order = array_flip((array) Rd::c('order', []));
-        uksort($out, function ($a, $b) use ($order, $out) {
-            $ia = $order[$a] ?? 1000 + (int) $out[$a]['order'];
-            $ib = $order[$b] ?? 1000 + (int) $out[$b]['order'];
-            return $ia <=> $ib ?: strcmp($a, $b);
+        // The order the admin set on the categories (admin → دسته‌بندی → ترتیب).
+        uasort($out, function ($a, $b) {
+            $oa = $a['order'] === null ? PHP_INT_MAX : (int) $a['order'];
+            $ob = $b['order'] === null ? PHP_INT_MAX : (int) $b['order'];
+            return $oa <=> $ob ?: $a['id'] <=> $b['id'];
         });
 
         return $out;
@@ -263,18 +265,16 @@ class Redesign
         ];
     }
 
-    /** Spec columns for the compact table (tables.key_specs). */
+    /**
+     * Spec columns for the compact price table: the first four in the order
+     * the admin set (admin → دسته → ستون‌های جدول), loading place left out.
+     * The full list is in the specification table lower on the page.
+     */
     public static function keySpecs(string $slug): array
     {
         $cat = self::category($slug);
         if (! $cat) {
             return [];
-        }
-        $want = Rd::c('key_specs.' . $slug);
-        if ($want) {
-            return array_values(array_filter($want, function ($s) use ($cat) {
-                return in_array($s, $cat['specs'], true);
-            }));
         }
 
         return array_slice(array_values(array_filter($cat['specs'], function ($s) {
@@ -282,9 +282,10 @@ class Redesign
         })), 0, 4);
     }
 
+    /** Column heading: the spec title the admin gave, as it is. */
     public static function shortHead(string $spec): string
     {
-        return (string) (Rd::c('short_head')[$spec] ?? $spec);
+        return $spec;
     }
 
     /** Most-moved products across the catalogue (tables.changes_table). */
@@ -304,15 +305,22 @@ class Redesign
         return array_slice($items, 0, $n);
     }
 
-    /** Category photos shipped with the prototype, product image as a fallback. */
+    /**
+     * Pictures of a category, all uploaded through the panel: the category's
+     * own image first, then every product image in the category (admin →
+     * محصول → محتوا → تصویر), no duplicates.
+     */
     public static function photos(string $slug): array
     {
-        $list = (array) (Rd::c('photos')[$slug] ?? []);
-        if ($list) {
-            return $list;
-        }
         $cat = self::category($slug);
-        foreach ($cat['rows'] ?? [] as $r) {
+        if (! $cat) {
+            return [];
+        }
+        $list = [];
+        if ($cat['image']) {
+            $list[] = $cat['image'];
+        }
+        foreach ($cat['rows'] as $r) {
             if ($r['_image']) {
                 $list[] = $r['_image'];
             }
@@ -321,9 +329,21 @@ class Redesign
         return array_values(array_unique($list));
     }
 
-    public static function thumb(string $src): string
+    /** The picture for a category card: its image, else its icon, else a product's. */
+    public static function cover(string $slug): ?string
     {
-        return str_replace('/photo-', '/thumb-', $src);
+        $cat = self::category($slug);
+        if (! $cat) {
+            return null;
+        }
+
+        return $cat['image'] ?: ($cat['icon'] ?: (self::photos($slug)[0] ?? null));
+    }
+
+    /** The panel stores a thumbnail beside every uploaded image (Image::upload). */
+    public static function thumb(?string $src): ?string
+    {
+        return $src ? str_replace('/main/', '/thumbnail/', $src) : $src;
     }
 
     public static function slugify(string $s): string
@@ -518,49 +538,32 @@ class Redesign
         return $out;
     }
 
-    /** Keyword score of an article against a product category (blog._score). */
-    private static function score(array $a, string $slug): int
+    /** Tag ids attached to a model (admin → برچسب‌ها on the category / article form). */
+    private static function tagIds(string $type, int $id): array
     {
-        $hay = str_replace("\u{200c}", ' ', implode(' ', [$a['title'], $a['description'], implode(' ', $a['tags']), $a['cat_title']]));
-        $s = 0;
-        foreach ((array) Rd::c('keywords.' . $slug, []) as $kw) {
-            if (mb_strpos($hay, $kw[0]) !== false) {
-                $s += (int) $kw[1];
-            }
+        if (! self::hasTable('taggables')) {
+            return [];
         }
 
-        return $s;
+        return DB::table('taggables')->where('taggable_type', $type)->where('taggable_id', $id)
+            ->pluck('tag_id')->map('intval')->all();
     }
 
-    /** Articles for a product category: shared tag first, then keywords, then newest. */
+    /** Articles for a product category: those sharing a tag with it, then the newest. */
     public static function relatedArticles(string $slug, int $n = 3): array
     {
         $arts = self::articles();
         $out = [];
         $cat = self::category($slug);
-        if ($cat && self::hasTable('taggables')) {
-            $tagIds = DB::table('taggables')->where('taggable_type', Category::class)
-                ->where('taggable_id', $cat['id'])->pluck('tag_id');
-            if ($tagIds->isNotEmpty()) {
-                $artIds = DB::table('taggables')->where('taggable_type', Article::class)
-                    ->whereIn('tag_id', $tagIds)->pluck('taggable_id')->map('intval')->all();
-                foreach ($arts as $a) {
-                    if (in_array($a['id'], $artIds, true)) {
-                        $out[$a['id']] = $a;
-                    }
+        $tagIds = $cat ? self::tagIds(Category::class, $cat['id']) : [];
+        if ($tagIds) {
+            $artIds = DB::table('taggables')->where('taggable_type', Article::class)
+                ->whereIn('tag_id', $tagIds)->pluck('taggable_id')->map('intval')->all();
+            foreach ($arts as $a) {
+                if (in_array($a['id'], $artIds, true)) {
+                    $out[$a['id']] = $a;
                 }
             }
-        }
-        $scored = [];
-        foreach ($arts as $i => $a) {
-            $s = self::score($a, $slug);
-            if ($s >= 2) {
-                $scored[] = [$s, $i, $a];
-            }
-        }
-        usort($scored, function ($x, $y) { return $y[0] <=> $x[0] ?: $x[1] <=> $y[1]; });
-        foreach ($scored as $t) {
-            $out[$t[2]['id']] = $t[2];
         }
         foreach ($arts as $a) {
             if (count($out) >= $n) {
@@ -572,26 +575,25 @@ class Redesign
         return array_slice(array_values($out), 0, $n);
     }
 
-    /** Product categories to advertise beside an article (blog.related_products). */
+    /** Product categories beside an article: those sharing a tag with it, else the first ones. */
     public static function relatedCategories(array $article, int $n = 2): array
     {
-        $cats = array_keys(self::catalog());
-        $scored = [];
-        foreach ($cats as $i => $slug) {
-            $scored[] = [self::score($article, $slug), $i, $slug];
-        }
-        usort($scored, function ($a, $b) { return $b[0] <=> $a[0] ?: $a[1] <=> $b[1]; });
+        $cats = self::catalog();
+        $tagIds = self::tagIds(Article::class, $article['id']);
         $keys = [];
-        foreach ($scored as $s) {
-            if ($s[0] >= 2 && count($keys) < $n) {
-                $keys[] = $s[2];
+        if ($tagIds) {
+            foreach ($cats as $slug => $c) {
+                if (array_intersect($tagIds, self::tagIds(Category::class, $c['id'])) && count($keys) < $n) {
+                    $keys[] = $slug;
+                }
             }
         }
-        if (! $keys) {
-            foreach ((array) Rd::c('fallback_cats', []) as $k) {
-                if (isset(self::catalog()[$k]) && count($keys) < $n) {
-                    $keys[] = $k;
-                }
+        foreach (array_keys($cats) as $slug) {
+            if (count($keys) >= $n) {
+                break;
+            }
+            if (! in_array($slug, $keys, true)) {
+                $keys[] = $slug;
             }
         }
 
@@ -625,9 +627,9 @@ class Redesign
             return $a['image'];
         }
         $keys = self::relatedCategories($a, 1);
-        $ph = $keys ? self::photos($keys[0]) : [];
+        $ph = $keys ? self::cover($keys[0]) : null;
 
-        return $ph ? $ph[0] : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'><rect width='16' height='9' fill='%23E9EFF6'/></svg>";
+        return $ph ?: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'><rect width='16' height='9' fill='%23E9EFF6'/></svg>";
     }
 
     /** Headings of an article body → [body with ids, toc items] (blog._toc). */
@@ -654,19 +656,17 @@ class Redesign
         return Cache::remember('redesign.search', self::ttl(), function () {
             $out = [];
             foreach (self::catalog() as $slug => $cat) {
-                $c = Rd::cat($slug);
-                $out[] = ['t' => $c['title'] ?? $cat['title'], 'u' => Rd::uCat($slug), 'k' => 'cat',
+                $out[] = ['t' => $cat['title'], 'u' => Rd::uCat($slug), 'k' => 'cat',
                           's' => Rd::fa(count($cat['rows'])) . ' نوع کالا',
-                          'x' => mb_substr(trim(($c['alias'] ?? '') . ' ' . ($c['lede'] ?? '')), 0, 300), 'w' => 90];
+                          'x' => mb_substr(trim(strip_tags($cat['intro'])), 0, 300), 'w' => 90];
             }
             foreach (self::catalog() as $slug => $cat) {
-                $c = Rd::cat($slug);
                 foreach ($cat['rows'] as $r) {
                     if ($r['_review']) {
                         continue;
                     }
-                    $out[] = ['t' => Rd::fa(Rd::cleanName($r['نام محصول'])), 'u' => Rd::uProd($slug, $r['_slug']),
-                              'k' => 'prod', 's' => $c['title'] ?? $cat['title'], 'x' => $r['نام محصول'],
+                    $out[] = ['t' => Rd::fa(Rd::cleanName($r['نام محصول'])), 'u' => Rd::prodUrl($slug, $r['_slug']) ?: Rd::uCat($slug),
+                              'k' => 'prod', 's' => $cat['title'], 'x' => $r['نام محصول'],
                               'p' => $r['_price'], 'unit' => $r['واحد'], 'w' => 100];
                 }
             }
@@ -696,60 +696,8 @@ class Redesign
     }
 
     /* ==================================================================
-     | Sales unit, freight, reviews
+     | Reviews
      * ================================================================== */
-
-    /**
-     * The sales expert responsible for a category (features.rep_for).
-     *
-     * One person is shown, never a grid: the page must not reveal how many
-     * people the sales unit has. A `sales_reps` table, when it exists, wins
-     * over the prototype's content.
-     */
-    public static function rep(?string $slug = null): ?array
-    {
-        if (self::hasTable('sales_reps')) {
-            $q = DB::table('sales_reps')->where('is_active', 1)->orderBy('order');
-            if ($slug && self::hasTable('category_sales_rep')) {
-                $row = (clone $q)->join('category_sales_rep', 'category_sales_rep.sales_rep_id', '=', 'sales_reps.id')
-                    ->join('categories', 'categories.id', '=', 'category_sales_rep.category_id')
-                    ->where('categories.slug', $slug)->select('sales_reps.*')->first();
-                if ($row) {
-                    return (array) $row;
-                }
-            }
-            if ($row = $q->first()) {
-                return (array) $row;
-            }
-        }
-        $team = (array) Rd::c('sales_team', []);
-        if (! $team) {
-            return null;
-        }
-        $who = $slug ? (Rd::c('assign')[$slug] ?? null) : null;
-        if ($who) {
-            foreach ($team as $m) {
-                if (($m['id'] ?? null) === $who) {
-                    return $m;
-                }
-            }
-        }
-
-        return $team[0];
-    }
-
-    /** [[name, rial per tonne], ...] */
-    public static function freight(): array
-    {
-        if (self::hasTable('freight_rates')) {
-            $rows = DB::table('freight_rates')->orderBy('order')->get();
-            if ($rows->isNotEmpty()) {
-                return $rows->map(function ($r) { return [$r->destination, (int) $r->rate_per_ton]; })->all();
-            }
-        }
-
-        return (array) Rd::c('freight', []);
-    }
 
     /** Approved comments of a category, newest first. */
     public static function reviews(int $categoryId, int $take = 8)

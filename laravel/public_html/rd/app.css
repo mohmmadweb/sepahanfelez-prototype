@@ -2842,3 +2842,45 @@ table.pt.ch .ch-cat,.expert-t .dim{font-size:14px}
 /* فرم دیدگاه یک ستون است؛ span 2 کادر متن ستون دوم ضمنی می‌ساخت و نام را له می‌کرد. */
 .rform .cform-grid{grid-template-columns:minmax(0,1fr)}
 .rform .fsearch,.comments .fsearch{grid-column:1/-1}
+
+/* ===========================================================================
+   بلوک‌هایی که از پنل مدیریت پر می‌شوند (نسخه‌ی لاراول)
+   متن صفحه‌ی اصلی و تصویرش، دو بنر صفحه‌ی اصلی، ویژگی‌ها و کاربردهای هر
+   دسته، ویدئوی دسته و صفحه‌ی درباره. همه اختیاری‌اند: خالی باشد، دیده نمی‌شود.
+   =========================================================================== */
+.home-about{display:grid; gap:var(--s6); align-items:start}
+.home-about.has-pic{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}
+.home-about-pic{margin:0; border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-2)}
+.home-about-pic img{width:100%; height:auto}
+.home-banners{display:grid; grid-template-columns:1fr 1fr; gap:var(--s4)}
+.home-banner{display:block; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); background:var(--surface-2)}
+.home-banner img{width:100%; height:auto}
+.cards-3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s4)}
+.icard{display:flex; gap:var(--s4); align-items:flex-start; background:#fff; border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:var(--s4)}
+.icard img{width:72px; height:72px; object-fit:cover; border-radius:var(--radius); flex:none; background:var(--surface-2)}
+.icard h3{font-size:var(--t-base); margin-bottom:4px}
+.icard p{font-size:var(--t-sm); color:var(--ink-2); line-height:1.8}
+.video-box{border-radius:var(--radius-lg); overflow:hidden; background:#000; aspect-ratio:16/9}
+.video-box iframe,.video-box video{width:100%; height:100%; border:0; display:block}
+.about-media{margin:var(--s5) 0; border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-2)}
+.about-media video,.about-media img{width:100%; max-height:560px; object-fit:cover; display:block}
+.board-head .lede p{margin:0 0 var(--s2)}
+.fwho p{margin:0 0 var(--s2)}
+.auth-solo{grid-template-columns:minmax(0,480px); justify-content:center}
+@media (max-width:900px){
+  .home-about.has-pic{grid-template-columns:1fr}
+  .cards-3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .home-banners,.cards-3{grid-template-columns:1fr}
+}
+/* فهرست‌هایی که ادمین در ویرایشگر پنل می‌نویسد کلاس ندارند؛ همان ظاهر .bul را بگیرند. */
+.prose ul:not(.bul),.lede ul{margin:0 0 var(--s4); padding-inline-start:var(--s5); list-style:disc}
+.prose ol{margin:0 0 var(--s4); padding-inline-start:var(--s5); list-style:persian}
+.prose ul:not(.bul) li,.prose ol li{margin-bottom:var(--s2); line-height:1.9}
+.prose ul:not(.bul) li::marker{color:var(--steel-ink)}
+.prose table{width:100%; margin:0 0 var(--s4); font-size:var(--t-sm)}
+.prose table td,.prose table th{border:1px solid var(--line); padding:var(--s2) var(--s3)}
+.prose img{border-radius:var(--radius); margin:var(--s3) 0}
+.prose a{color:var(--steel-ink); text-decoration:underline; text-underline-offset:3px}

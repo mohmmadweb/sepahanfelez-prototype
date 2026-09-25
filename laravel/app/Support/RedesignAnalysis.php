@@ -182,7 +182,8 @@ class RedesignAnalysis
     {
         foreach ($rows as $r) {
             if ($r['نام محصول'] === $name) {
-                return Rd::path(Rd::uProd($key, $r['_slug']));
+                $u = Rd::prodUrl($key, $r['_slug']);
+                return Rd::path($u ?: Rd::uCat($key));
             }
         }
 
@@ -443,7 +444,7 @@ class RedesignAnalysis
             self::galvNote(self::g($row, 'نوع گالوانیزه')),
             self::logisticsNote($piece ?: 'بسته', $weight),
         ]));
-        $notes[] = 'قیمت مندرج در این صفحه، قیمت مبنای روز درب کارخانه‌ی اصفهان است. تناژ و مقصد بار در مبلغ نهایی مؤثرند. جهت اعلام قیمت قطعی: '
+        $notes[] = 'قیمت مندرج در این صفحه، قیمت مبنای روز است. تناژ و مقصد بار در مبلغ نهایی مؤثرند. جهت اعلام قیمت قطعی: '
             . e(Rd::phoneShow()) . '.';
 
         return $notes;
@@ -525,7 +526,7 @@ class RedesignAnalysis
                 $rel = '<b>' . Rd::fa((int) round(abs($diff))) . '٪ ارزان‌تر</b> تمام می‌شود';
             }
             $out[] = 'با ثابت‌ نگه‌داشتن بقیه‌ی مشخصات، یک پله ' . ($v > $mine ? 'بالاتر' : 'پایین‌تر') . ' در ' . $label
-                . ' می‌شود <a href="' . Rd::path(Rd::uProd($key, $sib['_slug'])) . '">' . e($sib['نام محصول']) . '</a> — که در '
+                . ' می‌شود ' . Rd::link(Rd::prodUrl($key, $sib['_slug']), $sib['نام محصول'])->toHtml() . ' — که در '
                 . $unitTxt . ' ' . $rel . ' (<span class="num">' . Rd::moneyFa($b) . '</span> در برابر <span class="num">'
                 . Rd::moneyFa($a) . '</span> ریال).';
         }
@@ -537,7 +538,12 @@ class RedesignAnalysis
      | features.product_intro / _kg / _m2
      * ------------------------------------------------------------------ */
 
-    public static function productIntro(string $key, array $row, array $rows, array $specs, string $catTitle): string
+    /**
+     * Two paragraphs built from the product's own numbers. $usages are the
+     * category's «کاربردها» titles from the panel (admin → دسته → کاربردها).
+     * Shown only when the product has no description of its own in the panel.
+     */
+    public static function productIntro(string $key, array $row, array $rows, array $specs, string $catTitle, array $usages = []): string
     {
         $name = Rd::cleanName($row['نام محصول']);
         $p = $row['_price'];
@@ -553,7 +559,6 @@ class RedesignAnalysis
         $pos = array_search($p, $prices, true);
         $pos = $pos === false ? null : $pos + 1;
         $n = count($prices);
-        $use = Rd::c('use.' . $key, ['کاربردهای متداول', 'خریداران صنعتی']);
         $sp = [];
         foreach ($specs as $s) {
             if ($s !== 'محل بارگیری' && trim((string) ($row[$s] ?? '')) !== '') {
@@ -589,8 +594,8 @@ class RedesignAnalysis
         return '<p><strong>' . e($name) . '</strong> یکی از ' . Rd::fa(count($rows)) . ' نوع ' . e($catTitle)
             . ' تولید صنایع مفتولی طلوع سپاهان است' . ($specTxt !== '' ? ' با مشخصات ' . e($specTxt) : '') . '. '
             . 'این کالا ' . $rank . ' و به ' . e($unit) . ' فروخته می‌شود.' . $econ . '</p>'
-            . '<p>کاربرد اصلی آن ' . e($use[0]) . ' است و بیشتر ' . e($use[1]) . ' آن را سفارش می‌دهند. '
-            . 'تحویل از کارخانه‌ی اصفهان یا انبار تهران انجام می‌شود و قیمت قطعی سفارش با تناژ و مقصد بار در تماس با کارشناس فروش اعلام می‌گردد.</p>';
+            . '<p>' . ($usages ? 'کاربردهای رایج آن: ' . e(implode('، ', array_slice($usages, 0, 4))) . '. ' : '')
+            . 'قیمت قطعی سفارش با تناژ و مقصد بار در تماس با کارشناس فروش اعلام می‌شود.</p>';
     }
 
     /** kg per selling unit for the calculator. */

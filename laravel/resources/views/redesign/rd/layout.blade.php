@@ -18,7 +18,7 @@
     $canonical = trim($__env->yieldContent('canonical'));
     $canonicalUrl = $canonical !== '' ? (preg_match('~^https?://~', $canonical) ? $canonical : Rd::site(Rd::path($canonical))) : Rd::site(Rd::path('/' . ltrim(rawurldecode(request()->path()), '/')));
     // @section('x', $value) escapes on the way in; decode so {{ }} below escapes once.
-    $title = html_entity_decode(trim($__env->yieldContent('title')), ENT_QUOTES, 'UTF-8') ?: 'سپاهان فلز';
+    $title = html_entity_decode(trim($__env->yieldContent('title')), ENT_QUOTES, 'UTF-8') ?: \App\Support\Brand::name();
     $desc = html_entity_decode(trim($__env->yieldContent('description')), ENT_QUOTES, 'UTF-8');
     $robots = trim($__env->yieldContent('robots')) ?: 'index, follow';
 @endphp
@@ -35,12 +35,11 @@
 <meta name="description" content="{{ $desc }}">
 <link rel="preload" as="font" type="font/woff2" href="/rd/fonts/Estedad-Regular.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/rd/fonts/Estedad-Black.woff2" crossorigin>
-<link rel="icon" href="/rd/brand/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/rd/brand/favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/rd/brand/favicon-180.png">
+{{-- favicon: admin → تنظیمات عمومی (the old theme's own partial) --}}
+@include('partials.favicon')
 <meta property="og:locale" content="fa_IR">
-<meta property="og:site_name" content="سپاهان فلز">
-<meta property="og:image" content="{{ Rd::site('/rd/brand/og-image.png') }}">
+<meta property="og:site_name" content="{{ \App\Support\Brand::name() }}">
+<meta property="og:image" content="{{ \App\Support\Brand::ogImage() }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:url" content="{{ $canonicalUrl }}">

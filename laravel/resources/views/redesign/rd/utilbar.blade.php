@@ -1,8 +1,10 @@
+{{-- Hours and e-mail: admin → اطلاعات تماس (work_time, email) --}}
+@php $hours = \App\Support\Site::hours(); $email = \App\Support\Site::email(); @endphp
 <div class="utilbar">
   <div class="container">
     <ul class="util-left">
-      <li>{{ Rd::icon('i-clock') }} {{ Rd::c('hours') }}</li>
-      <li><a href="mailto:{{ Rd::c('email') }}">{{ Rd::icon('i-mail') }} {{ Rd::c('email') }}</a></li>
+      @if($hours)<li>{{ Rd::icon('i-clock') }} {{ $hours }}</li>@endif
+      @if($email)<li><a href="mailto:{{ $email }}">{{ Rd::icon('i-mail') }} {{ $email }}</a></li>@endif
     </ul>
     <ul>
       @auth

@@ -11,8 +11,8 @@
     <div class="container panel">
       <nav class="panel-nav" aria-label="ناحیه‌ی کاربری">
         <div class="panel-who"><span class="av">@if($u && $u->hasAvatar())<img src="{{ $u->avatar() }}" alt="" loading="lazy">@else{{ Rd::icon('i-user') }}@endif</span>
-          <div><b>{{ ($u->full_name ?? '') ?: 'کاربر سپاهان فلز' }}</b><span class="num">{{ $u->mobile ?? '' }}</span></div></div>
-        @foreach(Rd::c('account.nav', []) as $n)
+          <div><b>{{ ($u->full_name ?? '') ?: 'کاربر ' . \App\Support\Brand::name() }}</b><span class="num">{{ $u->mobile ?? '' }}</span></div></div>
+        @foreach([['profile', '/user/profile', 'i-user', 'مشخصات حساب'], ['orders', '/user/orders', 'i-box', 'سفارش‌های پیشین'], ['address', '/user/address', 'i-map', 'نشانی‌های تحویل'], ['tickets', '/user/tickets', 'i-book', 'تیکت‌ها و درخواست‌ها'], ['guide', '/user/guide', 'i-list', 'راهنمای حساب']] as $n)
           <a href="{{ $n[1] }}"@if(($panel ?? '') === $n[0]) aria-current="page"@endif>{{ Rd::icon($n[2]) }}{{ $n[3] }}</a>
         @endforeach
         <form method="post" action="{{ route('logout') }}">@csrf<button type="submit">{{ Rd::icon('i-arrow') }}خروج از حساب</button></form>

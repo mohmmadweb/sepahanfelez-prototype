@@ -1,6 +1,6 @@
 {{-- GET /user/orders/{order} — UserPanel\OrderController@show → $order. --}}
 @extends('user.layout.master', ['panel' => 'orders'])
-@section('title', 'سفارش ' . $order->id . ' | سپاهان فلز')
+@section('title', 'سفارش ' . $order->id . ' | ' . \App\Support\Brand::name())
 @section('crumb', 'سفارش ' . $order->id)
 @section('head')<div><h1>سفارش شماره‌ی <span class="num">{{ $order->id }}</span></h1><div class="sub">ثبت‌شده در {{ Rd::jDate($order->created_at) }}</div></div><a class="btn btn-ghost btn-lg2" href="{{ route('order.index') }}">بازگشت به سفارش‌ها</a>@endsection
 @section('panel')

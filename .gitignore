@@ -1,2 +1,5 @@
-__pycache__/
+# apply_pack.py: the admin session and the backups of live values stay local
 *.pyc
+__pycache__/
+migration/.session.json
+migration/backup/

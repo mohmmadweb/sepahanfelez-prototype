@@ -3,7 +3,7 @@
     <span class="l">تماس با کارشناس فروش</span>
     <span class="n num">{{ Rd::phoneShow() }}</span>
   </a>
-  <a href="https://wa.me/{{ Rd::wa() }}">{{ Rd::icon('i-whatsapp') }}واتساپ</a>
+  @if($wa = Rd::wa())<a href="{{ $wa }}">{{ Rd::icon('i-whatsapp') }}واتساپ</a>@endif
   <a href="/price">{{ Rd::icon('i-chart') }}قیمت‌ها</a>
 </nav>
 @include('rd.chart-dialog')

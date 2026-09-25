@@ -13,7 +13,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>{{ $title }} | سپاهان فلز</title>
+<title>{{ $title }} | {{ config('brand.name') }}</title>
 <link rel="icon" href="/rd/brand/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/rd/app.css">
 </head>
@@ -22,8 +22,8 @@
 <header class="masthead">
   <div class="container">
     <a class="brand" href="/">
-      <img class="mark" src="/rd/brand/mark-88.png" width="44" height="44" alt="نشان سپاهان فلز" loading="eager">
-      <span><span class="name">سپاهان فلز</span><br><span class="sub">فروشگاه اینترنتی صنایع مفتولی طلوع سپاهان</span></span>
+      <img class="mark" src="/rd/brand/mark-88.png" width="44" height="44" alt="{{ config('brand.name') }}" loading="eager">
+      <span><span class="name">{{ config('brand.name') }}</span></span>
     </a>
     <a class="callbox" href="tel:{{ Rd::phone() }}">
       <span class="icon">{{ Rd::icon('i-phone') }}</span>

@@ -1,6 +1,6 @@
 {{-- GET /user/profile — UserPanel\ProfileController@edit → $user. PATCH to the same URL. --}}
 @extends('user.layout.master', ['panel' => 'profile'])
-@section('title', 'مشخصات حساب | سپاهان فلز')
+@section('title', 'مشخصات حساب | ' . \App\Support\Brand::name())
 @section('crumb', 'مشخصات حساب')
 @section('head')<div><h1>مشخصات حساب</h1><div class="sub">شماره‌ی موبایل شناسه‌ی ورود شماست و تغییر نمی‌کند.</div></div>@endsection
 @section('panel')

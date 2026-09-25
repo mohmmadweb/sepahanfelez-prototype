@@ -4,13 +4,14 @@
     $R = \App\Support\Redesign::class;
     $slug = $category->slug;
     $cats = $R::blogCats();
-    $intro = Rd::c('blog_cat_intro.' . $slug) ?: $category->meta_description;
+    // admin → دسته‌بندی مقالات → توضیح متا
+    $intro = $category->meta_description;
     $list = [];
     foreach ($articles as $m) { if ($x = $R::articleArray((int) $m->id)) { $list[] = $x; } }
     $total = method_exists($articles, 'total') ? $articles->total() : count($list);
 @endphp
-@section('title', $category->meta_title ?: ('مقالات ' . $category->title . ' | مجله سپاهان فلز'))
-@section('description', Rd::cut($intro ?: ('همه‌ی مقالات دسته‌ی ' . $category->title . ' در مجله‌ی سپاهان فلز.')))
+@section('title', $category->meta_title ?: ('مقالات ' . $category->title . ' | مجله ' . \App\Support\Brand::name()))
+@section('description', Rd::cut($intro ?: ('همه‌ی مقالات دسته‌ی ' . $category->title . ' در مجله‌ی ' . \App\Support\Brand::name() . '.')))
 @section('canonical', Rd::uBlogCat($slug) . ($articles->currentPage() > 1 ? '?page=' . $articles->currentPage() : ''))
 @section('nav', 'blog')
 @section('crumbs')@include('rd.crumb', ['items' => [['خانه', '/'], ['مجله', '/blog'], [$category->title, null]]])@endsection
@@ -33,7 +34,7 @@
   <section class="section alt">
     <div class="container">
       <div class="section-head"><div><h2>مطالب دیگر مجله</h2>
-        <div class="sub">از دسته‌های دیگر مجله‌ی سپاهان فلز</div></div>
+        <div class="sub">از دسته‌های دیگر مجله‌ی {{ \App\Support\Brand::name() }}</div></div>
         <a href="/blog">همه‌ی مقالات {{ Rd::icon('i-chev') }}</a></div>
       <div class="mag-grid mag-grid-3">@foreach($pool as $a)@include('rd.mag-card', ['a' => $a])@endforeach</div>
     </div>

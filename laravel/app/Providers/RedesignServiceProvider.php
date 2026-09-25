@@ -8,8 +8,14 @@ use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\Category;
 use App\Models\Price;
+use App\Models\About;
+use App\Models\GeneralSetting;
+use App\Models\HomeSetting;
+use App\Models\Information;
 use App\Models\Product;
-use App\Models\ProductComment;
+use App\Models\Slider;
+use App\Models\Social;
+use App\Models\Video;
 use App\Support\Rd;
 use App\Support\Redesign;
 use Illuminate\Foundation\AliasLoader;
@@ -38,8 +44,10 @@ use Illuminate\Support\ServiceProvider;
  *      /cart → /price). They are registered after routes/web.php, so the /cart
  *      one deliberately replaces the old cart page.
  *   4. Digits in the rendered HTML become Persian, as in the prototype.
- *   5. Saving a product, price, category or article drops the cached catalogue.
- *   6. A review's star rating is stored without touching CommentController.
+ *   5. Saving anything in the panel that a page reads drops the cached data.
+ *
+ * Content lives only in the admin panel. The kit ships templates, CSS/JS and
+ * the logo — no copy, no photos, no prices.
  */
 class RedesignServiceProvider extends ServiceProvider
 {
@@ -65,21 +73,14 @@ class RedesignServiceProvider extends ServiceProvider
             $this->app->make(Router::class)->pushMiddlewareToGroup('web', RedesignFaDigits::class);
         }
 
-        foreach ([Product::class, Price::class, Category::class, Article::class, ArticleCategory::class] as $model) {
+        // Whatever the admin saves shows at once: every model a page reads
+        // drops the cached catalogue and settings when it changes.
+        foreach ([Product::class, Price::class, Category::class, Article::class, ArticleCategory::class,
+                  Information::class, HomeSetting::class, About::class, GeneralSetting::class,
+                  Social::class, Slider::class, Video::class] as $model) {
             $model::saved(function () { Redesign::flush(); });
             $model::deleted(function () { Redesign::flush(); });
         }
-
-        // Star rating on category reviews. Site\CommentController does not know
-        // about `rating`; rather than edit it, the value is taken from the
-        // request as the comment is created — only once database/sql has added
-        // the column, and only a whole number from 1 to 5.
-        ProductComment::creating(function ($comment) {
-            $r = (int) request()->input('rating');
-            if ($r >= 1 && $r <= 5 && Redesign::hasRating()) {
-                $comment->rating = $r;
-            }
-        });
 
         // After every provider has booted, i.e. after routes/web.php is loaded.
         $this->app->booted(function () {

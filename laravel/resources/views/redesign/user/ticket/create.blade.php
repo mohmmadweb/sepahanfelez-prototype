@@ -1,6 +1,6 @@
 {{-- GET /user/tickets/create — UserPanel\TicketController@create → $departments. --}}
 @extends('user.layout.master', ['panel' => 'tickets'])
-@section('title', 'تیکت تازه | سپاهان فلز')
+@section('title', 'تیکت تازه | ' . \App\Support\Brand::name())
 @section('crumb', 'تیکت تازه')
 @section('head')<div><h1>تیکت تازه</h1><div class="sub">پاسخ کارشناس در همین صفحه و با پیامک اطلاع داده می‌شود</div></div>@endsection
 @section('panel')

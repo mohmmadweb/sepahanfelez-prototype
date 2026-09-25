@@ -6,11 +6,11 @@
     };
     $links = [$a('/price', 'قیمت لحظه‌ای', 'price', 'nav-price')];
     foreach (\App\Support\Redesign::catalog() as $slug => $cat) {
-        $links[] = $a(Rd::uCat($slug), Rd::cat($slug)['nav'] ?? $cat['title'], $slug);
+        $links[] = $a(Rd::uCat($slug), $cat['title'], $slug);
     }
     $links[] = '<span class="spacer"></span>';
     $links[] = $a('/blog', 'مجله', 'blog');
-    $links[] = $a('/about', 'درباره کارخانه', 'about');
+    $links[] = $a('/about', 'درباره ما', 'about');
     $links[] = $a('/contact', 'تماس با ما', 'contact');
 @endphp
 <nav class="mainnav" aria-label="منوی اصلی">

@@ -1,16 +1,16 @@
 {{--
-    «بروزرسانی» stamp (common.stamp). $at is the newest prices.price_at.
-    The prototype always said «امروز» and site.js rewrote the date to the
-    visitor's today. That is only true here when the last import *was* today,
-    so the live-date hook is attached only then; otherwise the real date shows.
+    «بروزرسانی» stamp: date AND time of the newest prices row — i.e. of the
+    last save in admin → قیمت / اکسل. No promised time from a file.
 --}}
 @php
     $at = $at ?? \App\Support\Redesign::lastUpdate();
-    $today = $at ? Rd::isToday($at) : true;
-    $when = $at ?: now();
+    $today = $at ? Rd::isToday($at) : false;
+    $time = $at ? Rd::updatedAt($at) : '';
 @endphp
+@if($at)
 @if($short ?? false)
-<span class="stamp"><span class="dot"></span>بروزرسانی: <time @if($today) data-live-date @endif datetime="{{ Rd::iso($when) }}">{!! Rd::jDate($when, false, true) !!}</time></span>
+<span class="stamp"><span class="dot"></span>بروزرسانی: <time datetime="{{ Rd::iso($at) }}">{!! Rd::jDate($at, false, true) !!}</time></span>
 @else
-<span class="stamp"><span class="dot"></span>بروزرسانی: {{ $today ? 'امروز ' : '' }}<time @if($today) data-live-date @endif datetime="{{ Rd::iso($when) }}">{!! Rd::jDate($when, false, true) !!}</time> — ساعت {{ Rd::updateTime() }}</span>
+<span class="stamp"><span class="dot"></span>بروزرسانی: {{ $today ? 'امروز ' : '' }}<time datetime="{{ Rd::iso($at) }}">{!! Rd::jDate($at, false, true) !!}</time>@if($time) — ساعت {{ $time }}@endif</span>
+@endif
 @endif

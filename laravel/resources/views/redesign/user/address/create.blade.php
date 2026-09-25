@@ -1,5 +1,5 @@
 @extends('user.layout.master', ['panel' => 'address'])
-@section('title', 'نشانی تازه | سپاهان فلز')
+@section('title', 'نشانی تازه | ' . \App\Support\Brand::name())
 @section('crumb', 'نشانی تازه')
 @section('head')<div><h1>نشانی تازه</h1><div class="sub">نشانی محل تحویل بار</div></div>@endsection
 @section('panel')

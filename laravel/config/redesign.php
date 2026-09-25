@@ -5,17 +5,10 @@
 | Redesign (سپاهان فلز ۱۴۰۵)
 |--------------------------------------------------------------------------
 |
-| The redesigned front end was agreed as a static prototype first
-| (sepahanfelez.lenzit.ir). This kit is the same design running on the real
-| database. Three places hold what it needs:
-|
-|   database                         every number: categories, products, prices,
-|                                    specs, articles, comments, users
-|   resources/redesign/content.php   every piece of editorial copy, GENERATED
-|                                    from the prototype by tools/build_kit.py
-|   this file                        switches only
-|
-| Nothing here duplicates something the admin panel edits.
+| The redesigned front end of sepahanfelez.ir. Every word, number, picture
+| and SEO field a page shows is read from the database the admin panel
+| edits (/admin) — exactly as with the previous theme. This file holds
+| switches only; nothing here duplicates something the panel edits.
 |
 */
 
@@ -58,17 +51,6 @@ return [
     'chart' => [
         'sample_series' => env('REDESIGN_CHART_SAMPLE', false),
         'max_days'      => 365,
-    ],
-
-    /*
-    | Reviews.
-    |
-    | Approved rows of `product_comments` render as soon as they exist. The
-    | prototype's sample reviews are shown, badged «نمونه», only for a category
-    | with no approved comment and only while this is true. Keep false live.
-    */
-    'reviews' => [
-        'show_samples' => env('REDESIGN_SAMPLE_REVIEWS', false),
     ],
 
     /*

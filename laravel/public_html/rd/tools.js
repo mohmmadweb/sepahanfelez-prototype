@@ -37,7 +37,7 @@
       var kg = kgPerUnit ? units * kgPerUnit : 0;
       var m2 = m2PerUnit ? units * m2PerUnit : 0;
       var tons = kg / 1000;
-      var rate = +dest.value || 0;
+      var rate = dest ? (+dest.value || 0) : 0;
       var fr = rate ? Math.max(tons, minTon) * rate : 0;
       if (!q) { out.hidden = true; return; }
       out.hidden = false;
@@ -46,10 +46,10 @@
         (kg ? '<div class="calc-row"><span>وزن تقریبی بار</span><b class="num">' + fmt(kg) + ' کیلوگرم</b></div>' : '') +
         (m2 ? '<div class="calc-row"><span>سطح پوشش</span><b class="num">' + fa(+m2.toFixed(1)) + ' متر مربع</b></div>' : '') +
         '<div class="calc-row"><span>مبلغ کالا (مبنای روز)</span><b class="num">' + fmt(cost) + ' ریال</b></div>' +
-        (rate ? '<div class="calc-row"><span>برآورد کرایه‌ی حمل' + (tons < minTon ? ' (کف ' + fa(minTon) + ' تن)' : '') + '</span><b class="num">' + fmt(fr) + ' ریال</b></div>' : '<div class="calc-row"><span>کرایه‌ی حمل</span><b>تحویل درب کارخانه / انبار</b></div>') +
+        (!dest ? '' : rate ? '<div class="calc-row"><span>برآورد کرایه‌ی حمل' + (tons < minTon ? ' (کف ' + fa(minTon) + ' تن)' : '') + '</span><b class="num">' + fmt(fr) + ' ریال</b></div>' : '<div class="calc-row"><span>کرایه‌ی حمل</span><b>تحویل درب کارخانه / انبار</b></div>') +
         '<div class="calc-row total"><span>جمع برآورد</span><b class="num">' + fmt(cost + fr) + ' ریال</b></div>';
     }
-    [qty, mode, dest].forEach(function (el) { el.addEventListener('input', apply); el.addEventListener('change', apply); });
+    [qty, mode, dest].filter(Boolean).forEach(function (el) { el.addEventListener('input', apply); el.addEventListener('change', apply); });
     form.addEventListener('submit', function (e) { e.preventDefault(); apply(); });
     form.hidden = false; apply();
   }

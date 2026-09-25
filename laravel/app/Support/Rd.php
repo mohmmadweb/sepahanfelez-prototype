@@ -10,47 +10,29 @@ use Illuminate\Support\HtmlString;
  * generator said and produce the same markup.
  *
  * Registered as the alias `Rd` by RedesignServiceProvider; templates call
- * Rd::fmt(), Rd::icon(), Rd::c('cats') and so on.
+ * Rd::fmt(), Rd::icon(), Rd::jDate() and so on.
  *
  * PHP 7.4 on purpose: the production vendor tree is resolved for 7.4.
  */
 class Rd
 {
-    /** @var array|null */
-    private static $content;
-
     /* ------------------------------------------------------------------
-     | Editorial content (generated from the prototype)
+     | Contact — all from the admin panel, see App\Support\Site
      * ------------------------------------------------------------------ */
 
-    /** Content value by dot path, e.g. Rd::c('phone.show'). */
-    public static function c(?string $key = null, $default = null)
+    public static function phone(): string     { return Site::phone(); }
+    public static function phoneShow(): string { return Site::phoneShow(); }
+    public static function wa(): string        { return Site::whatsapp(); }
+    public static function waShow(): string    { return Site::whatsappShow(); }
+
+    /** «۱۲:۳۰» — the time of day of the newest price row, not a promise in a file. */
+    public static function updatedAt($at = null): string
     {
-        if (self::$content === null) {
-            $file = resource_path('redesign/content.php');
-            self::$content = is_file($file) ? (array) require $file : [];
-        }
+        $at = $at ?: Redesign::lastUpdate();
+        $d = self::date($at);
 
-        return $key === null ? self::$content : data_get(self::$content, $key, $default);
+        return $d && $d->format('H:i') !== '00:00' ? $d->format('H:i') : '';
     }
-
-    /** Editorial block of one category, or [] for a category the prototype never wrote. */
-    public static function cat(string $slug): array
-    {
-        return (array) self::c('cats.' . self::dotSafe($slug), []);
-    }
-
-    /** data_get splits on dots; category slugs never contain one, but be safe. */
-    private static function dotSafe(string $s): string
-    {
-        return str_replace('.', '\.', $s);
-    }
-
-    public static function phone(): string     { return (string) self::c('phone.raw'); }
-    public static function phoneShow(): string { return (string) self::c('phone.show'); }
-    public static function wa(): string        { return (string) self::c('phone.whatsapp'); }
-    public static function waShow(): string    { return (string) self::c('phone.whatsapp_show'); }
-    public static function updateTime(): string{ return (string) self::c('update_time', '۱۲:۳۰'); }
 
     /* ------------------------------------------------------------------
      | Numbers and text
@@ -205,6 +187,67 @@ class Rd
     }
 
     /* ------------------------------------------------------------------
+     | Admin rich text (CKEditor) → the design
+     * ------------------------------------------------------------------ */
+
+    /**
+     * Strip what the editor adds on paste — inline colours, fonts, sizes,
+     * dir="LTR" spans, empty paragraphs — so the page keeps one typography.
+     * Structure, links, images, tables and lists stay exactly as written.
+     */
+    public static function cleanHtml(?string $html): string
+    {
+        $h = (string) $html;
+        if (trim(strip_tags($h, '<img><iframe><video>')) === '') {
+            return '';
+        }
+        $h = preg_replace('~\s(style|class|dir|lang|face|color|size|align)\s*=\s*("[^"]*"|\'[^\']*\')~iu', '', $h);
+        $h = preg_replace('~</?(span|font|o:p)\b[^>]*>~iu', '', $h);
+        $h = preg_replace('~<p>(\s|&nbsp;|<br\s*/?>)*</p>~iu', '', $h);
+        $h = preg_replace('~<(h[1-6])>\s*<br\s*/?>~iu', '<$1>', $h);
+        $h = preg_replace('~<h1\b~iu', '<h2', preg_replace('~</h1>~iu', '</h2>', $h));
+
+        return trim($h);
+    }
+
+    /**
+     * Split admin HTML at its <h2> headings.
+     *
+     * Returns [lead, sections]: lead is whatever comes before the first
+     * heading; each section is ['title', 'html', 'faq'] where faq holds
+     * [question, answer-html] pairs when the heading is a FAQ («پرسش…»,
+     * «سؤال…», «سوال…») and its questions are written as <h3>.
+     */
+    public static function sections(?string $html): array
+    {
+        $h = self::cleanHtml($html);
+        if ($h === '') {
+            return ['', []];
+        }
+        $parts = preg_split('~<h2[^>]*>(.*?)</h2>~isu', $h, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $lead = trim($parts[0]);
+        $out = [];
+        for ($i = 1; $i < count($parts); $i += 2) {
+            $title = trim(html_entity_decode(strip_tags($parts[$i]), ENT_QUOTES, 'UTF-8'));
+            $body = trim($parts[$i + 1] ?? '');
+            $faq = null;
+            if (preg_match('~پرسش|سؤال|سوال~u', $title) && preg_match('~<h3~i', $body)) {
+                $faq = [];
+                $qs = preg_split('~<h3[^>]*>(.*?)</h3>~isu', $body, -1, PREG_SPLIT_DELIM_CAPTURE);
+                for ($j = 1; $j < count($qs); $j += 2) {
+                    $q = trim(html_entity_decode(strip_tags($qs[$j]), ENT_QUOTES, 'UTF-8'));
+                    if ($q !== '') {
+                        $faq[] = [$q, trim($qs[$j + 1] ?? '')];
+                    }
+                }
+            }
+            $out[] = ['title' => $title, 'html' => $body, 'faq' => $faq];
+        }
+
+        return [$lead, $out];
+    }
+
+    /* ------------------------------------------------------------------
      | Markup fragments
      * ------------------------------------------------------------------ */
 
@@ -263,6 +306,25 @@ class Rd
 
     public static function uCat(string $slug): string                { return '/category/' . $slug; }
     public static function uProd(string $cat, string $prod): string   { return '/category/' . $cat . '/' . $prod; }
+    /**
+     * A product's page, or null when it has none. A product gets a page only
+     * when the admin gives it a slug (admin → محصول → محتوا → اسلاگ); until
+     * then it is listed in its category's table without a link — exactly as
+     * the previous theme, which never linked a slug-less product.
+     */
+    public static function prodUrl(string $cat, ?string $prod): ?string
+    {
+        return ($prod !== null && trim($prod) !== '') ? self::uProd($cat, $prod) : null;
+    }
+
+    /** <a> to $url, or just the text when there is no page to go to. */
+    public static function link(?string $url, string $text, string $attrs = ''): HtmlString
+    {
+        return new HtmlString($url
+            ? '<a href="' . e(self::path($url)) . '"' . ($attrs ? ' ' . $attrs : '') . '>' . e($text) . '</a>'
+            : '<span>' . e($text) . '</span>');
+    }
+
     public static function uBlogCat(string $slug): string            { return '/blog/' . $slug; }
     public static function uArticle(string $cat, string $slug): string{ return '/blog/' . $cat . '/' . $slug; }
 
@@ -274,6 +336,13 @@ class Rd
     /** Percent-encode a path for use inside href/src without touching the slashes. */
     public static function path(string $p): string
     {
+        if (preg_match('~^[a-z][a-z0-9+.-]*://~i', $p)) {
+            $u = parse_url($p);
+            $tail = isset($u['query']) ? '?' . $u['query'] : '';
+            return $u['scheme'] . '://' . $u['host'] . (isset($u['port']) ? ':' . $u['port'] : '')
+                . self::path($u['path'] ?? '') . $tail;
+        }
+
         return implode('/', array_map(function ($seg) {
             return $seg === '' ? '' : rawurlencode(rawurldecode($seg));
         }, explode('/', $p)));
@@ -380,26 +449,17 @@ class Rd
     public static function orgId(): string  { return self::site('/#organization'); }
     public static function siteId(): string { return self::site('/#website'); }
 
+    /** The backend's own Organization node (App\Support\Schema, config/brand.php). */
     public static function organization(): array
     {
-        $tel = '+98' . ltrim(self::phone(), '0');
+        $o = Schema::organisation();
+        unset($o['@context']);
+        $o['@id'] = self::orgId();
+        if ($p = Site::phone()) {
+            $o['telephone'] = '+98' . ltrim($p, '0');
+        }
 
-        return [
-            '@type' => 'Organization', '@id' => self::orgId(),
-            'name' => 'صنایع مفتولی طلوع سپاهان', 'alternateName' => 'سپاهان فلز',
-            'url' => self::site('/'),
-            'logo' => ['@type' => 'ImageObject', 'url' => self::site('/rd/brand/logo-864.png')],
-            'image' => self::site('/rd/brand/og-image.png'),
-            'telephone' => $tel, 'email' => (string) self::c('email'),
-            'address' => [
-                ['@type' => 'PostalAddress', 'addressCountry' => 'IR', 'addressLocality' => 'اصفهان',
-                 'streetAddress' => 'شهرک صنعتی منتظریه (ویلاشهر)، خیابان قادری، پلاک ۱۸۱'],
-                ['@type' => 'PostalAddress', 'addressCountry' => 'IR', 'addressLocality' => 'تهران',
-                 'streetAddress' => 'بازار آهن شادآباد، بلوار شهید قربانخوانی، مجتمع پارس فلز، پلاک ۹'],
-            ],
-            'contactPoint' => ['@type' => 'ContactPoint', 'telephone' => $tel, 'contactType' => 'sales',
-                               'areaServed' => 'IR', 'availableLanguage' => 'fa'],
-        ];
+        return $o;
     }
 
     public static function website(): array
@@ -442,7 +502,7 @@ class Rd
     {
         $p = ['@type' => 'Product', '@id' => self::site($url) . '#product', 'name' => $name,
               'url' => self::site($url), 'description' => $desc,
-              'brand' => ['@type' => 'Brand', 'name' => 'طلوع سپاهان'],
+              'brand' => ['@type' => 'Brand', 'name' => Site::companyName()],
               'manufacturer' => ['@id' => self::orgId()]];
         if ($image) {
             $p['image'] = strpos($image, '/') === 0 ? self::site($image) : $image;

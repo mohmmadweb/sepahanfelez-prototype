@@ -4,7 +4,7 @@
     switched off.
 --}}
 @extends('rd.layout')
-@section('title', 'ثبت سفارش | سپاهان فلز')
+@section('title', 'ثبت سفارش | ' . \App\Support\Brand::name())
 @section('robots', 'noindex, follow')
 @section('content')
   <section class="section"><div class="container errpage">

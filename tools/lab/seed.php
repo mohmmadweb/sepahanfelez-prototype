@@ -115,7 +115,7 @@ foreach ($catalog as $key => $cat) {
             if (strpos($k, 'قیمت روز') === 0) { $price = money($v); }
             if (strpos($k, 'نوسان') === 0) { $prev = money($v); }
         }
-        $pid = $ins('products', ['category_id' => $cid, 'title' => $name, 'slug' => $slugs[$name] ?? slugify($name),
+        $pid = $ins('products', ['category_id' => $cid, 'title' => $name, 'slug' => null,
                                  'price' => $price, 'unit' => $row['واحد'], 'status' => 1, 'order' => $n + 1,
                                  'index_by_crawler' => 1]);
         $prodCount++;
@@ -162,10 +162,71 @@ foreach ($articles as $a) {
 }
 echo 'articles: ' . count($articles) . "\n";
 
-$ins('information', ['email' => 'info@sepahanfelez.ir', 'phone' => '02191326030', 'fax' => '-', 'work_time' => '۸ تا ۱۷']);
-$ins('home_settings', ['about' => '-', 'about_pic' => 'x.jpg', 'footer_pic1' => 'x.jpg', 'footer_pic2' => 'x.jpg']);
+/*
+ * The content pack (migration/pack.json), applied the way the admin panel
+ * stores it: files under public_html/images/<folder>/ (main + thumbnail, as
+ * App\Functions\Image::upload does) and names/fields in the same columns.
+ * This is the state the live database will be in after tools/apply_pack.py.
+ */
+$pack = json_decode(file_get_contents(dirname($build) . '/migration/pack.json'), true);
+$proto = dirname($build);
+$pub = getcwd() . '/public_html';
+$put = function (string $rel, string $folder, bool $thumb) use ($proto, $pub) {
+    // Deterministic names (the panel uses random ones) so a re-export does not churn git.
+    $name = substr(md5($rel), 0, 6) . str_replace(' ', '-', basename($rel));
+    $dir = $pub . '/images/' . $folder . ($thumb ? '/main' : '');
+    @mkdir($dir, 0775, true);
+    copy($proto . '/' . $rel, $dir . '/' . $name);
+    if ($thumb) {
+        @mkdir($pub . '/images/' . $folder . '/thumbnail', 0775, true);
+        copy($proto . '/' . $rel, $pub . '/images/' . $folder . '/thumbnail/' . $name);
+    }
+    return $name;
+};
+foreach ($pack['categories'] as $slug => $c) {
+    $upd = ['body' => $c['body'], 'meta_title' => $c['meta_title'],
+            'meta_description' => $c['meta_description'], 'meta_keywords' => $c['meta_keywords']];
+    if (! empty($c['image'])) {
+        $upd['image'] = $put($c['image'], 'category', true);
+    }
+    DB::table('categories')->where('slug', $slug)->update($upd);
+}
+foreach ($pack['products'] as $slug => $rows) {
+    $cid = DB::table('categories')->where('slug', $slug)->value('id');
+    foreach ($rows as $title => $p) {
+        DB::table('products')->where('category_id', $cid)->where('title', $title)
+            ->update(['image' => $put($p['image'], 'products', true), 'slug' => $p['slug']]);
+    }
+}
+$i = $pack['information'];
+$ins('information', ['email' => $i['email'], 'phone' => $i['phone'], 'fax' => '-', 'work_time' => $i['work_time'],
+                     'main_address' => $i['main_address'], 'factory_address_1' => $i['factory_address_1'],
+                     'factory_address_2' => $i['factory_address_2'], 'factory_address_3' => $i['factory_address_3'],
+                     'about' => $i['about']]);
+$h = $pack['home_setting'];
+$ins('home_settings', ['about' => $h['about'], 'about_pic' => $put($h['about_pic'], 'home', false),
+                       'alt_about_pic' => $h['alt_about_pic'], 'footer_pic1' => '', 'footer_pic2' => '',
+                       'home_title' => $h['home_title'], 'home_description' => $h['home_description'],
+                       'price_title' => $h['price_title'], 'price_description' => $h['price_description']]);
 $ins('general_settings', ['company_name' => 'طلوع سپاهان', 'favicon' => 'favicon.ico']);
-$ins('abouts', ['image' => 'x.jpg', 'video' => '', 'canonical' => '', 'text' => '-']);
+@mkdir($pub . '/videos', 0775, true);
+$videoNames = [];
+foreach ($pack['videos'] as $v) {
+    $name = substr(md5($v), 0, 4) . basename($v);
+    copy($proto . '/' . $v, $pub . '/videos/' . $name);
+    $ins('videos', ['video' => $name]);
+    $videoNames[basename($v)] = $name;
+}
+$ab = $pack['about'];
+$ins('abouts', ['image' => $put($ab['image'], 'static-pages', false), 'video' => '/videos/' . $videoNames[basename($ab['video_upload'])],
+                'canonical' => $ab['canonical'], 'text' => $ab['text']]);
+foreach ($pack['sliders'] as $sl) {
+    $ins('sliders', ['image' => $put($sl['image'], 'slider', false), 'link' => $sl['link'], 'alt' => $sl['alt']]);
+}
+foreach ([['واتساپ', 'whatsapp'], ['تلگرام', 'telegram'], ['اینستاگرام', 'instagram'], ['یوتیوب', 'youtube'], ['لینکدین', 'linkedin']] as $s) {
+    $url = $pack['socials']['active'][$s[1]] ?? null;
+    $ins('socials', ['title' => $s[0], 'icon' => '<i class="bi bi-' . $s[1] . '"></i>', 'url' => $url, 'is_active' => $url ? 1 : 0]);
+}
 $sales = $ins('roles', ['name' => 'sales', 'label' => 'واحد فروش', 'ticketing' => 1]);
 $ins('roles', ['name' => 'support', 'label' => 'پشتیبانی', 'ticketing' => 1]);
 

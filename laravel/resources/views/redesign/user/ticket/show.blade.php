@@ -1,6 +1,6 @@
 {{-- GET /user/ticket/{id} — UserPanel\TicketController@show → $ticket (messages newest first). --}}
 @extends('user.layout.master', ['panel' => 'tickets'])
-@section('title', $ticket->subject . ' | سپاهان فلز')
+@section('title', $ticket->subject . ' | ' . \App\Support\Brand::name())
 @section('crumb', 'تیکت')
 @section('head')<div><h1>{{ $ticket->subject }}</h1><div class="sub">{{ optional($ticket->role)->label ?: optional($ticket->role)->name }} · <span class="badge {{ ['pending' => 'badge-warn', 'answered' => 'badge-ok'][$ticket->status] ?? 'badge' }}">{{ $ticket->status() }}</span></div></div><a class="btn btn-ghost btn-lg2" href="{{ route('ticket.index') }}">بازگشت</a>@endsection
 @section('panel')
@@ -18,7 +18,7 @@
   <div class="thread">
   @foreach($ticket->messages as $m)
     <div class="msg{{ (int) $m->user_id === (int) auth()->id() ? ' me' : '' }}">
-      <header><b>{{ (int) $m->user_id === (int) auth()->id() ? 'شما' : (optional($m->user)->full_name ?: 'کارشناس سپاهان فلز') }}</b><span>{{ Rd::jDate($m->created_at) }} · {{ optional($m->created_at)->format('H:i') }}</span></header>
+      <header><b>{{ (int) $m->user_id === (int) auth()->id() ? 'شما' : (optional($m->user)->full_name ?: 'کارشناس فروش') }}</b><span>{{ Rd::jDate($m->created_at) }} · {{ optional($m->created_at)->format('H:i') }}</span></header>
       <p>{{ $m->text }}</p>
     </div>
   @endforeach

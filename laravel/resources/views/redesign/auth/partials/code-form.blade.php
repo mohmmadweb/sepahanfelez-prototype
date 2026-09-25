@@ -11,7 +11,7 @@
   <label class="ffield code"><span>کد تأیید شش‌رقمی</span>
     <input id="code" name="code" type="text" inputmode="numeric" pattern="[0-9۰-۹]*" maxlength="6" autocomplete="one-time-code"
            required autofocus aria-describedby="code-countdown"></label>
-  <button class="btn btn-lg btn-block" type="submit">{{ Rd::c('account.verify.button') }}</button>
+  <button class="btn btn-lg btn-block" type="submit">تأیید و ورود</button>
 </form>
 <div class="auth-resend">
   <span id="code-countdown" aria-live="polite">ارسال دوباره‌ی کد تا <b class="num" id="countdown-value">۰۲:۰۰</b> دیگر</span>

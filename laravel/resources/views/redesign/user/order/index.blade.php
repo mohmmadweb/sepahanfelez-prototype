@@ -1,8 +1,8 @@
 {{-- GET /user/orders — UserPanel\OrderController@index → $orders. Read-only history; new orders are placed by phone. --}}
 @extends('user.layout.master', ['panel' => 'orders'])
-@section('title', 'سفارش‌های پیشین | سپاهان فلز')
+@section('title', 'سفارش‌های پیشین | ' . \App\Support\Brand::name())
 @section('crumb', 'سفارش‌ها')
-@section('head')<div><h1>سفارش‌های پیشین</h1><div class="sub">{{ Rd::c('account.order_note') }}</div></div><a class="btn btn-call btn-lg2" href="tel:{{ Rd::phone() }}">{{ Rd::icon('i-phone') }} ثبت سفارش تلفنی</a>@endsection
+@section('head')<div><h1>سفارش‌های پیشین</h1><div class="sub">سفارش تازه و قیمت قطعی را تلفنی ثبت کنید.</div></div><a class="btn btn-call btn-lg2" href="tel:{{ Rd::phone() }}">{{ Rd::icon('i-phone') }} ثبت سفارش تلفنی</a>@endsection
 @section('panel')
   @if(count($orders))
   <div class="pcard2"><div class="pt-wrap"><table class="dtable">
