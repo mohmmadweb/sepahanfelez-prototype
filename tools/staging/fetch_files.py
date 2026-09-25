@@ -9,16 +9,21 @@ import json, os, re, sys, time, urllib.parse, urllib.request
 
 data, root = json.load(open(sys.argv[1])), sys.argv[2]
 want = set(data["files"])
-# Images inside the rich text (category and article bodies, descriptions): /images/ckeditor/… and the like.
+# Images inside the rich text (category and article bodies, descriptions): /images/ckeditor/… and the
+# like. Taken from src/href attributes, since live file names often contain spaces.
 for rows in data["tables"].values():
     for r in rows:
         for v in r.values():
             if isinstance(v, str) and "/images/" in v:
-                for m in re.findall(r"""(?:https?://(?:www\.)?sepahanfelez\.ir)?(/images/[^"'\s)<>]+\.(?:jpe?g|png|gif|webp|svg))""", v, re.I):
-                    want.add(urllib.parse.unquote(m))
+                for m in re.findall(r"""(?:src|href)\s*=\s*["']([^"']+)["']""", v, re.I):
+                    m = urllib.parse.unquote(re.sub(r"^https?://(?:www\.)?sepahanfelez\.ir", "", m.strip()))
+                    if m.startswith("/images/") and re.search(r"\.(jpe?g|png|gif|webp|svg)$", m, re.I):
+                        want.add(m)
 # Files the admin theme loads that are on the host but not in the repository.
 want |= {"/assets/js/jalalidatepicker.min.js", "/assets/css/jalalidatepicker.css"}
+# The panel shows thumbnails, the site the main image: fetch both of each pair.
 want |= {p.replace("/main/", "/thumbnail/") for p in want if "/main/" in p}
+want |= {p.replace("/thumbnail/", "/main/") for p in want if "/thumbnail/" in p}
 ok = miss = 0
 for p in sorted(want):
     dest = os.path.join(root, p.lstrip("/"))

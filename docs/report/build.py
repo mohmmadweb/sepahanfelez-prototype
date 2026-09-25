@@ -52,7 +52,8 @@ def render(facts):
 
     tag = {"pack": '<span class="tag t-ok">با بسته‌ی محتوا</span>',
            "panel": '<span class="tag t-warn">در پنل، با شما</span>',
-           "info": '<span class="tag t-dim">فقط اطلاع</span>'}
+           "info": '<span class="tag t-dim">فقط اطلاع</span>',
+           "code": '<span class="tag t-bad">ایراد کد بک‌اند</span>'}
     rows = "".join(
         f"<tr><td><b>{html.escape(f['where'])}</b></td><td>{f['what']}</td><td>{tag[f['fix']]}"
         f"{'<br><span class=small>' + f['note'] + '</span>' if f.get('note') else ''}</td></tr>"

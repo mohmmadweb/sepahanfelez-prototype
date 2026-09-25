@@ -64,12 +64,16 @@ $addr = $ins('addresses', ['user_id' => $user, 'location_id' => $city, 'title' =
                            'address' => 'شهرک صنعتی منتظریه، خیابان ۱۰۱ (نشانی نمونه)', 'postal_code' => '8513100000',
                            'is_default_address' => 1]);
 
+// The sales person who answers the sample ticket (no role, so no panel access).
+DB::table('users')->where('mobile', '09120000002')->delete();
+$staff = $ins('users', ['level' => 'user', 'type' => 'person', 'status' => 'active', 'full_name' => 'کارشناس فروش',
+                        'mobile' => '09120000002', 'last_login' => $now]);
 $sales = DB::table('roles')->where('name', 'sales')->value('id') ?: DB::table('roles')->value('id');
 $ticket = $ins('tickets', ['user_id' => $user, 'role_id' => $sales, 'subject' => 'پیش‌فاکتور ۳ تن توری حصاری (نمونه)',
                            'status' => 'answered', 'created_at' => $ago(3)]);
 $ins('messages', ['user_id' => $user, 'ticket_id' => $ticket, 'created_at' => $ago(3),
                   'text' => "سلام، برای ۳ تن توری حصاری چشمه ۶/۵ مفتول ۲/۷ پیش‌فاکتور می‌خواهم.\nتحویل: نجف‌آباد"]);
-$ins('messages', ['user_id' => 1, 'ticket_id' => $ticket, 'created_at' => $ago(2),
+$ins('messages', ['user_id' => $staff, 'ticket_id' => $ticket, 'created_at' => $ago(2),
                   'text' => 'سلام. پیش‌فاکتور آماده است؛ برای هماهنگی بارگیری با دفتر فروش تماس بگیرید.']);
 
 $gw = DB::table('gateways')->value('id') ?: $ins('gateways', ['title' => 'زرین‌پال', 'driver' => 'zarinpal', 'is_default' => 1,

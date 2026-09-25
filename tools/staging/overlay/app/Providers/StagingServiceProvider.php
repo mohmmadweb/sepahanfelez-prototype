@@ -11,7 +11,8 @@ use Illuminate\Support\ServiceProvider;
  * STAGING ONLY. Never copy to the Ahanamn repository or the live host.
  *
  *  - /_staging/login: password login as the staging admin (SMS does not
- *    leave this server, so the OTP login cannot work here).
+ *    leave this server, so the OTP login cannot work here); with `as=<id>`,
+ *    as that user instead (the sample customer, for the static demo export).
  *  - Every response carries X-Robots-Tag: noindex.
  */
 class StagingServiceProvider extends ServiceProvider
@@ -32,9 +33,13 @@ class StagingServiceProvider extends ServiceProvider
                         sleep(2);
                         return redirect('/_staging/login')->with('error', 'رمز درست نیست');
                     }
-                    Auth::loginUsingId((int) env('STAGING_ADMIN_ID', 1), true);
+                    // Optional «as»: sign in as the sample customer instead (tools/staging/demo_data.php),
+                    // used to export the customer panel for the static demo. Same password.
+                    $as = (int) $r->input('as', 0);
+                    $id = $as > 0 ? $as : (int) env('STAGING_ADMIN_ID', 1);
+                    Auth::loginUsingId($id, true);
                     $r->session()->regenerate();
-                    return redirect('/admin');
+                    return redirect($as > 0 ? '/user/profile' : '/admin');
                 })->middleware('throttle:10,1');
             });
         });

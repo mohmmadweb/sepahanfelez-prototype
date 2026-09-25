@@ -11,7 +11,13 @@ will show.
 
   python3 tools/export_static.py [http://127.0.0.1:8795]
 
-Needs the lab running (tools/lab/README.md). Writes, at the repository root:
+Source: the lab (tools/lab/README.md) or, with live data, the staging copy
+(tools/staging/README.md):
+
+  REDESIGN_LAB=~/projects/sepahanfelez-staging/app STAGING_PASSWORD=… DEMO_USER_ID=… \
+      python3 tools/export_static.py http://localhost:8796
+
+Writes, at the repository root:
   index.html, price/, category/…, blog/…, about/, contact/, login/, register/,
   verify-phone/, user/… (demo account), 404.html
   rd/            CSS, JS, fonts, logo, the JSON the pages fetch (search, charts)
@@ -105,15 +111,29 @@ def main():
     st, raw = fetch(guest, "/this-page-does-not-exist")
     write(os.path.join(ROOT, "404.html"), demo_html(raw))
 
-    # The user panel, as the lab's demo account sees it.
+    # The user panel, as the demo account sees it.
     member = opener()
-    fetch(member, "/_lab/login/2")
-    for url in ["/user/profile", "/user/orders", "/user/orders/1", "/user/address", "/user/address/create",
-                "/user/tickets", "/user/ticket/1", "/user/tickets/create", "/user/guide"]:
+    if os.environ.get("STAGING_PASSWORD"):
+        # Staging: its password login, as the sample customer (tools/staging/demo_data.php).
+        st, raw = fetch(member, "/_staging/login")
+        token = re.search(rb'name="_token" value="([^"]+)"', raw).group(1).decode()
+        data = urllib.parse.urlencode({"_token": token, "password": os.environ["STAGING_PASSWORD"],
+                                       "as": os.environ.get("DEMO_USER_ID", "2")}).encode()
+        member.open(urllib.request.Request(BASE + "/_staging/login", data=data))
+    else:
+        fetch(member, "/_lab/login/2")
+    urls = ["/user/profile", "/user/orders", "/user/address", "/user/address/create",
+            "/user/tickets", "/user/tickets/create", "/user/guide"]
+    for lst, pat in (("/user/orders", rb'href="[^"]*?(/user/orders/\d+)"'), ("/user/tickets", rb'href="[^"]*?(/user/ticket/\d+)"')):
+        st, raw = fetch(member, lst)
+        urls += sorted({m.decode() for m in re.findall(pat, raw)})[:3]
+    for url in urls:
         st, raw = fetch(member, url)
         if st == 200:
             write(out_path(url), demo_html(raw))
             n += 1
+        else:
+            print("skip", st, url)
 
     # JSON the pages fetch: search and every chart.
     write(os.path.join(ROOT, "rd", "search-index.json"), json.dumps(index, ensure_ascii=False).encode("utf-8"))

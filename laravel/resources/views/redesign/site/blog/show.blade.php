@@ -34,7 +34,10 @@
         <h1>{{ $t }}</h1>
         @if($a['description'])<p class="post-lede">{{ $a['description'] }}</p>@endif
         <div class="post-meta">
-          <span>{{ Rd::icon('i-user') }} {{ optional($article->user)->full_name ?: 'کارشناسان ' . \App\Support\Brand::name() }}</span>
+          {{-- A person's name only when the admin gave that user an author bio (users → description);
+               otherwise the shop, as on the old theme, which never printed staff names. --}}
+          @php $au = $article->user; $byline = ($au && trim(strip_tags((string) $au->description)) !== '' && $au->full_name) ? $au->full_name : 'کارشناسان ' . \App\Support\Brand::name(); @endphp
+          <span>{{ Rd::icon('i-user') }} {{ $byline }}</span>
           @if($a['published'])<span>{{ Rd::icon('i-calendar') }}<time datetime="{{ $a['published'] }}">{{ Rd::jDate($a['published']) }}</time></span>@endif
           <span>{{ Rd::icon('i-clock') }} {{ Rd::fa($a['read_min']) }} دقیقه مطالعه</span>
         </div>

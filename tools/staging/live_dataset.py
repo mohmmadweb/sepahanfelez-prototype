@@ -16,6 +16,7 @@ import json
 import os
 import re
 import sys
+import urllib.parse
 
 EXP, OUT = sys.argv[1], sys.argv[2]
 NOW = "2026-09-25 12:00:00"
@@ -128,7 +129,8 @@ FILES = set()
 
 def img(path, folder_hint=None):
     if path and not path.startswith("http") or (path or "").startswith("https://sepahanfelez.ir/"):
-        p = re.sub(r"^https://sepahanfelez\.ir", "", path)
+        # The panel's HTML sometimes URL-encodes names (spaces as %20); the database and disk do not.
+        p = urllib.parse.unquote(re.sub(r"^https://sepahanfelez\.ir", "", path))
         if "nopic" not in p and "no-picture" not in p:
             FILES.add(p)
         return p
