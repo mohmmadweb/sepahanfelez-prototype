@@ -232,9 +232,9 @@ async def run(args):
         # -- home settings -----------------------------------------------------------
         if want("home_setting"):
             h = dict(pack["home_setting"])
-            pic = h.pop("about_pic", None)
+            files = {k: h.pop(k) for k in ("about_pic", "footer_pic1", "footer_pic2") if h.get(k)}
             await P.edit(ctx, "home_setting", "home", "/admin/home_setting", "/admin/home_setting", h,
-                         rich=("about",), files={"about_pic": pic} if pic else None)
+                         rich=("about",), files=files or None)
 
         # -- socials ---------------------------------------------------------------
         if want("socials"):

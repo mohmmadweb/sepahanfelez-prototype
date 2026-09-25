@@ -12,7 +12,7 @@ Output: migration/pack.json — one entry per admin screen:
   categories[slug]  admin → دسته‌بندی → ویرایش   intro, body, meta_title,
                                                  meta_description, meta_keywords, image
   products[slug][title]  admin → محصول → محتوا    image
-  home_setting      admin → تنظیمات صفحه اصلی    home/price SEO, about (HTML), about_pic
+  home_setting      admin → تنظیمات صفحه اصلی    home/price SEO, about (HTML), about_pic, two banners
   information       admin → اطلاعات تماس         phone, email, work_time, addresses, about
   about             admin → درباره ما            text (HTML), image, video
   sliders           admin → اسلایدر              image, link, alt (the caption)
@@ -169,6 +169,14 @@ def home_setting():
         "about": about,
         "about_pic": asset("/assets/factory/toloue-sepahan-1.jpg"),
         "alt_about_pic": "نمای هوایی کارخانه‌ی صنایع مفتولی طلوع سپاهان",
+        # The two banners under the home page. The live ones still say
+        # «@Ahanamn»; these carry the approved mobile and link to it.
+        "footer_pic1": asset("/assets/banners/telegram.jpg"),
+        "alt_footer_pic1": "استعلام قیمت در تلگرام",
+        "url_footer_pic1": f"https://t.me/+{C.MOBILE_RAW}",
+        "footer_pic2": asset("/assets/banners/whatsapp.jpg"),
+        "alt_footer_pic2": "استعلام قیمت در واتساپ",
+        "url_footer_pic2": f"https://wa.me/{C.MOBILE_RAW}",
     }
 
 

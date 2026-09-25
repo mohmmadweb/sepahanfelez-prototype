@@ -205,7 +205,11 @@ $ins('information', ['email' => $i['email'], 'phone' => $i['phone'], 'fax' => '-
                      'about' => $i['about']]);
 $h = $pack['home_setting'];
 $ins('home_settings', ['about' => $h['about'], 'about_pic' => $put($h['about_pic'], 'home', false),
-                       'alt_about_pic' => $h['alt_about_pic'], 'footer_pic1' => '', 'footer_pic2' => '',
+                       'alt_about_pic' => $h['alt_about_pic'],
+                       'footer_pic1' => $put($h['footer_pic1'], 'home', false), 'alt_footer_pic1' => $h['alt_footer_pic1'],
+                       'url_footer_pic1' => $h['url_footer_pic1'],
+                       'footer_pic2' => $put($h['footer_pic2'], 'home', false), 'alt_footer_pic2' => $h['alt_footer_pic2'],
+                       'url_footer_pic2' => $h['url_footer_pic2'],
                        'home_title' => $h['home_title'], 'home_description' => $h['home_description'],
                        'price_title' => $h['price_title'], 'price_description' => $h['price_description']]);
 $ins('general_settings', ['company_name' => 'طلوع سپاهان', 'favicon' => 'favicon.ico']);

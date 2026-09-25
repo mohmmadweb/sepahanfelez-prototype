@@ -3,3 +3,4 @@
 __pycache__/
 migration/.session.json
 migration/backup/
+migration/live/
