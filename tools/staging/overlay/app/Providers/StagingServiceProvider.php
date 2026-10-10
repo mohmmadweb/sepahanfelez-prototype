@@ -14,11 +14,20 @@ use Illuminate\Support\ServiceProvider;
  *    leave this server, so the OTP login cannot work here); with `as=<id>`,
  *    as that user instead (the sample customer, for the static demo export).
  *  - Every response carries X-Robots-Tag: noindex.
+ *  - STAGING_GATE=true puts the whole site behind STAGING_PASSWORD (StagingGate).
  */
 class StagingServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        // Behind the Cloudflare tunnel the app sees plain HTTP; keep links on the public https URL.
+        if (strpos((string) config('app.url'), 'https://') === 0) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+            \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+        }
+        // Site-wide password (STAGING_GATE=true): the stage holds a copy of real customer data.
+        $this->app->make(\Illuminate\Contracts\Http\Kernel::class)->prependMiddleware(\App\Http\Middleware\StagingGate::class);
+
         $this->app['router']->pushMiddlewareToGroup('web', \App\Http\Middleware\StagingNoIndex::class);
         $this->app['router']->pushMiddlewareToGroup('api', \App\Http\Middleware\StagingNoIndex::class);
 
