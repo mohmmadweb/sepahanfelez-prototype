@@ -28,7 +28,7 @@
         @if($email)<a class="fmail" href="mailto:{{ $email }}">{{ Rd::icon('i-mail') }}{{ $email }}</a>@endif
       </div>
       <div class="fcol-links"><h3>دسترسی سریع</h3><ul class="flinks">
-        @foreach([['/price', 'قیمت لحظه‌ای'], ['/category/', 'دسته‌های محصول'], ['/blog', 'مجله'], ['/about', 'درباره ما'], ['/contact', 'تماس با ما']] as $l)
+        @foreach([['/price', 'قیمت لحظه‌ای'], ['/category', 'دسته‌های محصول'], ['/blog', 'مجله'], ['/about', 'درباره ما'], ['/contact', 'تماس با ما']] as $l)
           <li><a href="{{ $l[0] }}">{{ $l[1] }}</a></li>
         @endforeach
       </ul></div>

@@ -266,7 +266,7 @@ async def run(args):
                 for i, (u, on) in plan.items():
                     await f.locator(f"[name='url[{i}]']").fill(u or "")
                     # The theme hides the real checkbox behind a styled span.
-                    await f.evaluate("([n,on])=>{const b=document.querySelector('[name=\"'+n+'\"]'); if(b) b.checked=on;}",
+                    await f.evaluate("(form,[n,on])=>{const b=form.querySelector('[name=\"'+n+'\"]'); if(!b) throw new Error('no checkbox '+n); b.checked=on;}",
                                      [f"is_active[{i}]", on])
                 await P.submit(pg, f)
             await pg.close()
