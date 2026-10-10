@@ -46,7 +46,7 @@ class StagingServiceProvider extends ServiceProvider
                     // used to export the customer panel for the static demo. Same password.
                     $as = (int) $r->input('as', 0);
                     $id = $as > 0 ? $as : (int) env('STAGING_ADMIN_ID', 1);
-                    Auth::loginUsingId($id, true);
+                    Auth::loginUsingId($id);   // no "remember": the live users table has no remember_token column
                     $r->session()->regenerate();
                     return redirect($as > 0 ? '/user/profile' : '/admin');
                 })->middleware('throttle:10,1');

@@ -121,7 +121,9 @@ class Panel:
         action = (await f.get_attribute("action")) or ""
         async with pg.expect_navigation(wait_until="domcontentloaded", timeout=180000) as nav:
             btn = f.locator("[type=submit], button:not([type=button])")
-            await btn.last.click()
+            # expect_navigation above does the waiting; the click itself must not, or a slow
+            # save (busy host, large upload) fails at the click's own 30 s limit.
+            await btn.last.click(no_wait_after=True)
         resp = await nav.value
         await pg.wait_for_timeout(600)
         if resp is None or resp.status >= 400:
@@ -189,6 +191,8 @@ async def run(args):
     async with async_playwright() as pw:
         b = await pw.chromium.launch()
         ctx = await b.new_context(storage_state=args.state, viewport={"width": 1440, "height": 900})
+        # A busy host answers slowly; APPLY_TIMEOUT_MS raises every wait (default 60 s).
+        ctx.set_default_timeout(int(os.environ.get("APPLY_TIMEOUT_MS", "60000")))
 
         # -- videos: upload the factory videos not already in the panel -------------
         stored = {}
