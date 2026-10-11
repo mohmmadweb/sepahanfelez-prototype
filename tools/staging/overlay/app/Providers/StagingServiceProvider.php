@@ -21,9 +21,14 @@ class StagingServiceProvider extends ServiceProvider
     public function boot()
     {
         // Behind the Cloudflare tunnel the app sees plain HTTP; keep links on the public https URL.
-        if (strpos((string) config('app.url'), 'https://') === 0) {
+        // Only for requests that came through the tunnel on the public host: there the app sees
+        // plain HTTP and must still link to https. Requests on another host (an SSH tunnel to
+        // localhost) keep their own host, so links stay on it.
+        $appUrl = (string) config('app.url');
+        $req = $this->app->bound('request') ? $this->app['request'] : null;
+        if (strpos($appUrl, 'https://') === 0 && $req && $req->getHost() === parse_url($appUrl, PHP_URL_HOST)) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
-            \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+            \Illuminate\Support\Facades\URL::forceRootUrl($appUrl);
         }
         // Site-wide password (STAGING_GATE=true): the stage holds a copy of real customer data.
         $this->app->make(\Illuminate\Contracts\Http\Kernel::class)->prependMiddleware(\App\Http\Middleware\StagingGate::class);

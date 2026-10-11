@@ -29,7 +29,12 @@ class StagingLog
         $fixed = (string) env('STAGING_OTP', '');
         $token = $this->tokens['token'] ?? null;
         if ($fixed !== '' && $to && $token !== null) {
-            DB::table('verificationcodes')->where('mobile', $to)->where('code', $token)->update(['code' => $fixed]);
+            DB::table('verificationcodes')->where('mobile', $to)->where('code', $token)->update([
+                'code' => $fixed,
+                // The live table declares code_expire_at "ON UPDATE current_timestamp()": without
+                // naming it here, this UPDATE would reset the expiry to now and expire the code.
+                'code_expire_at' => DB::raw('`code_expire_at`'),
+            ]);
         }
         \Log::info('staging sms suppressed', ['method' => $name, 'to' => $to, 'fixed_otp' => $fixed !== '' && $token !== null]);
 

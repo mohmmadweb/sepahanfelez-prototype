@@ -202,6 +202,11 @@ class Rd
             return '';
         }
         $h = preg_replace('~\s(style|class|dir|lang|face|color|size|align)\s*=\s*("[^"]*"|\'[^\']*\')~iu', '', $h);
+        // Links the admin wrote as full addresses of our own site become relative, so they stay on
+        // whatever host serves the page (identical on sepahanfelez.ir; correct on stage).
+        $h = preg_replace_callback('~(href\s*=\s*)(["\'])(https?://[^"\']+)\2~i', function ($m) {
+            return $m[1] . $m[2] . self::local($m[3]) . $m[2];
+        }, $h);
         $h = preg_replace('~</?(span|font|o:p)\b[^>]*>~iu', '', $h);
         $h = preg_replace('~<p>(\s|&nbsp;|<br\s*/?>)*</p>~iu', '', $h);
         $h = preg_replace('~<(h[1-6])>\s*<br\s*/?>~iu', '<$1>', $h);
@@ -334,6 +339,25 @@ class Rd
     }
 
     /** Percent-encode a path for use inside href/src without touching the slashes. */
+    /**
+     * A link the admin stored as a full address: our own site's (sepahanfelez.ir, with or
+     * without www) becomes a relative path; any other host is left as it is.
+     */
+    public static function local(?string $url): string
+    {
+        $url = trim((string) $url);
+        if ($url === '' || ! preg_match('~^https?://~i', $url)) {
+            return $url === '' ? '' : self::path($url);
+        }
+        $own = preg_replace('~^www\.~i', '', (string) parse_url(self::site('/'), PHP_URL_HOST));
+        $u = parse_url($url);
+        if (strtolower(preg_replace('~^www\.~i', '', $u['host'] ?? '')) !== strtolower($own)) {
+            return $url;
+        }
+
+        return self::path(($u['path'] ?? '') ?: '/') . (isset($u['query']) ? '?' . $u['query'] : '') . (isset($u['fragment']) ? '#' . $u['fragment'] : '');
+    }
+
     public static function path(string $p): string
     {
         if (preg_match('~^[a-z][a-z0-9+.-]*://~i', $p)) {

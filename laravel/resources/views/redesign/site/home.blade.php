@@ -30,7 +30,7 @@
   @foreach($slides as $i => $sl)
     @php $n = $i + 1; @endphp
     <article class="slide{{ $sl['alt'] ? ' has-title' : '' }}" id="s{{ $n }}" style="background-image:url('{{ $sl['image'] }}')" aria-roledescription="اسلاید" aria-label="{{ $sl['alt'] ?: 'اسلاید ' . $n }}">
-      <a class="slide-link" href="{{ $sl['link'] }}" aria-label="{{ $sl['alt'] ?: 'مشاهده' }}"></a>
+      <a class="slide-link" href="{{ Rd::local($sl['link']) }}" aria-label="{{ $sl['alt'] ?: 'مشاهده' }}"></a>
       @if($sl['alt'])<div class="container"><div class="slide-in"><p class="stitle">{{ $sl['alt'] }}</p></div></div>@endif
     </article>
   @endforeach
@@ -68,7 +68,7 @@
     <div class="container home-about{{ $pic ? ' has-pic' : '' }}">
       <div class="prose wide">{!! $about !!}</div>
       @if($pic)
-        <figure class="home-about-pic">@if($hs->url_about_pic)<a href="{{ $hs->url_about_pic }}">@endif<img src="{{ $pic }}" alt="{{ $hs->alt_about_pic }}" loading="lazy">@if($hs->url_about_pic)</a>@endif</figure>
+        <figure class="home-about-pic">@if($hs->url_about_pic)<a href="{{ Rd::local($hs->url_about_pic) }}">@endif<img src="{{ $pic }}" alt="{{ $hs->alt_about_pic }}" loading="lazy">@if($hs->url_about_pic)</a>@endif</figure>
       @endif
     </div>
   </section>
@@ -85,7 +85,7 @@
   <section class="section tight">
     <div class="container home-banners">
       @foreach($banners as $b)
-        @if($b['url'])<a class="home-banner" href="{{ $b['url'] }}"><img src="{{ $b['img'] }}" alt="{{ $b['alt'] }}" loading="lazy"></a>
+        @if($b['url'])<a class="home-banner" href="{{ Rd::local($b['url']) }}"><img src="{{ $b['img'] }}" alt="{{ $b['alt'] }}" loading="lazy"></a>
         @else<span class="home-banner"><img src="{{ $b['img'] }}" alt="{{ $b['alt'] }}" loading="lazy"></span>@endif
       @endforeach
     </div>
