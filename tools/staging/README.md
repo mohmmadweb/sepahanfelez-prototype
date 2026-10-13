@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | مسیر | `~/projects/sepahanfelez-staging/app` (خارج از هر دو مخزن) |
-| اجرا | `127.0.0.1:8796`؛ عمومی فقط از راه تونل Cloudflare روی https://sepahanfelezstage.lenzit.ir (سرویس `sepahanfelez-stage-tunnel`) |
+| اجرا | `127.0.0.1:8796` (سرویس `sepahan-staging`؛ از ۱۱ مهر متوقف است، فقط برای ساختن دمو روشنش کنید). آدرس عمومی stage حالا به نسخه‌ی پیش از لایو وصل است (پایین) |
 | رمز کل سایت | با `STAGING_GATE=true` همه‌ی صفحه‌ها پشت `STAGING_PASSWORD` هستند (`StagingGate`)، چون نسخه‌ی پیش از لایو کپی دیتابیس واقعی و کد یک‌بارمصرف ثابت دارد |
 | ورود مدیر | `/_staging/login` با رمز `STAGING_PASSWORD` در `.env` همان پوشه |
 | پیامک | ارسال نمی‌شود؛ فقط در لاگ ثبت می‌شود |
@@ -16,7 +16,7 @@
 
 ## نسخه‌ی پیش از لایو (بکاپ واقعی هاست)
 
-`~/projects/sepahanfelez-prelive`: کد و دیتابیس از بکاپ cPanel، PHP 7.4 و MariaDB 10.3 (منطقه‌ی زمانی تهران) با docker compose، روی `127.0.0.1:8805`. تونل stage به همین وصل است. راه دوم، بدون Cloudflare:
+`~/projects/sepahanfelez-prelive`: کد و دیتابیس از بکاپ cPanel، PHP 7.4 و MariaDB 10.3 (منطقه‌ی زمانی تهران) با docker compose، روی `127.0.0.1:8805`. تونل stage (`sepahanfelez-stage-tunnel`، با `protocol: http2` و `edge-ip-version: "4"`) به همین وصل است. opcache روشن است (`docker/opcache.ini`) و کانتینرها swap نمی‌شوند (`memswap_limit`). earlyoom سرور اجازه ندارد cloudflared، apache2 و mariadbd را ببندد. راه دوم، بدون Cloudflare:
 
 ```bash
 ssh -L 8805:127.0.0.1:8805 ubuntu@185.204.168.61
