@@ -8,10 +8,11 @@
     foreach (\App\Support\Redesign::catalog() as $slug => $cat) {
         $links[] = $a(Rd::uCat($slug), $cat['title'], $slug);
     }
-    $links[] = '<span class="spacer"></span>';
-    $links[] = $a('/blog', 'مجله', 'blog');
-    $links[] = $a('/about', 'درباره ما', 'about');
-    $links[] = $a('/contact', 'تماس با ما', 'contact');
+    // On desktop these three sit in the top bar (rd.utilbar), so the categories fit one row.
+    $links[] = '<span class="spacer nav-aux"></span>';
+    $links[] = $a('/blog', 'مجله', 'blog', 'nav-aux');
+    $links[] = $a('/about', 'درباره ما', 'about', 'nav-aux');
+    $links[] = $a('/contact', 'تماس با ما', 'contact', 'nav-aux');
 @endphp
 <nav class="mainnav" aria-label="منوی اصلی">
   <div class="container">

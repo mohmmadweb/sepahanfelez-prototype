@@ -2884,3 +2884,21 @@ table.pt.ch .ch-cat,.expert-t .dim{font-size:14px}
 .prose table td,.prose table th{border:1px solid var(--line); padding:var(--s2) var(--s3)}
 .prose img{border-radius:var(--radius); margin:var(--s3) 0}
 .prose a{color:var(--steel-ink); text-decoration:underline; text-underline-offset:3px}
+
+/* ---- منوی اصلی با داده‌ی واقعی (۱۰ دسته با نام بلند) ---- */
+/* در دسکتاپ جا نمی‌شد و در ویندوز نوار اسکرول افقی می‌آمد و «مجله/درباره/تماس» پنهان می‌ماند.
+   دسکتاپ: اگر لازم شد به دو ردیف می‌شکند؛ موبایل: همان اسکرول افقی ولی بدون نوار. */
+.nav-scroll{scrollbar-width:none}
+.nav-scroll::-webkit-scrollbar{display:none}
+/* دسکتاپ: «مجله/درباره/تماس» به نوار بالا می‌روند تا دسته‌ها در یک ردیف جا شوند. */
+.utilbar .util-pages{display:none}
+@media (min-width:1001px){
+  .utilbar .util-pages{display:flex}
+  .nav-scroll .nav-aux{display:none}
+  .nav-scroll a{padding:0 11px}
+}
+/* لپ‌تاپ‌های کوچک (۱۰۰۱ تا ۱۲۷۹): اگر جا نشد، ردیف دوم */
+@media (min-width:1001px) and (max-width:1279px){
+  .nav-scroll{flex-wrap:wrap; overflow:visible}
+  .nav-scroll a{min-height:44px}
+}

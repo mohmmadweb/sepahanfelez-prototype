@@ -7,6 +7,10 @@
       @if($email)<li><a href="mailto:{{ $email }}">{{ Rd::icon('i-mail') }} {{ $email }}</a></li>@endif
     </ul>
     <ul>
+      {{-- Desktop only (the main menu keeps them on smaller screens). --}}
+      <li class="util-pages"><a href="{{ Rd::path('/blog') }}">مجله</a></li>
+      <li class="util-pages"><a href="{{ Rd::path('/about') }}">درباره ما</a></li>
+      <li class="util-pages"><a href="{{ Rd::path('/contact') }}">تماس با ما</a></li>
       @auth
         <li class="acct">
           <a href="{{ route('profile.edit') }}">{{ Rd::icon('i-user') }} {{ auth()->user()->full_name ?: 'حساب کاربری' }}</a>
