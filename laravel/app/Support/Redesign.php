@@ -151,7 +151,7 @@ class Redesign
                 $row['_price'] = $price;
                 $row['_prev'] = $prev === $price ? 0 : $prev;
                 $row['_at'] = $l ? (string) $l->price_at : null;
-                $row['_image'] = isset($p->image) && $p->image ? '/images/products/main/' . $p->image : null;
+                $row['_image'] = isset($p->image) && $p->image ? self::existing('/images/products/main/' . $p->image) : null;
                 $row['_kg'] = isset($p->weight_per_unit) && $p->weight_per_unit ? (float) $p->weight_per_unit : null;
                 $row['_m2'] = isset($p->area_per_unit) && $p->area_per_unit ? (float) $p->area_per_unit : null;
                 // A price the database flags for review (optional column) — never a list in a file.
@@ -466,6 +466,17 @@ class Redesign
      | Articles
      * ================================================================== */
 
+    /** The web path if that file exists under public_html, otherwise null. */
+    private static function existing(?string $url): ?string
+    {
+        $path = (string) parse_url((string) $url, PHP_URL_PATH);
+        if ($path === '' || preg_match('~/no-pic(ture)?\.jpe?g$~i', $path)) {
+            return null;
+        }
+
+        return is_file(public_path(ltrim(rawurldecode($path), '/'))) ? $url : null;
+    }
+
     /**
      * Every article as a light array, newest first, with its category and a
      * reading time — the magazine pages, the related-articles blocks and the
@@ -496,7 +507,9 @@ class Redesign
                     'title'       => (string) $a->title,
                     'slug'        => (string) $a->slug,
                     'description' => Rd::plainDesc($a->description),
-                    'image'       => $a->image && $a->image !== 'no-picture.jpg' ? $a->original_image() : null,
+                    // Only a picture that is really on disk: placeholders (no-picture.jpg, no-pic.jpg)
+                    // and files the host lost would otherwise render as broken images.
+                    'image'       => $a->image ? self::existing($a->original_image()) : null,
                     'cat_slug'    => (string) $c->slug,
                     'cat_title'   => (string) $c->title,
                     'published'   => optional($a->created_at)->toDateString(),
