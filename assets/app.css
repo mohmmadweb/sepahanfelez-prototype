@@ -2902,3 +2902,10 @@ table.pt.ch .ch-cat,.expert-t .dim{font-size:14px}
   .nav-scroll{flex-wrap:wrap; overflow:visible}
   .nav-scroll a{min-height:44px}
 }
+
+/* ---- متن‌ها هم‌عرض container و هم‌تراز با المان‌های بالا و پایین ---- */
+/* قبلاً سقف عرض (۵۶ تا ۷۶ حرف) داشتند و در دسکتاپ سمت چپشان خالی می‌ماند. */
+.prose,.prose-lead,.article-body,.post-lede,
+.board-call .say,.callband p,.hours,.mag-head .lede{max-width:none}
+/* سرتیتر و عکس مقاله، ویدئوی دسته و صفحه‌ی نویسنده هم‌عرض بقیه‌ی صفحه */
+.container.narrow{max-width:var(--container)}
