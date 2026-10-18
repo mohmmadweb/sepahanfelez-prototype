@@ -12,6 +12,6 @@
 <span class="brand-mark {{ $class ?? '' }}" style="display:inline-flex;align-items:center;gap:10px;line-height:1.2">
   <img src="/rd/brand/mark-88.png" srcset="/rd/brand/mark-88.png 2x, /rd/brand/mark-132.png 3x"
        width="{{ $px }}" height="{{ $px }}" style="width:{{ $px }}px;height:{{ $px }}px;border-radius:8px;background:#fff;padding:3px"
-       alt="{{ \App\Support\Site::companyName() ?: \App\Support\Brand::name() }}">
+       alt="{{ \App\Support\Site::companyName() ?: \App\Support\Brand::name() }}" loading="eager" decoding="async">
   @if($wide)<span style="color:#fff;font-weight:700;font-size:15px;white-space:nowrap">{{ \App\Support\Brand::name() }}</span>@endif
 </span>
