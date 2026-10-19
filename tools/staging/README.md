@@ -16,7 +16,7 @@
 
 ## نسخه‌ی پیش از لایو (بکاپ واقعی هاست)
 
-`~/projects/sepahanfelez-prelive`: کد و دیتابیس از بکاپ cPanel، PHP 7.4 و MariaDB 10.3 (منطقه‌ی زمانی تهران) با docker compose، روی `127.0.0.1:8805`. تونل stage (`sepahanfelez-stage-tunnel`، با `protocol: http2` و `edge-ip-version: "4"`) به همین وصل است. opcache روشن است (`docker/opcache.ini`) و کانتینرها swap نمی‌شوند (`memswap_limit`). earlyoom سرور اجازه ندارد cloudflared، apache2 و mariadbd را ببندد. راه دوم، بدون Cloudflare:
+`~/projects/sepahanfelez-prelive`: کد و دیتابیس از بکاپ cPanel، PHP 7.4 و MariaDB 10.3 (منطقه‌ی زمانی تهران) با docker compose، روی `127.0.0.1:8805`. آدرس عمومی: **https://sepahanfelezstage.lenzit.ir:9443**. از ۲۷ مهر مستقیم از همین سرور سرو می‌شود: رکورد DNS-only از نوع A به 185.204.168.61، با Caddy (سرویس `caddy` در compose) و گواهی Let's Encrypt خودکار. پورت ۸۰ فقط ریدایرکت است و ۴۴۳ مال SSH است. تونل Cloudflare قبلی (`sepahanfelez-stage-tunnel`) خاموش است، چون اینترنت ایران روی Cloudflare کند بود و فایل‌ها ناقص می‌رسید. **`.env` را فقط با `./set-env.sh KEY VALUE` عوض کنید**، وگرنه گروه فایل عوض می‌شود و stage خطای ۵۰۰ می‌دهد. opcache روشن است (`docker/opcache.ini`) و کانتینرها swap نمی‌شوند (`memswap_limit`). earlyoom سرور اجازه ندارد cloudflared، apache2 و mariadbd را ببندد. راه دوم، بدون Cloudflare:
 
 ```bash
 ssh -L 8805:127.0.0.1:8805 ubuntu@185.204.168.61
