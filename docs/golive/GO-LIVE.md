@@ -31,6 +31,17 @@
 5. در `.env` هاست (از File Manager): `REDESIGN_ENABLED=true`. قالب جدید فوراً بالا می‌آید.
 6. بررسی صفحه‌ها روی سایت زنده.
 
+## آنچه روز لایو (۷ آبان ۱۴۰۵) واقعاً پیش آمد
+
+- کیت در دو commit به `main` رفت: `2d767c52` (قالب‌ها و کلاس‌ها) و `1bb2079f` (پوشه‌ی `public_html/rd` و favicon). `/public_html` در `.gitignore` است، پس فایل‌های آن باید با `git add -f` اضافه شوند.
+- دیپلوی خودکار به هاست نرسید. cPanel به همه‌ی درخواست‌های API پاسخ `403 Access denied` داد، یعنی `CPANEL_API_TOKEN` باطل شده است:
+  - فایل وضعیت خوانده نشد و اجرای اول خواست کل درخت (۱۰٬۳۸۷ فایل) را بفرستد و در سقف ۳۰ دقیقه لغو شد؛
+  - اجرای دستی با `assume_last_commit=7d0416ed` فقط ۱۰۲ فایل برنامه‌ریزی کرد، ولی snapshot نتوانست فایل نمونه را بخواند و دیپلوی را متوقف کرد.
+
+  هیچ فایلی آپلود نشد.
+- جایگزین: یک zip با ۱۴۳ فایل خالی، ۱۰۲ فایل commit و `.deploy-state.json` که به `1bb2079f` اشاره می‌کند. این zip در File Manager در `/home/ahanamnc` باز می‌شود. مسیرش: `~/projects/sepahanfelez-staging/golive/sepahanfelez-golive.zip` (خارج از این مخزن).
+- برای دیپلوی‌های بعدی: در cPanel ← Security ← Manage API Tokens یک توکن تازه بسازید و در Secret مخزن، `CPANEL_API_TOKEN`، بگذارید. این کار دسترسی admin مخزن می‌خواهد.
+
 ## برگشت
 
 `REDESIGN_ENABLED=false` در `.env` هاست. قالب قبلی فوراً برمی‌گردد. متن‌های قبلی پنل در `migration/backup/<زمان>/` هستند. فایل‌های قبل از دیپلوی هم در artifact اجرای CI (pre-deploy snapshot) هستند.
