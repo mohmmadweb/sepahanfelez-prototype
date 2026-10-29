@@ -37,7 +37,9 @@ import urllib.parse
 from playwright.async_api import async_playwright
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PACK = os.path.join(ROOT, "migration", "pack.json")
+# APPLY_PACK points at a variant of the pack, e.g. one whose videos were
+# re-encoded under the host's 8 MB post_max_size (it answers 413 above that).
+PACK = os.environ.get("APPLY_PACK") or os.path.join(ROOT, "migration", "pack.json")
 STATE = os.path.join(ROOT, "migration", ".session.json")   # git-ignored
 PAUSE = 1.5            # seconds between saves; the host is shared and busy
 
