@@ -1533,7 +1533,7 @@ article:hover .mag-img img{transform:scale(1.03)}
   background:#fff; border:1px solid var(--line); border-radius:999px; padding:4px 12px; white-space:nowrap}
 .pt-upd svg{width:15px; height:15px; color:var(--fresh)}
 .pt-upd b{color:var(--ink)}
-.pt-wrap{overflow-x:auto; overscroll-behavior-x:contain}
+.pt-wrap{position:relative; overflow-x:auto; overscroll-behavior-x:contain}   /* relative: keeps the abs-positioned .vh labels inside the scroller (RTL page overflowed at 1050–1290px) */
 table.pt{width:100%; border-collapse:collapse; font-size:var(--t-sm)}
 table.pt th{background:#fff; color:var(--ink-2); font-weight:700; font-size:var(--t-xs);
   text-align:start; padding:10px 14px; border-bottom:1.5px solid var(--line-2); white-space:nowrap}
