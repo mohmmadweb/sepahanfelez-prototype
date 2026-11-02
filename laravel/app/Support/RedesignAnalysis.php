@@ -594,7 +594,7 @@ class RedesignAnalysis
         }
 
         return '<p><strong>' . e($name) . '</strong> یکی از ' . Rd::fa(count($rows)) . ' نوع ' . e($catTitle)
-            . (($cat = Redesign::category($key)) && empty($cat['ours']) ? ' است که سپاهان فلز عرضه می‌کند' : ' تولید صنایع مفتولی طلوع سپاهان است')
+            . (($cat = Redesign::category($key)) && isset($cat['ours']) && ! $cat['ours'] ? ' است که سپاهان فلز عرضه می‌کند' : ' تولید صنایع مفتولی طلوع سپاهان است')
             . ($specTxt !== '' ? ' با مشخصات ' . e($specTxt) : '') . '. '
             . 'این کالا ' . $rank . ' و به ' . e($unit) . ' فروخته می‌شود.' . $econ . '</p>'
             . '<p>' . ($usages ? 'کاربردهای رایج آن: ' . e(implode('، ', array_slice($usages, 0, 4))) . '. ' : '')
