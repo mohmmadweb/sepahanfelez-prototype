@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Controllers\RedesignController;
 use App\Http\Middleware\RedesignFaDigits;
+use App\Http\Middleware\RedesignRedirects;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\Category;
@@ -45,6 +46,9 @@ use Illuminate\Support\ServiceProvider;
  *      one deliberately replaces the old cart page.
  *   4. Digits in the rendered HTML become Persian, as in the prototype.
  *   5. Saving anything in the panel that a page reads drops the cached data.
+ *   6. The panel's redirect table answers 301 on decoded paths, and an article
+ *      opened under a category it is not in goes to its real address
+ *      (RedesignRedirects).
  *
  * Content lives only in the admin panel. The kit ships templates, CSS/JS and
  * the logo — no copy, no photos, no prices.
@@ -71,6 +75,10 @@ class RedesignServiceProvider extends ServiceProvider
 
         if (config('redesign.fa_digits', true)) {
             $this->app->make(Router::class)->pushMiddlewareToGroup('web', RedesignFaDigits::class);
+        }
+
+        if (config('redesign.redirects', true)) {
+            $this->app->make(\Illuminate\Contracts\Http\Kernel::class)->prependMiddleware(RedesignRedirects::class);
         }
 
         // Whatever the admin saves shows at once: every model a page reads

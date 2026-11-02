@@ -41,6 +41,13 @@ return [
     'fa_digits' => env('REDESIGN_FA_DIGITS', true),
 
     /*
+    | 301 redirects from the panel's redirect table, matched on the decoded
+    | path whatever host a row names, plus articles opened under the wrong
+    | category. See App\Http\Middleware\RedesignRedirects.
+    */
+    'redirects' => env('REDESIGN_REDIRECTS', true),
+
+    /*
     | Price-history chart.
     |
     | Real data: the `prices` table that every Excel import writes to, so it
