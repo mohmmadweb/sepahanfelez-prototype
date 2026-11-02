@@ -2909,3 +2909,7 @@ table.pt.ch .ch-cat,.expert-t .dim{font-size:14px}
 .board-call .say,.callband p,.hours,.mag-head .lede{max-width:none}
 /* سرتیتر و عکس مقاله، ویدئوی دسته و صفحه‌ی نویسنده هم‌عرض بقیه‌ی صفحه */
 .container.narrow{max-width:var(--container)}
+
+/* «تماس بگیرید»: a product whose panel price is 1 has no price on the site, only a call link */
+.pt-askp{font-weight:800; color:var(--brand); white-space:nowrap; text-decoration:underline; text-underline-offset:3px}
+.pt-askp:hover{color:var(--brand-dark)}

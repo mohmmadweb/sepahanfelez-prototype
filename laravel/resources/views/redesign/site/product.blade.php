@@ -20,7 +20,8 @@
     if (! $row) {
         // Inactive product, or one outside a leaf category: build its row on the spot.
         $row = ['نام محصول' => $product->title, 'واحد' => $product->unit, '_id' => (int) $product->id, '_slug' => $product->slug,
-                '_price' => (int) $product->price, '_prev' => 0, '_at' => null, '_image' => null, '_review' => null, '_kg' => null, '_m2' => null];
+                '_price' => (int) $product->price > 1 ? (int) $product->price : 0, '_call' => (int) $product->price <= 1,
+                '_prev' => 0, '_at' => null, '_image' => null, '_review' => null, '_kg' => null, '_m2' => null];
         $titles = $category->specs->pluck('title', 'id');
         foreach ($spec_values as $sv) {
             if (isset($titles[$sv->spec_id])) { $row[trim($titles[$sv->spec_id])] = trim((string) $sv->title); }
@@ -42,7 +43,10 @@
     $notes = $A::buyingNotes($slug, $row);
     $sib = $A::siblingNotes($slug, $row, $rows, $specs);
     $tips = array_merge(array_slice(array_slice($notes, 0, 3), 0, -1), array_slice($sib, 0, 1));
-    $metaDesc = $product->meta_description ?: ('قیمت روز ' . $name . ': ' . Rd::fmt($p) . ' ریال / ' . $unit . ' — ' . $t . ' با مشخصات فنی.');
+    $call = ! empty($row['_call']);
+    $metaDesc = $product->meta_description ?: ($call
+        ? ('استعلام قیمت ' . $name . ' — ' . $t . ' با مشخصات فنی؛ قیمت روز را از کارشناس فروش بگیرید.')
+        : ('قیمت روز ' . $name . ': ' . Rd::fmt($p) . ' ریال / ' . $unit . ' — ' . $t . ' با مشخصات فنی.'));
 @endphp
 @section('title', $product->meta_title ?: ('قیمت ' . $name . ' | ' . \App\Support\Brand::name()))
 @section('description', $metaDesc)
@@ -57,7 +61,7 @@
 @endphp
 @if($kw = ($product->meta_keyword ?? $product->meta_keywords ?? null))<meta name="keywords" content="{{ $kw }}">@endif
 {!! \App\Support\Schema::storedIsUsable($product->schema_tag ?? null) ? $product->schema_tag : '' !!}
-{{ Rd::graph(Rd::organization(), Rd::website(), \App\Support\Schema::storedIsUsable($product->schema_tag ?? null) ? null : Rd::product($name, $url, $metaDesc, $p, $unit, $photos[0] ?? null, $props), Rd::faq(array_map(function ($q) { return [$q[0], trim(strip_tags($q[1]))]; }, $faq)), Rd::breadcrumb([['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, Rd::uCat($slug)], [$name, null]])) }}
+{{ Rd::graph(Rd::organization(), Rd::website(), \App\Support\Schema::storedIsUsable($product->schema_tag ?? null) ? null : Rd::product($name, $url, $metaDesc, $p, $unit, $photos[0] ?? null, $props, $cat['ours'] ?? true), Rd::faq(array_map(function ($q) { return [$q[0], trim(strip_tags($q[1]))]; }, $faq)), Rd::breadcrumb([['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, Rd::uCat($slug)], [$name, null]])) }}
 @endsection
 @section('content')
   <section class="section product">
@@ -76,9 +80,15 @@
           <h1>{{ $name }}</h1>
           <p class="plede">{{ $t }} — {{ \App\Support\Site::companyName() }}</p>
           <div class="pcard">
+            @if($call)
+            <div class="pcard-price"><span class="k">قیمت روز</span>
+              <span class="v"><b>تماس بگیرید</b></span>
+              <span class="pcard-meta">قیمت این کالا تلفنی اعلام می‌شود.</span></div>
+            @else
             <div class="pcard-price"><span class="k">قیمت روز</span>
               <span class="v"><b class="num">{{ Rd::fmt($p) }}</b> <span class="u">ریال / {{ $unit }}</span></span>
               <span class="pcard-meta">{{ Rd::delta($d, $p) }} نسبت به آخرین ثبت @if($d)<span class="pcard-prev">قیمت ثبت قبلی: <span class="num">{{ Rd::fmt($d) }}</span> ریال</span>@endif</span></div>
+            @endif
             <div class="pcard-upd">@include('rd.stamp', ['short' => true, 'at' => $row['_at']])</div>
             @if($row['_review'])<p class="callout slim"><b>قیمت در حال بازبینی است.</b> {{ $row['_review'] }} پیش از سفارش، قیمت را تلفنی بگیرید.</p>@endif
             <div class="pcard-cta">

@@ -51,7 +51,7 @@
         $props = [];
         foreach (array_slice($cat['specs'], 0, 6) as $k2) { $props[] = [$k2, Rd::cleanVal($r[$k2] ?? '')]; }
         if (! $r['_slug']) { continue; }
-        $prods[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — ' . $t . '، قیمت روز.', $r['_price'], $r['واحد'], $r['_image'] ?: ($photos[0] ?? null), $props);
+        $prods[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — ' . $t . '، قیمت روز.', $r['_price'], $r['واحد'], $r['_image'] ?: ($photos[0] ?? null), $props, $cat['ours'] ?? true);
     }
 @endphp
 {{ Rd::graph(Rd::organization(), Rd::website(), Rd::page('CollectionPage', Rd::uCat($slug), 'قیمت روز ' . $t, ['description' => $meta, 'about' => ['@id' => Rd::orgId()], 'primaryImageOfPage' => $photos ? Rd::site($photos[0]) : null]), $prods ? Rd::itemList($prods, 'کالاهای ' . $t) : null, \App\Support\Schema::storedIsUsable($category->schema_tag) ? null : Rd::faq($faq), Rd::breadcrumb([['خانه', '/'], ['قیمت لحظه‌ای', '/price'], [$t, null]])) }}

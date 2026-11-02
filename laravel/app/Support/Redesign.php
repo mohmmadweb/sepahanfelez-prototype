@@ -72,7 +72,11 @@ class Redesign
 
     private static function buildCatalog(): array
     {
-        $cats = DB::table('categories')->select('id', 'parent_id', 'title', 'slug', 'order', 'status', 'image', 'icon', 'intro')->get();
+        $catCols = ['id', 'parent_id', 'title', 'slug', 'order', 'status', 'image', 'icon', 'intro'];
+        if (self::hasColumn('categories', 'our_product')) {
+            $catCols[] = 'our_product';
+        }
+        $cats = DB::table('categories')->select($catCols)->get();
         $parents = [];
         foreach ($cats as $c) {
             if ($c->parent_id) {
@@ -137,9 +141,18 @@ class Redesign
                 }
                 $l = $latest->get($p->id);
                 $price = (int) $p->price;
+                // A price of 1 is how the panel says «تماس بگیرید»: no number on the site, and the row
+                // is left out of averages, cheapest-of, price changes and charts (they all skip a 0 price).
+                $call = $price <= 1;
                 $prev = 0;
-                if ($l) {
+                if ($l && ! $call) {
                     $prev = (int) $l->second_price === $price ? (int) $l->first_price : (int) $l->second_price;
+                }
+                if ($call) {
+                    $price = 0;
+                }
+                if ($prev <= 1) {
+                    $prev = 0;
                 }
                 $row = ['نام محصول' => (string) $p->title, 'واحد' => trim((string) $p->unit)];
                 foreach ($valuesBy[$p->id] ?? [] as $k => $v) {
@@ -156,6 +169,7 @@ class Redesign
                 $row['_m2'] = isset($p->area_per_unit) && $p->area_per_unit ? (float) $p->area_per_unit : null;
                 // A price the database flags for review (optional column) — never a list in a file.
                 $row['_review'] = ! empty($p->needs_review) ? 'قیمت این ردیف در حال بازبینی است.' : null;
+                $row['_call'] = $call;
                 $rows[] = $row;
             }
             if (! $rows) {
@@ -186,6 +200,8 @@ class Redesign
                 'image'       => $cat->image ? '/images/category/main/' . $cat->image : null,
                 'icon'        => $cat->icon ? '/images/category/icon/' . $cat->icon : null,
                 'intro'       => (string) $cat->intro,
+                // admin → دسته → «تولید کننده / فروشنده»: only the factory's own lines are «تولید طلوع سپاهان».
+                'ours'        => ! isset($cat->our_product) || (int) $cat->our_product === 1,
                 'specs'       => $specs,
                 'rows'        => $rows,
                 'last_update' => $ats ? max($ats) : null,
@@ -380,10 +396,13 @@ class Redesign
         $pts = [];
         foreach ($rows as $i => $r) {
             $day = substr((string) $r->price_at, 0, 10);
-            if ($i === 0 && (int) $r->first_price > 0 && (int) $r->first_price !== (int) $r->second_price) {
+            // 1 is «تماس بگیرید», not a price: it would draw a cliff to zero.
+            if ($i === 0 && (int) $r->first_price > 1 && (int) $r->first_price !== (int) $r->second_price) {
                 $pts[date('Y-m-d', strtotime($day . ' -1 day'))] = (int) $r->first_price;
             }
-            $pts[$day] = (int) $r->second_price;
+            if ((int) $r->second_price > 1) {
+                $pts[$day] = (int) $r->second_price;
+            }
         }
         // chart_price holds daily snapshots when price:update has ever run; they
         // only fill days the change log does not cover.
@@ -392,7 +411,7 @@ class Redesign
                          ->where('created_at', '>=', $since)->orderBy('created_at')
                          ->get(['price', 'created_at']) as $r) {
                 $day = substr((string) $r->created_at, 0, 10);
-                if (! isset($pts[$day]) && (int) $r->price > 0) {
+                if (! isset($pts[$day]) && (int) $r->price > 1) {
                     $pts[$day] = (int) $r->price;
                 }
             }
@@ -423,7 +442,7 @@ class Redesign
         $series = [];
         $dates = [];
         foreach ($cat['rows'] as $r) {
-            if ($r['_review']) {
+            if ($r['_review'] || $r['_call']) {
                 continue;
             }
             $s = self::productSeries($r['_id']);

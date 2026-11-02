@@ -20,7 +20,7 @@
         foreach ($cat['rows'] as $r) {
             if (! $r['_review'] && $r['_slug'] && count($items) < 60) {
                 $nm = Rd::cleanName($r['نام محصول']);
-                $items[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — قیمت روز.', $r['_price'], $r['واحد']);
+                $items[] = Rd::product($nm, Rd::uProd($slug, $r['_slug']), $nm . ' — قیمت روز.', $r['_price'], $r['واحد'], null, [], $cat['ours'] ?? true);
             }
         }
     }

@@ -522,12 +522,15 @@ class Rd
     }
 
     public static function product(string $name, string $url, string $desc, $price, string $unit,
-                                   ?string $image = null, array $props = []): array
+                                   ?string $image = null, array $props = [], bool $ours = true): array
     {
         $p = ['@type' => 'Product', '@id' => self::site($url) . '#product', 'name' => $name,
-              'url' => self::site($url), 'description' => $desc,
-              'brand' => ['@type' => 'Brand', 'name' => Site::companyName()],
-              'manufacturer' => ['@id' => self::orgId()]];
+              'url' => self::site($url), 'description' => $desc];
+        // A category marked «فروشنده» in the panel is resold, not made here: no factory brand on it.
+        if ($ours) {
+            $p['brand'] = ['@type' => 'Brand', 'name' => Site::companyName()];
+            $p['manufacturer'] = ['@id' => self::orgId()];
+        }
         if ($image) {
             $p['image'] = strpos($image, '/') === 0 ? self::site($image) : $image;
         }

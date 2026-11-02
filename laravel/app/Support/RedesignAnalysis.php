@@ -577,22 +577,25 @@ class RedesignAnalysis
             $rank = 'از نظر قیمت در جایگاه ' . Rd::fa($pos) . ' از ' . Rd::fa($n) . ' سطح قیمتی دسته قرار می‌گیرد';
         } elseif ($pos) {
             $rank = 'هم‌قیمت با بیشتر کالاهای این دسته است و تفاوت آن در مشخصات فنی است';
+        } elseif (! empty($row['_call'])) {
+            $rank = 'قیمتش را کارشناس فروش تلفنی اعلام می‌کند';
         } else {
             $rank = 'قیمتش در حال بازبینی است';
         }
         [, $area, , $wm2] = self::geometry($key, $row);
         $econ = '';
-        if ($wm2 && $unit !== 'مترمربع') {
+        if ($p && $wm2 && $unit !== 'مترمربع') {
             $perM2 = $unit === 'کیلوگرم' ? $p * $wm2 : ($area ? $p / $area : 0);
             $econ = ' هر متر مربع آن حدود ' . Rd::fa(Rd::g($wm2)) . ' کیلوگرم فولاد دارد؛ یعنی هزینه‌ی هر متر مربع حدود <b class="num">'
                 . Rd::fmt((int) $perM2) . '</b> ریال درمی‌آید.';
-        } elseif ($area && in_array($unit, ['رول', 'برگ'], true)) {
+        } elseif ($p && $area && in_array($unit, ['رول', 'برگ'], true)) {
             $econ = ' هر ' . e($unit) . ' ' . Rd::fa(Rd::g($area)) . ' متر مربع را می‌پوشاند، پس هزینه‌ی هر متر مربع حدود <b class="num">'
                 . Rd::fmt((int) ($p / $area)) . '</b> ریال است.';
         }
 
         return '<p><strong>' . e($name) . '</strong> یکی از ' . Rd::fa(count($rows)) . ' نوع ' . e($catTitle)
-            . ' تولید صنایع مفتولی طلوع سپاهان است' . ($specTxt !== '' ? ' با مشخصات ' . e($specTxt) : '') . '. '
+            . (($cat = Redesign::category($key)) && empty($cat['ours']) ? ' است که سپاهان فلز عرضه می‌کند' : ' تولید صنایع مفتولی طلوع سپاهان است')
+            . ($specTxt !== '' ? ' با مشخصات ' . e($specTxt) : '') . '. '
             . 'این کالا ' . $rank . ' و به ' . e($unit) . ' فروخته می‌شود.' . $econ . '</p>'
             . '<p>' . ($usages ? 'کاربردهای رایج آن: ' . e(implode('، ', array_slice($usages, 0, 4))) . '. ' : '')
             . 'قیمت قطعی سفارش با تناژ و مقصد بار در تماس با کارشناس فروش اعلام می‌شود.</p>';

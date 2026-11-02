@@ -58,9 +58,14 @@
       <tr data-name="{{ $nm }}" data-price="{{ $r['_price'] }}" data-prev="{{ $r['_prev'] ?: $r['_price'] }}" data-src="/rd/chart/product/{{ $r['_id'] }}" @foreach($specs as $n => $sp) data-s{{ $n }}="{{ $r[$sp] ?? '' }}"@endforeach>
         <td class="pt-name">{{ Rd::link(Rd::prodUrl($slug, $r['_slug']), $nm) }}@if($r['_review'])<span class="review" title="{{ $r['_review'] }}">بازبینی</span>@endif</td>
         @foreach($specs as $i => $sp)<td class="pt-spec{{ $i >= 2 ? ' pt-lo' : '' }}" data-label="{{ $R::shortHead($sp) }}">{{ Rd::cleanVal($r[$sp] ?? '') }}</td>@endforeach
+        @if(! empty($r['_call']))
+        <td class="pt-price" data-label="قیمت"><a class="pt-askp" href="tel:{{ Rd::phone() }}" data-track="call-row">تماس بگیرید</a></td>
+        <td class="pt-delta" data-label="نوسان">—</td>
+        <td class="pt-act">
+        @else
         <td class="pt-price" data-label="قیمت"><b class="num">{{ Rd::fmt($r['_price']) }}</b><span class="pt-u">ریال / {{ $r['واحد'] }}</span></td>
         <td class="pt-delta" data-label="نوسان">{{ Rd::delta($r['_prev'], $r['_price']) }}</td>
-        <td class="pt-act"><button type="button" class="pt-chart" data-chart-row title="نمودار قیمت">{{ Rd::icon('i-chart') }}<span class="vh">نمودار قیمت {{ $nm }}</span></button><a class="pt-call" href="tel:{{ Rd::phone() }}" data-track="call-row" title="استعلام تلفنی">{{ Rd::icon('i-phone') }}<span class="vh">استعلام تلفنی {{ $nm }}</span></a></td>
+        <td class="pt-act"><button type="button" class="pt-chart" data-chart-row title="نمودار قیمت">{{ Rd::icon('i-chart') }}<span class="vh">نمودار قیمت {{ $nm }}</span></button>@endif<a class="pt-call" href="tel:{{ Rd::phone() }}" data-track="call-row" title="استعلام تلفنی">{{ Rd::icon('i-phone') }}<span class="vh">استعلام تلفنی {{ $nm }}</span></a></td>
       </tr>
     @endforeach
     </tbody>
